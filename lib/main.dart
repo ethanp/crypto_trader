@@ -19,19 +19,39 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Invest in crypto')),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Text(
-              'Connect with Coinbase Pro',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+        child: Text(
+          'Connection: Not connected',
+          style: Theme.of(context).textTheme.headline5,
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => print('Buying ETH...'),
+        child: Icon(Icons.monetization_on_outlined),
+        onPressed: () => _buyEth(),
       ),
     );
   }
+
+  void _buyEth() {
+    print('Buying ETH...');
+    Trader().buy(Holding('ETH', Dollars(25)));
+  }
+}
+
+class Dollars {
+  const Dollars(this.amt);
+
+  final double amt;
+}
+
+class Holding {
+  const Holding(this.code, this.dollars);
+
+  final String code;
+  final Dollars dollars;
+}
+
+// Watch out for https://flutter.dev/desktop#setting-up-entitlements
+class Trader {
+  void buy(Holding holding) {}
+  List<Holding> getMyHoldings() => [];
 }
