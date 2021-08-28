@@ -2,15 +2,14 @@
 
 Utilities for crpyto trading
 
-## Getting Started
+## Motivation
 
-This project is a starting point for a Flutter application.
+Coinbase Pro is difficult to use. The app is super janky on both web
+and mobile. They don't allow automatic dollar cost averaging (DCA).
 
-A few resources to get you started if this is your first Flutter project:
+Another app I'm using (**TODO** what) only allows DCA on Bitcoin.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+I couldn't find any good bots on github that work like I want. I want
+a similar model to M1 finance. I assemble an idealized portfolio, and
+the app takes my money and does its best to resemble that portfolio
+(aka passive rebalancing).
