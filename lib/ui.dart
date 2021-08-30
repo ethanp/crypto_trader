@@ -30,6 +30,7 @@ class HomePage extends StatelessWidget {
           ),
           Text(
             'Not connected',
+            // TODO(UI): Make this the default style for headline3.
             style: Theme.of(context)
                 .textTheme
                 .headline3!
