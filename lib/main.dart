@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
 
   void _buyEth() {
     print('Buying ETH...');
-    Trader().buy(Holding('ETH', Dollars(25)));
+    CoinbaseProTrader().buy(Holding(ethereum, Dollars(25)));
   }
 }
 
@@ -44,14 +44,49 @@ class Dollars {
 }
 
 class Holding {
-  const Holding(this.code, this.dollars);
+  const Holding(this.cryptocurrency, this.dollars);
 
-  final String code;
+  final Cryptocurrency cryptocurrency;
   final Dollars dollars;
 }
 
-// Watch out for https://flutter.dev/desktop#setting-up-entitlements
-class Trader {
-  void buy(Holding holding) {}
-  List<Holding> getMyHoldings() => [];
+class Cryptocurrency {
+  const Cryptocurrency({
+    required this.name,
+    required this.callLetters,
+  });
+
+  final String name;
+  final String callLetters;
 }
+
+const bitcoin = Cryptocurrency(name: 'Bitcoin', callLetters: 'BTC');
+const ethereum = Cryptocurrency(name: 'Ethereum', callLetters: 'ETH');
+const cardano = Cryptocurrency(name: 'Cardano', callLetters: 'ADA');
+const lightcoin = Cryptocurrency(name: 'Lightcoin', callLetters: 'LTC');
+const bitcoinCash = Cryptocurrency(name: 'Bitcoin Cash', callLetters: 'BCH');
+
+const portfolioCurrencies = [
+  bitcoin,
+  ethereum,
+  cardano,
+  lightcoin,
+  bitcoinCash,
+];
+
+// Watch out for https://flutter.dev/desktop#setting-up-entitlements
+abstract class Trader {
+  void buy(Holding holding);
+  List<Holding> getMyHoldings();
+}
+
+class CoinbaseProTrader implements Trader {
+  final url = 'https://api.pro.coinbase.com';
+
+  @override
+  void buy(Holding holding) => throw UnimplementedError();
+  @override
+  List<Holding> getMyHoldings() => throw UnimplementedError();
+}
+
+abstract class Prices {}
