@@ -5,14 +5,14 @@ class Dollars {
 }
 
 class Holding {
-  const Holding(this.cryptocurrency, this.dollars);
+  const Holding(this.currency, this.dollars);
 
-  final Cryptocurrency cryptocurrency;
+  final Currency currency;
   final Dollars dollars;
 }
 
-class Cryptocurrency {
-  const Cryptocurrency({
+class Currency {
+  const Currency({
     required this.name,
     required this.callLetters,
   });
@@ -21,16 +21,18 @@ class Cryptocurrency {
   final String callLetters;
 }
 
-const bitcoin = Cryptocurrency(name: 'Bitcoin', callLetters: 'BTC');
-const ethereum = Cryptocurrency(name: 'Ethereum', callLetters: 'ETH');
-const cardano = Cryptocurrency(name: 'Cardano', callLetters: 'ADA');
-const lightcoin = Cryptocurrency(name: 'Lightcoin', callLetters: 'LTC');
-const bitcoinCash = Cryptocurrency(name: 'Bitcoin Cash', callLetters: 'BCH');
+const bitcoin = Currency(name: 'Bitcoin', callLetters: 'BTC');
+const bitcoinCash = Currency(name: 'Bitcoin Cash', callLetters: 'BCH');
+const cardano = Currency(name: 'Cardano', callLetters: 'ADA');
+const dollars = Currency(name: 'US Dollars', callLetters: 'USD');
+const ethereum = Currency(name: 'Ethereum', callLetters: 'ETH');
+const lightcoin = Currency(name: 'Lightcoin', callLetters: 'LTC');
 
 const supportedCurrencies = [
   bitcoin,
-  ethereum,
-  cardano,
-  lightcoin,
   bitcoinCash,
+  cardano,
+  dollars,
+  ethereum,
+  lightcoin,
 ];

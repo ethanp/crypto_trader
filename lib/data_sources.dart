@@ -19,11 +19,15 @@ class CoinbaseProTrader implements Trader {
 }
 
 abstract class Prices {
-  void getCurrentPrice(Cryptocurrency cryptocurrency);
+  void getCurrentPrice(Currency cryptocurrency);
 }
 
 class CoinbaseProPrices {
   final apiEndpoint = 'https://api.pro.coinbase.com';
-  void getCurrentPrice(Cryptocurrency cryptocurrency) =>
-      throw UnimplementedError();
+  final sandboxEndpoint = 'https://api-public.sandbox.pro.coinbase.com';
+
+  void getCurrentPrice(Currency cryptocurrency) {
+    // ignore: unused_local_variable
+    final url = '$sandboxEndpoint/products/BTC-USD/ticker';
+  }
 }
