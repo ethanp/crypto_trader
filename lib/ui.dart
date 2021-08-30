@@ -19,50 +19,40 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Invest in crypto')),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Text(
-              'Current Bitcoin price:',
-              style: Theme.of(context).textTheme.headline5,
-            ),
-          ),
-          Text(
-            'Not connected',
-            // TODO(UI): Make this the default style for headline3.
-            style: Theme.of(context)
-                .textTheme
-                .headline3!
-                .copyWith(color: Colors.green[900]),
-          ),
-        ],
-      ),
+      body: BitcoinPrice(),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          FloatingActionButton(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.monetization_on_outlined),
-                Text('Buy ETH', style: TextStyle(fontSize: 9)),
-              ],
-            ),
-            onPressed: () => _buyEth(),
-          ),
-          FloatingActionButton(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.refresh),
-                Text('Refresh', style: TextStyle(fontSize: 9)),
-              ],
-            ),
-            onPressed: () => _refreshPrices(),
-          ),
+          _buyEthButton(),
+          _refreshPricesButton(),
         ],
       ),
+    );
+  }
+
+  Widget _refreshPricesButton() {
+    return FloatingActionButton(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.refresh),
+          Text('Refresh', style: TextStyle(fontSize: 9)),
+        ],
+      ),
+      onPressed: () => _refreshPrices(),
+    );
+  }
+
+  Widget _buyEthButton() {
+    return FloatingActionButton(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.monetization_on_outlined),
+          Text('Buy ETH', style: TextStyle(fontSize: 9)),
+        ],
+      ),
+      onPressed: () => _buyEth(),
     );
   }
 
@@ -74,5 +64,30 @@ class HomePage extends StatelessWidget {
   void _refreshPrices() async {
     print('Refreshing prices');
     print(await CoinbaseProPrices().getCurrentPrice(bitcoin));
+  }
+}
+
+class BitcoinPrice extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Center(
+          child: Text(
+            'Current Bitcoin price:',
+            style: Theme.of(context).textTheme.headline5,
+          ),
+        ),
+        Text(
+          'Not connected',
+          // TODO(UI): Make this the default style for headline3.
+          style: Theme.of(context)
+              .textTheme
+              .headline3!
+              .copyWith(color: Colors.green[900]),
+        ),
+      ],
+    );
   }
 }

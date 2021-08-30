@@ -11,8 +11,6 @@ abstract class Trader {
 }
 
 class CoinbaseProTrader implements Trader {
-  final apiEndpoint = 'https://api.pro.coinbase.com';
-
   @override
   void buy(Holding holding) => throw UnimplementedError();
 
@@ -25,14 +23,22 @@ abstract class Prices {
 }
 
 class CoinbaseProPrices extends Prices {
-  final apiEndpoint = 'api.pro.coinbase.com';
-  final sandboxEndpoint = 'api-public.sandbox.pro.coinbase.com';
-
   @override
   Future<String> getCurrentPrice(Currency cryptocurrency) async {
-    // ignore: unused_local_variable
-    final path = '/products/BTC-USD/ticker';
-    final url = Uri.https(sandboxEndpoint, path);
+    final path = '/products/${cryptocurrency.callLetters}-USD/ticker';
+    return CoinbaseApi.get(path);
+  }
+}
+
+class CoinbaseApi {
+  static final productionEndpoint = 'api.pro.coinbase.com';
+  static final sandboxEndpoint = 'api-public.sandbox.pro.coinbase.com';
+  static final useSandbox = false;
+  static late final endpoint =
+      useSandbox ? sandboxEndpoint : productionEndpoint;
+
+  static Future<String> get(String path) async {
+    final url = Uri.https(endpoint, path);
     final res = await http.get(url);
     return res.body;
   }
