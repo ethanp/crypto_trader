@@ -26,20 +26,38 @@ class CoinbaseProPrices extends Prices {
   @override
   Future<String> getCurrentPrice(Currency cryptocurrency) async {
     final path = '/products/${cryptocurrency.callLetters}-USD/ticker';
-    return CoinbaseApi.get(path);
+    return CoinbaseApi().get(path);
   }
 }
 
 class CoinbaseApi {
-  static final productionEndpoint = 'api.pro.coinbase.com';
-  static final sandboxEndpoint = 'api-public.sandbox.pro.coinbase.com';
-  static final useSandbox = false;
-  static late final endpoint =
-      useSandbox ? sandboxEndpoint : productionEndpoint;
+  static final coinbaseProAddress = 'pro.coinbase.com';
+  static final productionEndpoint = 'api.$coinbaseProAddress';
+  static final sandboxEndpoint = 'api-public.sandbox.$coinbaseProAddress';
 
-  static Future<String> get(String path) async {
+  CoinbaseApi({this.useSandbox = false});
+
+  final useSandbox;
+
+  late final endpoint = useSandbox ? sandboxEndpoint : productionEndpoint;
+
+  Future<String> get(String path, {Map<String, String>? headers}) async {
     final url = Uri.https(endpoint, path);
-    final res = await http.get(url);
+    final res = await http.get(url, headers: headers);
     return res.body;
+  }
+
+  Future<String> getPrivate(String path) async {
+    // TODO(feature-infra): Create the headers.
+    final key = '';
+    final signature = '';
+    final timestamp = '';
+    final passphrase = '';
+    return get(path, headers: {
+      'CB-ACCESS-KEY': key,
+      'CB-ACCESS-SIGN': signature,
+      'CB-ACCESS-TIMESTAMP': timestamp,
+      'CB-ACCESS-PASSPHRASE': passphrase,
+    });
   }
 }
