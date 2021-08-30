@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 
 import 'data_model.dart';
@@ -49,15 +52,29 @@ class CoinbaseApi {
 
   Future<String> getPrivate(String path) async {
     // TODO(feature-infra): Create the headers.
+    return get(path, headers: _privateHeaders(method: 'GET', path: path));
+  }
+
+  Map<String, String> _privateHeaders({
+    required String method,
+    required String path,
+    String body = '',
+  }) {
     final key = '';
-    final signature = '';
-    final timestamp = '';
     final passphrase = '';
-    return get(path, headers: {
+
+    // TODO pretty sure this timestamp formatting is not correct.
+    final timestamp = DateTime.now().millisecondsSinceEpoch / 1000;
+    final what = timestamp.toString() + method.toUpperCase() + path + body;
+    final hMac = Hmac(sha256, base64Decode(key));
+    final signature = hMac.convert(base64Decode(what));
+    final sigStr = base64Encode(signature.bytes);
+    final headers = {
       'CB-ACCESS-KEY': key,
-      'CB-ACCESS-SIGN': signature,
-      'CB-ACCESS-TIMESTAMP': timestamp,
+      'CB-ACCESS-SIGN': sigStr,
+      'CB-ACCESS-TIMESTAMP': timestamp.toString(),
       'CB-ACCESS-PASSPHRASE': passphrase,
-    });
+    };
+    return headers;
   }
 }
