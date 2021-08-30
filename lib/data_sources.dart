@@ -44,15 +44,11 @@ class CoinbaseApi {
 
   late final endpoint = useSandbox ? sandboxEndpoint : productionEndpoint;
 
-  Future<String> get(String path, {Map<String, String>? headers}) async {
+  Future<String> get(String path, {bool private = false}) async {
     final url = Uri.https(endpoint, path);
+    final headers = private ? _privateHeaders(method: 'GET', path: path) : null;
     final res = await http.get(url, headers: headers);
     return res.body;
-  }
-
-  Future<String> getPrivate(String path) async {
-    // TODO(feature-infra): Create the headers.
-    return get(path, headers: _privateHeaders(method: 'GET', path: path));
   }
 
   Map<String, String> _privateHeaders({
