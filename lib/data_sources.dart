@@ -9,7 +9,7 @@ abstract class Trader {
 }
 
 class CoinbaseProTrader implements Trader {
-  final url = 'https://api.pro.coinbase.com';
+  final apiEndpoint = 'https://api.pro.coinbase.com';
 
   @override
   void buy(Holding holding) => throw UnimplementedError();
@@ -23,6 +23,7 @@ abstract class Prices {
 }
 
 class CoinbaseProPrices {
+  final apiEndpoint = 'https://api.pro.coinbase.com';
   void getCurrentPrice(Cryptocurrency cryptocurrency) =>
       throw UnimplementedError();
 }

@@ -38,9 +38,30 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.monetization_on_outlined),
-        onPressed: () => _buyEth(),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          FloatingActionButton(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.monetization_on_outlined),
+                Text('Buy ETH', style: TextStyle(fontSize: 9)),
+              ],
+            ),
+            onPressed: () => _buyEth(),
+          ),
+          FloatingActionButton(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.refresh),
+                Text('Refresh', style: TextStyle(fontSize: 9)),
+              ],
+            ),
+            onPressed: () => _refreshPrices(),
+          ),
+        ],
       ),
     );
   }
@@ -48,5 +69,10 @@ class HomePage extends StatelessWidget {
   void _buyEth() {
     print('Buying ETH...');
     CoinbaseProTrader().buy(Holding(ethereum, Dollars(25)));
+  }
+
+  void _refreshPrices() {
+    print('Refreshing prices');
+    CoinbaseProPrices().getCurrentPrice(bitcoin);
   }
 }
