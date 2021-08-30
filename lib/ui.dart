@@ -19,11 +19,23 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Invest in crypto')),
-      body: Center(
-        child: Text(
-          'Connection: Not connected',
-          style: Theme.of(context).textTheme.headline5,
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: Text(
+              'Current Bitcoin price:',
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          ),
+          Text(
+            'Not connected',
+            style: Theme.of(context)
+                .textTheme
+                .headline3!
+                .copyWith(color: Colors.green[900]),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.monetization_on_outlined),
