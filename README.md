@@ -1,6 +1,6 @@
 # crypto_trader
 
-Utilities for crpyto trading
+Utilities for crypto trading
 
 ## Motivation
 

@@ -1,3 +1,5 @@
+import 'package:http/http.dart' as http;
+
 import 'data_model.dart';
 
 /// Watch out for https://flutter.dev/desktop#setting-up-entitlements
@@ -19,15 +21,19 @@ class CoinbaseProTrader implements Trader {
 }
 
 abstract class Prices {
-  void getCurrentPrice(Currency cryptocurrency);
+  Future<String> getCurrentPrice(Currency cryptocurrency);
 }
 
-class CoinbaseProPrices {
-  final apiEndpoint = 'https://api.pro.coinbase.com';
-  final sandboxEndpoint = 'https://api-public.sandbox.pro.coinbase.com';
+class CoinbaseProPrices extends Prices {
+  final apiEndpoint = 'api.pro.coinbase.com';
+  final sandboxEndpoint = 'api-public.sandbox.pro.coinbase.com';
 
-  void getCurrentPrice(Currency cryptocurrency) {
+  @override
+  Future<String> getCurrentPrice(Currency cryptocurrency) async {
     // ignore: unused_local_variable
-    final url = '$sandboxEndpoint/products/BTC-USD/ticker';
+    final path = '/products/BTC-USD/ticker';
+    final url = Uri.https(sandboxEndpoint, path);
+    final res = await http.get(url);
+    return res.body;
   }
 }

@@ -71,8 +71,8 @@ class HomePage extends StatelessWidget {
     CoinbaseProTrader().buy(Holding(ethereum, Dollars(25)));
   }
 
-  void _refreshPrices() {
+  void _refreshPrices() async {
     print('Refreshing prices');
-    CoinbaseProPrices().getCurrentPrice(bitcoin);
+    print(await CoinbaseProPrices().getCurrentPrice(bitcoin));
   }
 }
