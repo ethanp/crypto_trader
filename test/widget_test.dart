@@ -10,9 +10,12 @@ import 'package:crypto_trader/widgets/app_dependencies.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Overall page loads (smoke test)', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(AppDependencies(prices: Prices.fake()));
+    await tester.pumpWidget(AppDependencies(
+      prices: Prices.fake(),
+      trader: Trader.fake(),
+    ));
 
     expect(find.text('Current Bitcoin price:'), findsOneWidget);
 

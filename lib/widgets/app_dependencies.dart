@@ -5,9 +5,13 @@ import 'package:provider/provider.dart';
 import 'ui.dart';
 
 class AppDependencies extends StatelessWidget {
-  const AppDependencies({required this.prices});
+  const AppDependencies({
+    required this.prices,
+    required this.trader,
+  });
 
   final Prices prices;
+  final Trader trader;
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +19,7 @@ class AppDependencies extends StatelessWidget {
       child: MyApp(),
       providers: [
         ChangeNotifierProvider(create: (_) => prices),
+        ChangeNotifierProvider(create: (_) => trader),
       ],
     );
   }

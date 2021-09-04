@@ -1,7 +1,12 @@
+import 'package:intl/intl.dart';
+
 class Dollars {
   const Dollars(this.amt);
 
   final double amt;
+
+  @override
+  String toString() => NumberFormat.simpleCurrency().format(amt);
 }
 
 class Holding {
@@ -22,6 +27,16 @@ class Currency {
 
   final String name;
   final String callLetters;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Currency &&
+          runtimeType == other.runtimeType &&
+          callLetters == other.callLetters;
+
+  @override
+  int get hashCode => callLetters.hashCode;
 }
 
 const bitcoin = Currency(name: 'Bitcoin', callLetters: 'BTC');

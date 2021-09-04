@@ -21,6 +21,15 @@ class BitcoinPrice extends StatelessWidget {
               snapshot.hasData ? snapshot.data! : 'Not connected or Loading...',
               style: Theme.of(context).textTheme.headline3),
         ),
+        FutureBuilder<String>(
+          future: context.read<Trader>().getMyHoldings().then((value) => value
+              .singleWhere((element) => element.currency == bitcoin)
+              .dollarValue
+              .toString()),
+          builder: (BuildContext ctx, AsyncSnapshot<String> snapshot) => Text(
+              snapshot.hasData ? snapshot.data! : 'Not connected or Loading...',
+              style: Theme.of(context).textTheme.headline3),
+        )
       ],
     );
   }

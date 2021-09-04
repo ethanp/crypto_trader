@@ -6,5 +6,6 @@ import 'data/data_sources.dart';
 void main() {
   runApp(AppDependencies(
     prices: Prices.coinbasePro(),
+    trader: Trader.coinbasePro(),
   ));
 }

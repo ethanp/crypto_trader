@@ -8,18 +8,33 @@ import '../../data_model.dart';
 
 /// Watch out for https://flutter.dev/desktop#setting-up-entitlements
 
-abstract class Trader {
+abstract class Trader extends ChangeNotifier {
   void buy(Holding holding);
 
-  List<Holding> getMyHoldings();
+  Future<List<Holding>> getMyHoldings();
+
+  static Trader coinbasePro() => CoinbaseProTrader();
+
+  static Trader fake() => FakeTrader();
 }
 
-class CoinbaseProTrader implements Trader {
+class FakeTrader extends Trader {
   @override
   void buy(Holding holding) => throw UnimplementedError();
 
   @override
-  List<Holding> getMyHoldings() => throw UnimplementedError();
+  Future<List<Holding>> getMyHoldings() =>
+      Future.value([Holding(currency: bitcoin, dollarValue: Dollars(29))]);
+}
+
+class CoinbaseProTrader extends Trader {
+  @override
+  void buy(Holding holding) => throw UnimplementedError();
+
+  @override
+  Future<List<Holding>> getMyHoldings() =>
+      // TODO actually reach out to coinbase for the info.
+      Future.value([Holding(currency: bitcoin, dollarValue: Dollars(29))]);
 }
 
 abstract class Prices extends ChangeNotifier {
