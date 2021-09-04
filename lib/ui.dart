@@ -24,22 +24,8 @@ class HomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _buyEthButton(),
-          _refreshPricesButton(),
         ],
       ),
-    );
-  }
-
-  Widget _refreshPricesButton() {
-    return FloatingActionButton(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.refresh),
-          Text('Refresh', style: TextStyle(fontSize: 9)),
-        ],
-      ),
-      onPressed: () => _refreshPrices(),
     );
   }
 
@@ -59,11 +45,6 @@ class HomePage extends StatelessWidget {
   void _buyEth() {
     print('Buying ETH...');
     CoinbaseProTrader().buy(Holding(ethereum, Dollars(25)));
-  }
-
-  void _refreshPrices() async {
-    print('Refreshing prices');
-    print(await CoinbaseProPrices().getCurrentPrice(of: bitcoin));
   }
 }
 
