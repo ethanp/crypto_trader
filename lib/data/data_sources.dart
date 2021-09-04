@@ -31,9 +31,18 @@ abstract class Prices extends ChangeNotifier {
     Currency units = dollars,
   });
 
-  static Prices coinbasePro() {
-    return CoinbaseProPrices();
-  }
+  static Prices fake() => FakePrices();
+
+  static Prices coinbasePro() => CoinbaseProPrices();
+}
+
+class FakePrices extends Prices {
+  @override
+  Future<String> getCurrentPrice({
+    required Currency of,
+    Currency units = dollars,
+  }) =>
+      Future.value('0');
 }
 
 class CoinbaseProPrices extends Prices {
