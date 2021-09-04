@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 
-import 'data_model.dart';
-import 'data_sources.dart';
+import '../data_model.dart';
+import '../data_sources.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        textTheme: TextTheme(
-          headline3: TextStyle(
-            color: Colors.green[700],
-          ),
+      theme: _appTheme(),
+      home: HomePage(),
+    );
+  }
+
+  ThemeData _appTheme() {
+    return ThemeData(
+      primarySwatch: Colors.blue,
+      textTheme: TextTheme(
+        headline3: TextStyle(
+          color: Colors.green[700],
         ),
       ),
-      home: HomePage(),
     );
   }
 }
