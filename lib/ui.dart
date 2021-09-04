@@ -63,7 +63,7 @@ class HomePage extends StatelessWidget {
 
   void _refreshPrices() async {
     print('Refreshing prices');
-    print(await CoinbaseProPrices().getCurrentPrice(bitcoin));
+    print(await CoinbaseProPrices().getCurrentPrice(of: bitcoin));
   }
 }
 
@@ -79,6 +79,8 @@ class BitcoinPrice extends StatelessWidget {
             style: Theme.of(context).textTheme.headline5,
           ),
         ),
+        // TODO this should be FutureWidget.of(
+        //   notYet: 'loading', loaded: latestPrice)
         Text(
           'Not connected',
           // TODO(UI): Make this the default style for headline3.

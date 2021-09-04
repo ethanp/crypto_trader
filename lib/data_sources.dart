@@ -22,14 +22,23 @@ class CoinbaseProTrader implements Trader {
 }
 
 abstract class Prices {
-  Future<String> getCurrentPrice(Currency cryptocurrency);
+  Future<String> getCurrentPrice({
+    required Currency of,
+    Currency units = dollars,
+  });
 }
 
 class CoinbaseProPrices extends Prices {
   @override
-  Future<String> getCurrentPrice(Currency cryptocurrency) async {
-    final path = '/products/${cryptocurrency.callLetters}-USD/ticker';
-    return CoinbaseApi().get(path);
+  Future<String> getCurrentPrice({
+    required Currency of,
+    Currency units = dollars,
+  }) async {
+    final from = of.callLetters;
+    final to = units.callLetters;
+    return CoinbaseApi().get(
+      path: '/products/$from-$to/ticker',
+    );
   }
 }
 
@@ -44,7 +53,10 @@ class CoinbaseApi {
 
   late final endpoint = useSandbox ? sandboxEndpoint : productionEndpoint;
 
-  Future<String> get(String path, {bool private = false}) async {
+  Future<String> get({
+    required String path,
+    bool private = false,
+  }) async {
     final url = Uri.https(endpoint, path);
     final headers = private ? _privateHeaders(method: 'GET', path: path) : null;
     final res = await http.get(url, headers: headers);
@@ -56,10 +68,12 @@ class CoinbaseApi {
     required String path,
     String body = '',
   }) {
+    // TODO load these in from the file system or something (encrypted).
+    //  Recall that losing access to these will not lose me any money.
     final key = '';
     final passphrase = '';
 
-    // TODO pretty sure this timestamp formatting is not correct.
+    // TODO(incomplete): pretty sure this timestamp formatting is not correct.
     final timestamp = DateTime.now().millisecondsSinceEpoch / 1000;
     final what = timestamp.toString() + method.toUpperCase() + path + body;
     final hMac = Hmac(sha256, base64Decode(key));
