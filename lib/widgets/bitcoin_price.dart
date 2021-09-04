@@ -19,7 +19,14 @@ class BitcoinPrice extends StatelessWidget {
           future: context.read<Prices>().getCurrentPrice(of: bitcoin),
           builder: (BuildContext ctx, AsyncSnapshot<String> snapshot) => Text(
               snapshot.hasData ? snapshot.data! : 'Not connected or Loading...',
-              style: Theme.of(context).textTheme.headline3),
+              style: Theme.of(ctx).textTheme.headline3),
+        ),
+        SizedBox(height: 50),
+        Center(
+          child: Text(
+            'Current Bitcoin holdings:',
+            style: Theme.of(context).textTheme.headline5,
+          ),
         ),
         FutureBuilder<String>(
           future: context.read<Trader>().getMyHoldings().then((value) => value
@@ -28,7 +35,7 @@ class BitcoinPrice extends StatelessWidget {
               .toString()),
           builder: (BuildContext ctx, AsyncSnapshot<String> snapshot) => Text(
               snapshot.hasData ? snapshot.data! : 'Not connected or Loading...',
-              style: Theme.of(context).textTheme.headline3),
+              style: Theme.of(ctx).textTheme.headline3),
         )
       ],
     );
