@@ -8,7 +8,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        textTheme: TextTheme(
+          headline3: TextStyle(
+            color: Colors.green[700],
+          ),
+        ),
+      ),
       home: HomePage(),
     );
   }
@@ -58,13 +65,8 @@ class BitcoinPrice extends StatelessWidget {
         FutureBuilder<String>(
           future: CoinbaseProPrices().getCurrentPrice(of: bitcoin),
           builder: (BuildContext ctx, AsyncSnapshot<String> snapshot) => Text(
-            snapshot.hasData ? snapshot.data! : 'Not connected or Loading...',
-            // TODO(UI): Make this the default style for headline3.
-            style: Theme.of(context)
-                .textTheme
-                .headline3!
-                .copyWith(color: Colors.green[900]),
-          ),
+              snapshot.hasData ? snapshot.data! : 'Not connected or Loading...',
+              style: Theme.of(context).textTheme.headline3),
         ),
       ],
     );
