@@ -79,15 +79,16 @@ class BitcoinPrice extends StatelessWidget {
             style: Theme.of(context).textTheme.headline5,
           ),
         ),
-        // TODO this should be FutureWidget.of(
-        //   notYet: 'loading', loaded: latestPrice)
-        Text(
-          'Not connected',
-          // TODO(UI): Make this the default style for headline3.
-          style: Theme.of(context)
-              .textTheme
-              .headline3!
-              .copyWith(color: Colors.green[900]),
+        FutureBuilder<String>(
+          future: CoinbaseProPrices().getCurrentPrice(of: bitcoin),
+          builder: (BuildContext ctx, AsyncSnapshot<String> snapshot) => Text(
+            snapshot.hasData ? snapshot.data! : 'Not connected or Loading...',
+            // TODO(UI): Make this the default style for headline3.
+            style: Theme.of(context)
+                .textTheme
+                .headline3!
+                .copyWith(color: Colors.green[900]),
+          ),
         ),
       ],
     );
