@@ -1,4 +1,4 @@
-import 'package:crypto_trader/widgets/data/data_sources.dart';
+import 'package:crypto_trader/data/data_sources.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
