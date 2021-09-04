@@ -25,6 +25,9 @@ class Currency {
     required this.callLetters,
   });
 
+  static Currency byLetters(String callLetters) => supportedCurrencies
+      .firstWhere((element) => element.callLetters == callLetters);
+
   final String name;
   final String callLetters;
 

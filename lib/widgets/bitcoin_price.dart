@@ -29,10 +29,11 @@ class BitcoinPrice extends StatelessWidget {
           ),
         ),
         FutureBuilder<String>(
-          future: context.read<Trader>().getMyHoldings().then((value) => value
-              .singleWhere((element) => element.currency == bitcoin)
-              .dollarValue
-              .toString()),
+          future: context.read<Trader>().getMyHoldings().then(
+              (List<Holding> holdings) => holdings
+                  .singleWhere((holding) => holding.currency == bitcoin)
+                  .dollarValue
+                  .toString()),
           builder: (BuildContext ctx, AsyncSnapshot<String> snapshot) => Text(
               snapshot.hasData ? snapshot.data! : 'Not connected or Loading...',
               style: Theme.of(ctx).textTheme.headline3),

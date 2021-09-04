@@ -32,9 +32,17 @@ class CoinbaseProTrader extends Trader {
   void buy(Holding holding) => throw UnimplementedError();
 
   @override
-  Future<List<Holding>> getMyHoldings() =>
-      // TODO actually reach out to coinbase for the info.
-      Future.value([Holding(currency: bitcoin, dollarValue: Dollars(29))]);
+  Future<List<Holding>> getMyHoldings() async {
+    print('Getting my holdings');
+
+    /// https://docs.pro.coinbase.com/?ruby#list-accounts
+    final String response = await CoinbaseApi().get(path: '/accounts');
+    print('Got response: $response');
+    final accountListRaw = jsonDecode(response);
+    return accountListRaw.map((acct) => Holding(
+        currency: Currency.byLetters(acct['currency']),
+        dollarValue: acct['balance']));
+  }
 }
 
 abstract class Prices extends ChangeNotifier {
