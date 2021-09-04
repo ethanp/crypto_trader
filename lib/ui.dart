@@ -20,12 +20,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Invest in crypto')),
       body: BitcoinPrice(),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buyEthButton(),
-        ],
-      ),
+      floatingActionButton: _buyEthButton(),
     );
   }
 
