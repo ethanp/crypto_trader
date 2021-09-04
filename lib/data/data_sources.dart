@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
@@ -84,13 +85,21 @@ class CoinbaseApi {
     final key = config.key;
     final passphrase = config.passphrase;
 
-    // TODO(incomplete): pretty sure this timestamp formatting is not correct.
-    final timestamp = DateTime.now().millisecondsSinceEpoch / 1000;
-    final what = timestamp.toString() + method.toUpperCase() + path + body;
-    final hMac = Hmac(sha256, base64Decode(key));
-    final signature = hMac.convert(base64Decode(what));
-    final sigStr = base64Encode(signature.bytes);
-    final headers = {
+    // TODO(incomplete): Find out what the correct timestamp format is.
+    final double timestamp = DateTime.now().millisecondsSinceEpoch / 1000;
+    final Uint8List decodedKey = base64Decode(key);
+    final Hmac hMac = Hmac(sha256, decodedKey);
+    final String compendium = [
+      timestamp.toString(),
+      method.toUpperCase(),
+      path,
+      body,
+    ].join();
+    final Uint8List decodedCompendium = base64Decode(compendium);
+    final Digest signature = hMac.convert(decodedCompendium);
+    final List<int> bytes = signature.bytes;
+    final String sigStr = base64Encode(bytes);
+    final Map<String, String> headers = {
       'CB-ACCESS-KEY': key,
       'CB-ACCESS-SIGN': sigStr,
       'CB-ACCESS-TIMESTAMP': timestamp.toString(),
