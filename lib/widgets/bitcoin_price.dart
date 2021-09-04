@@ -1,6 +1,7 @@
 import 'package:crypto_trader/data_model.dart';
 import 'package:crypto_trader/data_sources.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BitcoinPrice extends StatelessWidget {
   @override
@@ -15,7 +16,7 @@ class BitcoinPrice extends StatelessWidget {
           ),
         ),
         FutureBuilder<String>(
-          future: CoinbaseProPrices().getCurrentPrice(of: bitcoin),
+          future: context.read<Prices>().getCurrentPrice(of: bitcoin),
           builder: (BuildContext ctx, AsyncSnapshot<String> snapshot) => Text(
               snapshot.hasData ? snapshot.data! : 'Not connected or Loading...',
               style: Theme.of(context).textTheme.headline3),

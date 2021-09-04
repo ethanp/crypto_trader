@@ -1,4 +1,10 @@
-import 'package:crypto_trader/widgets/ui.dart';
+import 'package:crypto_trader/widgets/app_dependencies.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+import 'data_sources.dart';
+
+void main() {
+  runApp(AppDependencies(
+    prices: Prices.coinbasePro(),
+  ));
+}
