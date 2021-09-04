@@ -29,6 +29,9 @@ class HomePage extends StatelessWidget {
 
   void _buyEth() {
     print('Buying ETH...');
-    CoinbaseProTrader().buy(Holding(ethereum, Dollars(25)));
+    CoinbaseProTrader().buy(Holding(
+      currency: ethereum,
+      dollarValue: Dollars(25),
+    ));
   }
 }

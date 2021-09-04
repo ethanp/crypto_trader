@@ -5,10 +5,13 @@ class Dollars {
 }
 
 class Holding {
-  const Holding(this.currency, this.dollars);
+  const Holding({
+    required this.currency,
+    required this.dollarValue,
+  });
 
   final Currency currency;
-  final Dollars dollars;
+  final Dollars dollarValue;
 }
 
 class Currency {
