@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import 'data_model.dart';
 
@@ -34,11 +35,14 @@ class CoinbaseProPrices extends Prices {
     required Currency of,
     Currency units = dollars,
   }) async {
-    final from = of.callLetters;
-    final to = units.callLetters;
-    return CoinbaseApi().get(
-      path: '/products/$from-$to/ticker',
-    );
+    final String from = of.callLetters;
+    final String to = units.callLetters;
+    final String path = '/products/$from-$to/ticker';
+    final String apiResponse = await CoinbaseApi().get(path: path);
+    final String priceStr = jsonDecode(apiResponse)['price'];
+    final double price = double.parse(priceStr);
+    final String formatted = NumberFormat.simpleCurrency().format(price);
+    return formatted;
   }
 }
 
