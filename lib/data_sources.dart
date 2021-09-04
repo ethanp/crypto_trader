@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -58,29 +59,30 @@ class CoinbaseApi {
 
   CoinbaseApi({this.useSandbox = false});
 
-  final useSandbox;
+  final bool useSandbox;
 
-  late final endpoint = useSandbox ? sandboxEndpoint : productionEndpoint;
+  late final String _endpoint =
+      useSandbox ? sandboxEndpoint : productionEndpoint;
 
   Future<String> get({
     required String path,
     bool private = false,
   }) async {
-    final url = Uri.https(endpoint, path);
-    final headers = private ? _privateHeaders(method: 'GET', path: path) : null;
+    final url = Uri.https(_endpoint, path);
+    final headers =
+        private ? await _privateHeaders(method: 'GET', path: path) : null;
     final res = await http.get(url, headers: headers);
     return res.body;
   }
 
-  Map<String, String> _privateHeaders({
+  Future<Map<String, String>> _privateHeaders({
     required String method,
     required String path,
     String body = '',
-  }) {
-    // TODO load these in from the file system or something (encrypted).
-    //  Recall that losing access to these will not lose me any money.
-    final key = '';
-    final passphrase = '';
+  }) async {
+    final config = await _loadConfigFromDisk();
+    final key = config.key;
+    final passphrase = config.passphrase;
 
     // TODO(incomplete): pretty sure this timestamp formatting is not correct.
     final timestamp = DateTime.now().millisecondsSinceEpoch / 1000;
@@ -95,5 +97,28 @@ class CoinbaseApi {
       'CB-ACCESS-PASSPHRASE': passphrase,
     };
     return headers;
+  }
+
+  Future<Config> _loadConfigFromDisk() async {
+    final a = await rootBundle.loadString('config/config.json');
+    return Config(jsonDecode(a));
+  }
+}
+
+class Config {
+  const Config(this.loaded);
+  final dynamic loaded;
+
+  String get key => loaded['key'];
+  String get passphrase => loaded['passphrase'];
+
+  /// Can be useful for debugging.
+  @override
+  String toString() {
+    final fields = <String, String>{
+      'key': key,
+      'passphrase': passphrase,
+    }.entries.map((e) => '${e.key}: ${e.value}').join(',\n  ');
+    return 'Config{\n  $fields\n}';
   }
 }

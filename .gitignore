@@ -47,4 +47,4 @@ app.*.map.json
 
 
 #### Ethan added these
-SECRETS.json
+config/config.json
