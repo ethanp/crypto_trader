@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:crypto_trader/data/access/coinbase_api.dart';
+import 'package:crypto_trader/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import '../../data_model.dart';
 
 /// Watch out for https://flutter.dev/desktop#setting-up-entitlements
 
@@ -36,10 +35,10 @@ class CoinbaseProTrader extends Trader {
     print('Getting my holdings');
 
     /// https://docs.pro.coinbase.com/?ruby#list-accounts
-    final String response =
+    final String holdingsResponse =
         await CoinbaseApi().get(path: '/accounts', private: true);
-    print('Got response: $response');
-    final accountListRaw = jsonDecode(response);
+    print('Got holdings response: $holdingsResponse');
+    final accountListRaw = jsonDecode(holdingsResponse);
     return accountListRaw.map((acct) => Holding(
         currency: Currency.byLetters(acct['currency']),
         dollarValue: acct['balance']));

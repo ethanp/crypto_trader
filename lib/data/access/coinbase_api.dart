@@ -54,7 +54,12 @@ class CoinbaseApi {
   }
 
   String _signature(
-      int timestamp, String method, String path, String body, Config config) {
+    int timestamp,
+    String method,
+    String path,
+    String body,
+    Config config,
+  ) {
     final List<String> prehash = [
       timestamp.toString(),
       method.toUpperCase(),

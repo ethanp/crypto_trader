@@ -25,8 +25,12 @@ class Currency {
     required this.callLetters,
   });
 
-  static Currency byLetters(String callLetters) => supportedCurrencies
-      .firstWhere((element) => element.callLetters == callLetters);
+  static Currency byLetters(String callLetters) {
+    return supportedCurrencies.firstWhere(
+      (element) => element.callLetters == callLetters,
+      orElse: () => Currency(name: 'Unknown', callLetters: callLetters),
+    );
+  }
 
   final String name;
   final String callLetters;
