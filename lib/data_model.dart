@@ -62,13 +62,13 @@ class Currency {
     required this.pctAllocation,
   });
 
-  static Currency byLetters(String callLetters) =>
-      supportedCurrencies[callLetters]!;
-
   final String name;
   final String callLetters;
   final Color chartColor;
   final int pctAllocation;
+
+  static Currency byLetters(String callLetters) =>
+      supportedCurrencies[callLetters]!;
 
   @override
   bool operator ==(Object other) =>

@@ -17,9 +17,7 @@ abstract class Trader extends ChangeNotifier {
 
   Future<Holdings> getMyHoldings();
 
-  static Trader coinbasePro() => CoinbaseProTrader();
-
-  static Trader fake() => FakeTrader();
+  static Trader get api => FakeTrader();
 }
 
 class FakeTrader extends Trader {
@@ -45,35 +43,50 @@ class CoinbaseProTrader extends Trader {
     final String holdingsResponse =
         await CoinbaseApi().get(path: '/accounts', private: true);
     final List<dynamic> accountListRaw = jsonDecode(holdingsResponse);
-    final List<Holding> ret = [];
-    for (final acct in accountListRaw) {
-      final String callLetters = acct['currency'];
-      final double balanceInCurrency = double.parse(acct['balance']);
-      if (supportedCurrencies.containsKey(callLetters)) {
-        final Currency currency = Currency.byLetters(callLetters);
-        final Dollars priceDollars =
-            await Prices.coinbasePro().getCurrentPrice(of: currency);
-        final Dollars balanceInDollars = priceDollars * balanceInCurrency;
-        ret.add(Holding(
-          currency: currency,
-          dollarValue: balanceInDollars,
-        ));
-      }
-    }
-    ret.sort((a, b) => a.currency.name.compareTo(b.currency.name));
-    return Holdings(ret);
+    return await _parseHoldings(accountListRaw);
   }
+
+  Future<Holdings> _parseHoldings(List<dynamic> accountListRaw) async =>
+      Holdings(await Future.wait(accountListRaw
+          .map((raw) => CoinbaseAccount(raw))
+          .where((acct) => acct.isSupported)
+          .map((acct) => acct.asHolding)));
+}
+
+class CoinbaseAccount {
+  CoinbaseAccount(this.acct);
+
+  final dynamic acct;
+
+  bool get isSupported => supportedCurrencies.containsKey(_callLetters);
+
+  Future<Holding> get asHolding async {
+    final Currency currency = Currency.byLetters(_callLetters);
+    final Dollars priceInDollars =
+        await Prices.api.getCurrentPrice(of: currency);
+    return Holding(
+        currency: currency, dollarValue: priceInDollars * _balanceInCurrency);
+  }
+
+  String get _callLetters => acct['currency'];
+
+  double get _balanceInCurrency => double.parse(acct['balance']);
 }
 
 abstract class Prices extends ChangeNotifier {
+  Future<Dollars> inDollars(Currency currency, double amount) async {
+    final Dollars priceInDollars =
+        await Prices.api.getCurrentPrice(of: currency);
+    return priceInDollars * amount;
+  }
+
+  @protected
   Future<Dollars> getCurrentPrice({
     required Currency of,
     Currency units = dollars,
   });
 
-  static Prices fake() => FakePrices();
-
-  static Prices coinbasePro() => CoinbaseProPrices();
+  static Prices get api => FakePrices();
 }
 
 class FakePrices extends Prices {

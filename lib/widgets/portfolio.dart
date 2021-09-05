@@ -2,13 +2,12 @@ import 'package:crypto_trader/data/data_sources.dart';
 import 'package:crypto_trader/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class Portfolio extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
       child: FutureBuilder<Holdings>(
-          future: context.watch<Trader>().getMyHoldings(),
+          future: Trader.api.getMyHoldings(),
           builder: (BuildContext ctx, AsyncSnapshot<Holdings> holdings) =>
               !holdings.hasData
                   ? Text('Loading')
