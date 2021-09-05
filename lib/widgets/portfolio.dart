@@ -6,27 +6,40 @@ import 'package:provider/provider.dart';
 class Portfolio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text('Portfolio'),
-        FutureBuilder<List<Holding>>(
-            future: context.watch<Trader>().getMyHoldings(),
-            builder: (BuildContext ctx, AsyncSnapshot<List<Holding>> snapshot) {
-              return Flexible(
-                child: ListView.separated(
-                  itemBuilder: (ctx, idx) => Row(children: [
-                    Flexible(child: Text(currencies[idx].name)),
-                    Text(snapshot.hasData
-                        ? snapshot.data![idx].dollarValue.toString()
-                        : "Loading"),
-                  ]),
-                  separatorBuilder: (ctx, idx) => SizedBox(height: 0),
-                  itemCount: currencies.length,
-                ),
-              );
-            })
-      ],
+    return FutureBuilder<List<Holding>>(
+      future: context.watch<Trader>().getMyHoldings(),
+      builder: (BuildContext ctx, AsyncSnapshot<List<Holding>> snapshot) {
+        return Column(children: [
+          _title(),
+          _table(snapshot.data),
+          _portfolioTotal(snapshot.data),
+        ]);
+      },
     );
+  }
+
+  Flexible _table(List<Holding>? snapshot) {
+    return Flexible(
+      child: ListView.builder(
+        itemBuilder: (ctx, idx) => _row(idx, snapshot),
+        itemCount: currencies.length,
+      ),
+    );
+  }
+
+  Text _title() => Text('Portfolio');
+
+  Text _portfolioTotal(List<Holding>? snapshot) {
+    final String? total = snapshot
+        ?.fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue.amt)
+        .toString();
+    return Text(total ?? "Loading");
+  }
+
+  Row _row(int idx, List<Holding>? snapshot) {
+    return Row(children: [
+      Flexible(child: Text(currencies[idx].name)),
+      Text(snapshot?[idx].dollarValue.toString() ?? "Loading"),
+    ]);
   }
 }

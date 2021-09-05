@@ -8,6 +8,7 @@ class Dollars {
   @override
   String toString() => NumberFormat.simpleCurrency().format(amt);
 
+  operator +(double o) => Dollars(amt + o);
   operator *(double o) => Dollars(amt * o);
 }
 

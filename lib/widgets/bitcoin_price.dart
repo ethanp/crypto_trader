@@ -23,25 +23,6 @@ class BitcoinPrice extends StatelessWidget {
                   : 'Not connected or Loading...',
               style: Theme.of(ctx).textTheme.headline3),
         ),
-        SizedBox(height: 50),
-        Center(
-          child: Text(
-            'Current Bitcoin holdings:',
-            style: Theme.of(context).textTheme.headline5,
-          ),
-        ),
-        FutureBuilder<List<Holding>>(
-          future: context.read<Trader>().getMyHoldings(),
-          builder: (BuildContext ctx, AsyncSnapshot<List<Holding>> snapshot) =>
-              Text(
-                  snapshot.hasData
-                      ? snapshot.data!
-                          .firstWhere((element) => element.currency == bitcoin)
-                          .dollarValue
-                          .toString()
-                      : 'Not connected or Loading...',
-                  style: Theme.of(ctx).textTheme.headline3),
-        )
       ],
     );
   }
