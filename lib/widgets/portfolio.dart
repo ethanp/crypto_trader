@@ -20,40 +20,34 @@ class Portfolio extends StatelessWidget {
   }
 
   Widget _table(List<Holding>? snapshot) {
-    return ListView.builder(
-      itemBuilder: (ctx, idx) {
-        final double total = (_totalValue(snapshot)?.amt ?? 1);
-        final double thisOne = (snapshot?[idx].dollarValue.amt ?? 0);
-        final int percentage = (thisOne / total * 100).round();
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _colorRef(idx),
-            Text(currencies[idx].name),
-            Text(snapshot?[idx].dollarValue.toString() ?? "Loading"),
-            Text('$percentage%')
-          ].map(_addPadding).toList(),
-        );
-      },
-      itemCount: currencies.length,
+    if (snapshot == null) return Container();
+    return DataTable(
+      columns: ['Color', 'Name', 'Value', 'Percentage']
+          .map((colName) => DataColumn(label: Text(colName)))
+          .toList(),
+      rows: snapshot.map((holding) {
+        final double total = _totalValue(snapshot)!.amt;
+        final int percentage = (holding.dollarValue.amt / total * 100).round();
+        return DataRow(cells: [
+          DataCell(_colorRef(holding.currency)),
+          DataCell(Text(holding.currency.name)),
+          DataCell(Text(holding.dollarValue.toString())),
+          DataCell(Text('$percentage%')),
+        ]);
+      }).toList(),
     );
   }
 
-  Widget _colorRef(int idx) {
+  Widget _colorRef(Currency currency) {
     return Container(
       height: 10,
       width: 10,
       decoration: BoxDecoration(
-        color: currencies[idx].chartColor,
+        color: supportedCurrencies[currency.callLetters]?.chartColor,
         shape: BoxShape.circle,
       ),
     );
   }
-
-  Widget _addPadding(w) => Padding(
-        padding: const EdgeInsets.all(2),
-        child: w,
-      );
 
   Widget _title() => Text('Portfolio');
 
