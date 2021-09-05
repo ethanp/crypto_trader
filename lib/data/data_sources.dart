@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:crypto_trader/data/access/coinbase_api.dart';
 import 'package:crypto_trader/data_model.dart';
@@ -21,9 +22,16 @@ class FakeTrader extends Trader {
   void buy(Holding holding) => throw UnimplementedError();
 
   @override
-  Future<List<Holding>> getMyHoldings() => Future.value(currencies
-      .map((c) => Holding(currency: c, dollarValue: Dollars(3)))
-      .toList());
+  Future<List<Holding>> getMyHoldings() => Future.value(
+        currencies
+            .map(
+              (c) => Holding(
+                currency: c,
+                dollarValue: Dollars(Random().nextDouble() * 20),
+              ),
+            )
+            .toList(),
+      );
 }
 
 class CoinbaseProTrader extends Trader {

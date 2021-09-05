@@ -1,9 +1,9 @@
 import 'package:crypto_trader/data/data_sources.dart';
 import 'package:crypto_trader/data_model.dart';
+import 'package:crypto_trader/widgets/portfolio.dart';
 import 'package:flutter/material.dart';
 
 import 'bitcoin_price.dart';
-import 'portfolio.dart';
 
 class HomePage extends StatelessWidget {
   @override
