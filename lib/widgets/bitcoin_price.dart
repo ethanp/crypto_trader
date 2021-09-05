@@ -15,10 +15,12 @@ class BitcoinPrice extends StatelessWidget {
             style: Theme.of(context).textTheme.headline5,
           ),
         ),
-        FutureBuilder<String>(
+        FutureBuilder<Dollars>(
           future: context.read<Prices>().getCurrentPrice(of: bitcoin),
-          builder: (BuildContext ctx, AsyncSnapshot<String> snapshot) => Text(
-              snapshot.hasData ? snapshot.data! : 'Not connected or Loading...',
+          builder: (BuildContext ctx, AsyncSnapshot<Dollars> snapshot) => Text(
+              snapshot.hasData
+                  ? snapshot.data!.toString()
+                  : 'Not connected or Loading...',
               style: Theme.of(ctx).textTheme.headline3),
         ),
         SizedBox(height: 50),
@@ -28,15 +30,17 @@ class BitcoinPrice extends StatelessWidget {
             style: Theme.of(context).textTheme.headline5,
           ),
         ),
-        FutureBuilder<String>(
-          future: context.read<Trader>().getMyHoldings().then(
-              (List<Holding> holdings) => holdings
-                  .singleWhere((holding) => holding.currency == bitcoin)
-                  .dollarValue
-                  .toString()),
-          builder: (BuildContext ctx, AsyncSnapshot<String> snapshot) => Text(
-              snapshot.hasData ? snapshot.data! : 'Not connected or Loading...',
-              style: Theme.of(ctx).textTheme.headline3),
+        FutureBuilder<List<Holding>>(
+          future: context.read<Trader>().getMyHoldings(),
+          builder: (BuildContext ctx, AsyncSnapshot<List<Holding>> snapshot) =>
+              Text(
+                  snapshot.hasData
+                      ? snapshot.data!
+                          .firstWhere((element) => element.currency == bitcoin)
+                          .dollarValue
+                          .toString()
+                      : 'Not connected or Loading...',
+                  style: Theme.of(ctx).textTheme.headline3),
         )
       ],
     );

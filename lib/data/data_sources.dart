@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:crypto_trader/data/access/coinbase_api.dart';
 import 'package:crypto_trader/data_model.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 /// Watch out for https://flutter.dev/desktop#setting-up-entitlements
 
@@ -30,23 +29,31 @@ class CoinbaseProTrader extends Trader {
   @override
   void buy(Holding holding) => throw UnimplementedError();
 
+  /// Calls https://docs.pro.coinbase.com/?ruby#list-accounts
   @override
   Future<List<Holding>> getMyHoldings() async {
-    print('Getting my holdings');
-
-    /// https://docs.pro.coinbase.com/?ruby#list-accounts
     final String holdingsResponse =
         await CoinbaseApi().get(path: '/accounts', private: true);
-    print('Got holdings response: $holdingsResponse');
-    final accountListRaw = jsonDecode(holdingsResponse);
-    return accountListRaw.map((acct) => Holding(
-        currency: Currency.byLetters(acct['currency']),
-        dollarValue: acct['balance']));
+    final List<dynamic> accountListRaw = jsonDecode(holdingsResponse);
+    final List<Holding> ret = [];
+    for (final acct in accountListRaw) {
+      if (isSupportedCallLetters(acct['currency'])) {
+        final Currency currency = Currency.byLetters(acct['currency']);
+        final Dollars priceDollars =
+            await Prices.coinbasePro().getCurrentPrice(of: currency);
+        final double balanceInCurrency = double.parse(acct['balance']);
+        ret.add(Holding(
+          currency: currency,
+          dollarValue: priceDollars * balanceInCurrency,
+        ));
+      }
+    }
+    return ret;
   }
 }
 
 abstract class Prices extends ChangeNotifier {
-  Future<String> getCurrentPrice({
+  Future<Dollars> getCurrentPrice({
     required Currency of,
     Currency units = dollars,
   });
@@ -58,26 +65,26 @@ abstract class Prices extends ChangeNotifier {
 
 class FakePrices extends Prices {
   @override
-  Future<String> getCurrentPrice({
+  Future<Dollars> getCurrentPrice({
     required Currency of,
     Currency units = dollars,
   }) =>
-      Future.value('0');
+      Future.value(Dollars(100));
 }
 
 class CoinbaseProPrices extends Prices {
   @override
-  Future<String> getCurrentPrice({
+  Future<Dollars> getCurrentPrice({
     required Currency of,
     Currency units = dollars,
   }) async {
     final String from = of.callLetters;
     final String to = units.callLetters;
+    if (from == to) return Dollars(1);
     final String path = '/products/$from-$to/ticker';
     final String apiResponse = await CoinbaseApi().get(path: path);
     final String priceStr = jsonDecode(apiResponse)['price'];
     final double price = double.parse(priceStr);
-    final String formatted = NumberFormat.simpleCurrency().format(price);
-    return formatted;
+    return Dollars(price);
   }
 }

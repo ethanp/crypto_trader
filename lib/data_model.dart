@@ -7,6 +7,8 @@ class Dollars {
 
   @override
   String toString() => NumberFormat.simpleCurrency().format(amt);
+
+  operator *(double o) => Dollars(amt * o);
 }
 
 class Holding {
@@ -17,6 +19,11 @@ class Holding {
 
   final Currency currency;
   final Dollars dollarValue;
+
+  @override
+  String toString() {
+    return 'Holding{currency: $currency, dollarValue: $dollarValue}';
+  }
 }
 
 class Currency {
@@ -25,12 +32,8 @@ class Currency {
     required this.callLetters,
   });
 
-  static Currency byLetters(String callLetters) {
-    return supportedCurrencies.firstWhere(
-      (element) => element.callLetters == callLetters,
-      orElse: () => Currency(name: 'Unknown', callLetters: callLetters),
-    );
-  }
+  static Currency byLetters(String callLetters) => supportedCurrencies
+      .firstWhere((element) => element.callLetters == callLetters);
 
   final String name;
   final String callLetters;
@@ -44,6 +47,11 @@ class Currency {
 
   @override
   int get hashCode => callLetters.hashCode;
+
+  @override
+  String toString() {
+    return 'Currency{name: $name, callLetters: $callLetters}';
+  }
 }
 
 const bitcoin = Currency(name: 'Bitcoin', callLetters: 'BTC');
@@ -61,3 +69,6 @@ const supportedCurrencies = [
   ethereum,
   lightcoin,
 ];
+
+bool isSupportedCallLetters(String callLetters) =>
+    supportedCurrencies.any((c) => c.callLetters == callLetters);
