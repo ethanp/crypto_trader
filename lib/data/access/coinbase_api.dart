@@ -21,13 +21,9 @@ class CoinbaseApi {
     required String path,
     bool private = false,
   }) async {
-    print('get $path, private: $private');
     final url = Uri.https(_endpoint, path);
-    print('url $url');
     final headers =
         private ? await _privateHeaders(method: 'GET', path: path) : null;
-    print('headers: $headers');
-    print('Get: $url\nHeaders: $headers');
     final res = await http.get(url, headers: headers);
     if (res.statusCode != 200) {
       print('Error in get from Coinbase API!');
@@ -36,6 +32,8 @@ class CoinbaseApi {
     return res.body;
   }
 
+  /// https://docs.pro.coinbase.com/#creating-a-request
+  /// NB: Perusing the linked library impls is required to get it working.
   Future<Map<String, String>> _privateHeaders({
     required String method,
     required String path,
@@ -43,6 +41,20 @@ class CoinbaseApi {
   }) async {
     final Config config = await Config.loadFromDisk();
     final int timestamp = _timestamp();
+
+    return <String, String>{
+      "accept": "application/json",
+      "content-type": "application/json",
+      "User-Agent": "gdax-flutter unofficial coinbase pro api library",
+      'CB-ACCESS-KEY': config.key,
+      'CB-ACCESS-SIGN': _signature(timestamp, method, path, body, config),
+      'CB-ACCESS-TIMESTAMP': timestamp.toString(),
+      'CB-ACCESS-PASSPHRASE': config.passphrase,
+    };
+  }
+
+  String _signature(
+      int timestamp, String method, String path, String body, Config config) {
     final List<String> prehash = [
       timestamp.toString(),
       method.toUpperCase(),
@@ -50,21 +62,10 @@ class CoinbaseApi {
       body,
     ];
     final Uint8List secret = base64.decode(config.secret);
-    final Hmac hmac2 = Hmac(sha256, secret);
-    final Digest digest = hmac2.convert(utf8.encode(prehash.join()));
+    final Hmac hmac = Hmac(sha256, secret);
+    final Digest digest = hmac.convert(utf8.encode(prehash.join()));
     final String signature = base64.encode(digest.bytes);
-
-    /// https://docs.pro.coinbase.com/#creating-a-request
-    final Map<String, String> headers = {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "User-Agent": "gdax-flutter unofficial coinbase pro api library",
-      'CB-ACCESS-KEY': config.key,
-      'CB-ACCESS-SIGN': signature,
-      'CB-ACCESS-TIMESTAMP': timestamp.toString(),
-      'CB-ACCESS-PASSPHRASE': config.passphrase,
-    };
-    return headers;
+    return signature;
   }
 
   int _timestamp() {
