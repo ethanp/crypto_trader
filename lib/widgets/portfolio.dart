@@ -6,22 +6,21 @@ import 'package:provider/provider.dart';
 
 class Portfolio extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<Holding>>(
+  Widget build(BuildContext context) => FutureBuilder<List<Holding>>(
       future: context.watch<Trader>().getMyHoldings(),
-      builder: (BuildContext ctx, AsyncSnapshot<List<Holding>> snapshot) {
-        if (!snapshot.hasData) return Text('Loading');
-        return Column(children: [
-          _title(),
-          Flexible(child: _table(snapshot.data!)),
-          _portfolioTotal(snapshot.data!),
-        ]);
-      },
-    );
-  }
+      builder: (BuildContext ctx, AsyncSnapshot<List<Holding>> snapshot) =>
+          !snapshot.hasData
+              ? Text('Loading')
+              : Column(children: [
+                  _title(),
+                  Flexible(child: _table(snapshot.data!)),
+                  _portfolioTotal(snapshot.data!),
+                ]));
 
   Widget _table(List<Holding> snapshot) {
     return DataTable(
+      sortColumnIndex: 2,
+      sortAscending: true,
       columns: ['Color', 'Name', 'Value', 'Percentage']
           .map((colName) => DataColumn(label: Text(colName)))
           .toList(),

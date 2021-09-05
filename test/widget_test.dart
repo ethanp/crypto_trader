@@ -17,7 +17,7 @@ void main() {
       trader: Trader.fake(),
     ));
 
-    expect(find.text('Current Bitcoin price:'), findsOneWidget);
+    expect(find.text('Bitcoin price:'), findsOneWidget);
 
     // TODO Tap the Coin icon and trigger a frame once it's implemented
     // await tester.tap(find.byIcon(Icons.monetization_on_outlined));

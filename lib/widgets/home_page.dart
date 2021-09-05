@@ -3,17 +3,12 @@ import 'package:crypto_trader/data_model.dart';
 import 'package:crypto_trader/widgets/portfolio.dart';
 import 'package:flutter/material.dart';
 
-import 'bitcoin_price.dart';
-
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Invest in crypto')),
-      body: Column(children: [
-        BitcoinPrice(),
-        Flexible(child: Portfolio()),
-      ]),
+      body: Portfolio(),
       floatingActionButton: _buyEthButton(),
     );
   }
