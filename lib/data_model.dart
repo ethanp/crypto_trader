@@ -10,6 +10,7 @@ class Dollars {
   String toString() => NumberFormat.simpleCurrency().format(amt);
 
   operator +(double o) => Dollars(amt + o);
+
   operator *(double o) => Dollars(amt * o);
 }
 
@@ -33,6 +34,7 @@ class Currency {
     required this.name,
     required this.callLetters,
     required this.chartColor,
+    required this.pctAllocation,
   });
 
   static Currency byLetters(String callLetters) =>
@@ -41,6 +43,7 @@ class Currency {
   final String name;
   final String callLetters;
   final Color chartColor;
+  final int pctAllocation;
 
   @override
   bool operator ==(Object other) =>
@@ -62,31 +65,37 @@ const bitcoin = Currency(
   name: 'Bitcoin',
   callLetters: 'BTC',
   chartColor: Colors.blue,
+  pctAllocation: 5,
 );
 const bitcoinCash = Currency(
   name: 'Bitcoin Cash',
   callLetters: 'BCH',
   chartColor: Colors.red,
+  pctAllocation: 15,
 );
 const cardano = Currency(
   name: 'Cardano',
   callLetters: 'ADA',
   chartColor: Colors.green,
+  pctAllocation: 30,
 );
 const dollars = Currency(
   name: 'US Dollars',
   callLetters: 'USD',
   chartColor: Colors.purple,
+  pctAllocation: 0,
 );
 const ethereum = Currency(
   name: 'Ethereum',
   callLetters: 'ETH',
   chartColor: Colors.orange,
+  pctAllocation: 40,
 );
 const lightcoin = Currency(
   name: 'Lightcoin',
   callLetters: 'LTC',
   chartColor: Colors.yellow,
+  pctAllocation: 10,
 );
 
 List<Currency> get currencies => [

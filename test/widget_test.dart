@@ -16,11 +16,8 @@ void main() {
       prices: Prices.fake(),
       trader: Trader.fake(),
     ));
+    await tester.pumpAndSettle(); // Allow Futures to complete.
 
-    expect(find.text('Bitcoin price:'), findsOneWidget);
-
-    // TODO Tap the Coin icon and trigger a frame once it's implemented
-    // await tester.tap(find.byIcon(Icons.monetization_on_outlined));
-    // await tester.pump();
+    expect(find.text('Portfolio'), findsOneWidget);
   });
 }

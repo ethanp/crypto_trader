@@ -21,7 +21,7 @@ class Portfolio extends StatelessWidget {
     return DataTable(
       sortColumnIndex: 2,
       sortAscending: true,
-      columns: ['Color', 'Name', 'Value', 'Percentage']
+      columns: ['Color', 'Name', 'Value', 'Percentage', 'Allocation']
           .map((colName) => DataColumn(label: Text(colName)))
           .toList(),
       rows: snapshot.map((holding) {
@@ -32,6 +32,7 @@ class Portfolio extends StatelessWidget {
           DataCell(Text(holding.currency.name)),
           DataCell(Text(holding.dollarValue.toString())),
           DataCell(Text('$percentage%')),
+          DataCell(Text('${holding.currency.pctAllocation}%')),
         ]);
       }).toList(),
     );
