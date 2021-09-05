@@ -19,36 +19,34 @@ class Portfolio extends StatelessWidget {
 
   Widget _table(Holdings holdings) {
     return DataTable(
-      // TODO this is not working.
+      // TODO(low priority): this is not working.
       sortColumnIndex: 5,
       sortAscending: false,
       columns: ['Color', 'Name', 'Value', 'Percentage', 'Allocation', 'Error']
           .map((colName) => DataColumn(label: Text(colName)))
           .toList(),
       rows: holdings.holdings.map((holding) {
-        final double total = holdings.totalValue.amt;
-        final int percentage = (holding.dollarValue.amt / total * 100).round();
+        final double percentage = holding.asPercentageOf(holdings);
         return DataRow(
           cells: [
             _colorCircle(holding.currency),
             Text(holding.currency.name),
             Text(holding.dollarValue.toString()),
-            Text('$percentage%'),
-            Text('${holding.currency.pctAllocation}%'),
-            _difference(holding, percentage),
+            Text('${percentage.round()}%'),
+            Text('${holding.currency.percentAllocation}%'),
+            _difference(holding, holdings),
           ].map((w) => DataCell(w)).toList(),
         );
       }).toList(),
     );
   }
 
-  Widget _difference(Holding holding, int percentage) {
-    final difference = percentage - holding.currency.pctAllocation;
+  Widget _difference(Holding holding, Holdings holdings) {
+    var difference = holding.difference(holdings);
     final color = difference >= 0 ? Colors.red : Colors.green;
-    final diffTxt = difference > 0
-        ? '$difference% too much'
-        : '${difference.abs()}% too little';
-    return Text('$diffTxt', style: TextStyle(color: color));
+    final int differenceInt = difference.abs().round();
+    final suffix = difference > 0 ? '% too much' : '% too little';
+    return Text('$differenceInt$suffix', style: TextStyle(color: color));
   }
 
   Widget _colorCircle(Currency currency) {

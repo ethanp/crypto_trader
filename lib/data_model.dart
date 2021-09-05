@@ -25,6 +25,15 @@ class Holding {
   final Currency currency;
   final Dollars dollarValue;
 
+  double asPercentageOf(Holdings holdings) {
+    final double total = holdings.totalValue.amt;
+    final double ratio = dollarValue.amt / total;
+    return ratio * 100;
+  }
+
+  double difference(Holdings holdings) =>
+      asPercentageOf(holdings) - currency.percentAllocation;
+
   @override
   String toString() {
     return 'Holding{currency: $currency, dollarValue: $dollarValue}';
@@ -52,6 +61,9 @@ class Holdings {
 
   static Dollars _randomDollars({required int max}) =>
       Dollars((Random().nextDouble() * max * 100).round() / 100.0);
+
+  Holding get biggestShortfall => holdings
+      .reduce((a, b) => a.difference(this) > b.difference(this) ? a : b);
 }
 
 class Currency {
@@ -59,13 +71,13 @@ class Currency {
     required this.name,
     required this.callLetters,
     required this.chartColor,
-    required this.pctAllocation,
+    required this.percentAllocation,
   });
 
   final String name;
   final String callLetters;
   final Color chartColor;
-  final int pctAllocation;
+  final int percentAllocation;
 
   static Currency byLetters(String callLetters) =>
       supportedCurrencies[callLetters]!;
@@ -90,37 +102,37 @@ const bitcoin = Currency(
   name: 'Bitcoin',
   callLetters: 'BTC',
   chartColor: Colors.blue,
-  pctAllocation: 5,
+  percentAllocation: 5,
 );
 const bitcoinCash = Currency(
   name: 'Bitcoin Cash',
   callLetters: 'BCH',
   chartColor: Colors.red,
-  pctAllocation: 15,
+  percentAllocation: 15,
 );
 const cardano = Currency(
   name: 'Cardano',
   callLetters: 'ADA',
   chartColor: Colors.green,
-  pctAllocation: 30,
+  percentAllocation: 30,
 );
 const dollars = Currency(
   name: 'US Dollars',
   callLetters: 'USD',
   chartColor: Colors.purple,
-  pctAllocation: 0,
+  percentAllocation: 0,
 );
 const ethereum = Currency(
   name: 'Ethereum',
   callLetters: 'ETH',
   chartColor: Colors.orange,
-  pctAllocation: 40,
+  percentAllocation: 40,
 );
 const lightcoin = Currency(
   name: 'Lightcoin',
   callLetters: 'LTC',
   chartColor: Colors.yellow,
-  pctAllocation: 10,
+  percentAllocation: 10,
 );
 
 List<Currency> get currencies => [

@@ -11,8 +11,9 @@ abstract class Trader extends ChangeNotifier {
   void buy(Holding holding);
 
   Future<void> spend(Dollars dollars) async {
-    // final h = await getMyHoldings();
-    // h.sort((a, b) => a.)
+    final hs = await getMyHoldings();
+    final h = hs.biggestShortfall;
+    print(h);
   }
 
   Future<Holdings> getMyHoldings();
