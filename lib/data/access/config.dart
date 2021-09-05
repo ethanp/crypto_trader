@@ -9,6 +9,8 @@ class Config {
 
   String get key => loaded['key'];
 
+  String get secret => loaded['secret'];
+
   String get passphrase => loaded['passphrase'];
 
   static Future<Config> loadFromDisk() async {
@@ -21,6 +23,7 @@ class Config {
   String toString() {
     final fields = <String, String>{
       'key': key,
+      'secret': secret,
       'passphrase': passphrase,
     }.entries.map((e) => '${e.key}: ${e.value}').join(',\n  ');
     return 'Config{\n  $fields\n}';

@@ -36,7 +36,8 @@ class CoinbaseProTrader extends Trader {
     print('Getting my holdings');
 
     /// https://docs.pro.coinbase.com/?ruby#list-accounts
-    final String response = await CoinbaseApi().get(path: '/accounts');
+    final String response =
+        await CoinbaseApi().get(path: '/accounts', private: true);
     print('Got response: $response');
     final accountListRaw = jsonDecode(response);
     return accountListRaw.map((acct) => Holding(
