@@ -37,17 +37,20 @@ class CoinbaseProTrader extends Trader {
     final List<dynamic> accountListRaw = jsonDecode(holdingsResponse);
     final List<Holding> ret = [];
     for (final acct in accountListRaw) {
-      if (isSupportedCallLetters(acct['currency'])) {
-        final Currency currency = Currency.byLetters(acct['currency']);
+      final String callLetters = acct['currency'];
+      final double balanceInCurrency = double.parse(acct['balance']);
+      if (supportedCurrencies.containsKey(callLetters)) {
+        final Currency currency = Currency.byLetters(callLetters);
         final Dollars priceDollars =
             await Prices.coinbasePro().getCurrentPrice(of: currency);
-        final double balanceInCurrency = double.parse(acct['balance']);
+        final Dollars balanceInDollars = priceDollars * balanceInCurrency;
         ret.add(Holding(
           currency: currency,
-          dollarValue: priceDollars * balanceInCurrency,
+          dollarValue: balanceInDollars,
         ));
       }
     }
+    ret.sort((a, b) => a.currency.name.compareTo(b.currency.name));
     return ret;
   }
 }

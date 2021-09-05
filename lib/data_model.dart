@@ -32,8 +32,8 @@ class Currency {
     required this.callLetters,
   });
 
-  static Currency byLetters(String callLetters) => supportedCurrencies
-      .firstWhere((element) => element.callLetters == callLetters);
+  static Currency byLetters(String callLetters) =>
+      supportedCurrencies[callLetters]!;
 
   final String name;
   final String callLetters;
@@ -61,14 +61,14 @@ const dollars = Currency(name: 'US Dollars', callLetters: 'USD');
 const ethereum = Currency(name: 'Ethereum', callLetters: 'ETH');
 const lightcoin = Currency(name: 'Lightcoin', callLetters: 'LTC');
 
-const supportedCurrencies = [
-  bitcoin,
-  bitcoinCash,
-  cardano,
-  dollars,
-  ethereum,
-  lightcoin,
-];
+List<Currency> get currencies => [
+      bitcoin,
+      bitcoinCash,
+      cardano,
+      dollars,
+      ethereum,
+      lightcoin,
+    ]..sort((a, b) => a.name.compareTo(b.name));
 
-bool isSupportedCallLetters(String callLetters) =>
-    supportedCurrencies.any((c) => c.callLetters == callLetters);
+Map<String, Currency> get supportedCurrencies =>
+    currencies.asMap().map((k, v) => MapEntry(v.callLetters, v));
