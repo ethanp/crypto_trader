@@ -10,26 +10,26 @@ class Portfolio extends StatelessWidget {
     return FutureBuilder<List<Holding>>(
       future: context.watch<Trader>().getMyHoldings(),
       builder: (BuildContext ctx, AsyncSnapshot<List<Holding>> snapshot) {
+        if (!snapshot.hasData) return Text('Loading');
         return Column(children: [
           _title(),
-          Flexible(child: _table(snapshot.data)),
-          _portfolioTotal(snapshot.data),
+          Flexible(child: _table(snapshot.data!)),
+          _portfolioTotal(snapshot.data!),
         ]);
       },
     );
   }
 
-  Widget _table(List<Holding>? snapshot) {
-    if (snapshot == null) return Container();
+  Widget _table(List<Holding> snapshot) {
     return DataTable(
       columns: ['Color', 'Name', 'Value', 'Percentage']
           .map((colName) => DataColumn(label: Text(colName)))
           .toList(),
       rows: snapshot.map((holding) {
-        final double total = _totalValue(snapshot)!.amt;
+        final double total = _totalValue(snapshot).amt;
         final int percentage = (holding.dollarValue.amt / total * 100).round();
         return DataRow(cells: [
-          DataCell(_colorRef(holding.currency)),
+          DataCell(_colorCircle(holding.currency)),
           DataCell(Text(holding.currency.name)),
           DataCell(Text(holding.dollarValue.toString())),
           DataCell(Text('$percentage%')),
@@ -38,12 +38,12 @@ class Portfolio extends StatelessWidget {
     );
   }
 
-  Widget _colorRef(Currency currency) {
+  Widget _colorCircle(Currency currency) {
     return Container(
       height: 10,
       width: 10,
       decoration: BoxDecoration(
-        color: supportedCurrencies[currency.callLetters]?.chartColor,
+        color: supportedCurrencies[currency.callLetters]!.chartColor,
         shape: BoxShape.circle,
       ),
     );
@@ -51,11 +51,9 @@ class Portfolio extends StatelessWidget {
 
   Widget _title() => Text('Portfolio');
 
-  Widget _portfolioTotal(List<Holding>? snapshot) {
-    final String? total = _totalValue(snapshot).toString();
-    return Text('Total: ' + (total ?? "Loading"));
-  }
+  Widget _portfolioTotal(List<Holding> snapshot) =>
+      Text('Total: ${_totalValue(snapshot)}');
 
-  Dollars? _totalValue(List<Holding>? snapshot) =>
-      snapshot?.fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue.amt);
+  Dollars _totalValue(List<Holding> snapshot) =>
+      snapshot.fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue.amt);
 }
