@@ -20,23 +20,36 @@ class Portfolio extends StatelessWidget {
 
   Widget _table(List<Holding> snapshot) {
     return DataTable(
-      sortColumnIndex: 2,
-      sortAscending: true,
-      columns: ['Color', 'Name', 'Value', 'Percentage', 'Allocation']
+      // TODO this is not working.
+      sortColumnIndex: 5,
+      sortAscending: false,
+      columns: ['Color', 'Name', 'Value', 'Percentage', 'Allocation', 'Error']
           .map((colName) => DataColumn(label: Text(colName)))
           .toList(),
       rows: snapshot.map((holding) {
         final double total = _totalValue(snapshot).amt;
         final int percentage = (holding.dollarValue.amt / total * 100).round();
-        return DataRow(cells: [
-          DataCell(_colorCircle(holding.currency)),
-          DataCell(Text(holding.currency.name)),
-          DataCell(Text(holding.dollarValue.toString())),
-          DataCell(Text('$percentage%')),
-          DataCell(Text('${holding.currency.pctAllocation}%')),
-        ]);
+        return DataRow(
+          cells: [
+            _colorCircle(holding.currency),
+            Text(holding.currency.name),
+            Text(holding.dollarValue.toString()),
+            Text('$percentage%'),
+            Text('${holding.currency.pctAllocation}%'),
+            _difference(holding, percentage),
+          ].map((w) => DataCell(w)).toList(),
+        );
       }).toList(),
     );
+  }
+
+  Widget _difference(Holding holding, int percentage) {
+    final difference = percentage - holding.currency.pctAllocation;
+    final color = difference >= 0 ? Colors.red : Colors.green;
+    final diffTxt = difference > 0
+        ? '$difference% too much'
+        : '${difference.abs()}% too little';
+    return Text('$diffTxt', style: TextStyle(color: color));
   }
 
   Widget _colorCircle(Currency currency) {

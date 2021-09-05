@@ -8,7 +8,17 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Crypto: DCA with passive rebalancing')),
-      body: Portfolio(),
+      body: Column(
+        children: [
+          Flexible(child: Portfolio()),
+          // TODO Implement: Trade dollars for cypto.
+          Container(
+            height: 100,
+            color: Colors.blue[100],
+            child: Text('TODO(implement): Trade dollars for crypto'),
+          )
+        ],
+      ),
       floatingActionButton: _buyEthButton(),
     );
   }
