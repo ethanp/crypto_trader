@@ -7,7 +7,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Invest in crypto')),
+      appBar: AppBar(title: Text('Crypto: DCA with passive rebalancing')),
       body: Portfolio(),
       floatingActionButton: _buyEthButton(),
     );
