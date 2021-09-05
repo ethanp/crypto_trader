@@ -17,6 +17,21 @@ class CoinbaseApi {
   late final String _endpoint =
       useSandbox ? sandboxEndpoint : productionEndpoint;
 
+  /// https://docs.pro.coinbase.com/?php#place-a-new-order
+  Future<String> order() async {
+    final Map<String, String> body = {
+      "size": "0.01",
+      "price": "0.100",
+      "side": "buy",
+      "product_id": "BTC-USD"
+    };
+    final String path = '/orders';
+    final url = Uri.https(_endpoint, path);
+    final headers = await _privateHeaders(method: 'GET', path: path);
+    final res = await http.post(url, headers: headers, body: body);
+    return res.body;
+  }
+
   Future<String> get({
     required String path,
     bool private = false,
