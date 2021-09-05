@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Dollars {
@@ -31,6 +32,7 @@ class Currency {
   const Currency({
     required this.name,
     required this.callLetters,
+    required this.chartColor,
   });
 
   static Currency byLetters(String callLetters) =>
@@ -38,6 +40,7 @@ class Currency {
 
   final String name;
   final String callLetters;
+  final Color chartColor;
 
   @override
   bool operator ==(Object other) =>
@@ -55,12 +58,36 @@ class Currency {
   }
 }
 
-const bitcoin = Currency(name: 'Bitcoin', callLetters: 'BTC');
-const bitcoinCash = Currency(name: 'Bitcoin Cash', callLetters: 'BCH');
-const cardano = Currency(name: 'Cardano', callLetters: 'ADA');
-const dollars = Currency(name: 'US Dollars', callLetters: 'USD');
-const ethereum = Currency(name: 'Ethereum', callLetters: 'ETH');
-const lightcoin = Currency(name: 'Lightcoin', callLetters: 'LTC');
+const bitcoin = Currency(
+  name: 'Bitcoin',
+  callLetters: 'BTC',
+  chartColor: Colors.blue,
+);
+const bitcoinCash = Currency(
+  name: 'Bitcoin Cash',
+  callLetters: 'BCH',
+  chartColor: Colors.red,
+);
+const cardano = Currency(
+  name: 'Cardano',
+  callLetters: 'ADA',
+  chartColor: Colors.green,
+);
+const dollars = Currency(
+  name: 'US Dollars',
+  callLetters: 'USD',
+  chartColor: Colors.purple,
+);
+const ethereum = Currency(
+  name: 'Ethereum',
+  callLetters: 'ETH',
+  chartColor: Colors.orange,
+);
+const lightcoin = Currency(
+  name: 'Lightcoin',
+  callLetters: 'LTC',
+  chartColor: Colors.yellow,
+);
 
 List<Currency> get currencies => [
       bitcoin,
