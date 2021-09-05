@@ -21,8 +21,9 @@ class FakeTrader extends Trader {
   void buy(Holding holding) => throw UnimplementedError();
 
   @override
-  Future<List<Holding>> getMyHoldings() =>
-      Future.value([Holding(currency: bitcoin, dollarValue: Dollars(29))]);
+  Future<List<Holding>> getMyHoldings() => Future.value(currencies
+      .map((c) => Holding(currency: c, dollarValue: Dollars(3)))
+      .toList());
 }
 
 class CoinbaseProTrader extends Trader {
