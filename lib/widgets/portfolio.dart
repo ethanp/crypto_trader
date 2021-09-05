@@ -7,18 +7,18 @@ import 'package:provider/provider.dart';
 class Portfolio extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
-      child: FutureBuilder<List<Holding>>(
+      child: FutureBuilder<Holdings>(
           future: context.watch<Trader>().getMyHoldings(),
-          builder: (BuildContext ctx, AsyncSnapshot<List<Holding>> snapshot) =>
-              !snapshot.hasData
+          builder: (BuildContext ctx, AsyncSnapshot<Holdings> holdings) =>
+              !holdings.hasData
                   ? Text('Loading')
                   : Column(children: [
                       SizedBox(height: 30),
-                      Flexible(child: _table(snapshot.data!)),
-                      _portfolioTotal(snapshot.data!),
+                      Flexible(child: _table(holdings.data!)),
+                      _portfolioTotal(holdings.data!),
                     ])));
 
-  Widget _table(List<Holding> snapshot) {
+  Widget _table(Holdings holdings) {
     return DataTable(
       // TODO this is not working.
       sortColumnIndex: 5,
@@ -26,8 +26,8 @@ class Portfolio extends StatelessWidget {
       columns: ['Color', 'Name', 'Value', 'Percentage', 'Allocation', 'Error']
           .map((colName) => DataColumn(label: Text(colName)))
           .toList(),
-      rows: snapshot.map((holding) {
-        final double total = _totalValue(snapshot).amt;
+      rows: holdings.holdings.map((holding) {
+        final double total = holdings.totalValue.amt;
         final int percentage = (holding.dollarValue.amt / total * 100).round();
         return DataRow(
           cells: [
@@ -63,9 +63,6 @@ class Portfolio extends StatelessWidget {
     );
   }
 
-  Widget _portfolioTotal(List<Holding> snapshot) =>
-      Text('Total: ${_totalValue(snapshot)}');
-
-  Dollars _totalValue(List<Holding> snapshot) =>
-      snapshot.fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue.amt);
+  Widget _portfolioTotal(Holdings holdings) =>
+      Text('Total: ${holdings.totalValue}');
 }

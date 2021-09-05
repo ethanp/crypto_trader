@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:crypto_trader/data/access/coinbase_api.dart';
 import 'package:crypto_trader/data_model.dart';
@@ -8,9 +7,15 @@ import 'package:flutter/material.dart';
 /// Watch out for https://flutter.dev/desktop#setting-up-entitlements
 
 abstract class Trader extends ChangeNotifier {
+  @protected
   void buy(Holding holding);
 
-  Future<List<Holding>> getMyHoldings();
+  Future<void> spend(Dollars dollars) async {
+    // final h = await getMyHoldings();
+    // h.sort((a, b) => a.)
+  }
+
+  Future<Holdings> getMyHoldings();
 
   static Trader coinbasePro() => CoinbaseProTrader();
 
@@ -18,23 +23,16 @@ abstract class Trader extends ChangeNotifier {
 }
 
 class FakeTrader extends Trader {
+  Holdings? holdings;
+
+  @override
+  Future<Holdings> getMyHoldings() {
+    if (holdings == null) holdings = Holdings.randomized();
+    return Future.value(holdings);
+  }
+
   @override
   void buy(Holding holding) => throw UnimplementedError();
-
-  @override
-  Future<List<Holding>> getMyHoldings() => Future.value(
-        currencies
-            .map(
-              (c) => Holding(
-                currency: c,
-                dollarValue: _randomDollars(max: 20),
-              ),
-            )
-            .toList(),
-      );
-
-  Dollars _randomDollars({required int max}) =>
-      Dollars((Random().nextDouble() * max * 100).round() / 100.0);
 }
 
 class CoinbaseProTrader extends Trader {
@@ -43,7 +41,7 @@ class CoinbaseProTrader extends Trader {
 
   /// Calls https://docs.pro.coinbase.com/?ruby#list-accounts
   @override
-  Future<List<Holding>> getMyHoldings() async {
+  Future<Holdings> getMyHoldings() async {
     final String holdingsResponse =
         await CoinbaseApi().get(path: '/accounts', private: true);
     final List<dynamic> accountListRaw = jsonDecode(holdingsResponse);
@@ -63,7 +61,7 @@ class CoinbaseProTrader extends Trader {
       }
     }
     ret.sort((a, b) => a.currency.name.compareTo(b.currency.name));
-    return ret;
+    return Holdings(ret);
   }
 }
 

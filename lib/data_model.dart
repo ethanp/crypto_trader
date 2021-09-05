@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -27,6 +29,29 @@ class Holding {
   String toString() {
     return 'Holding{currency: $currency, dollarValue: $dollarValue}';
   }
+}
+
+class Holdings {
+  Holdings(this.holdings);
+
+  final List<Holding> holdings;
+
+  get totalValue =>
+      holdings.fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue.amt);
+
+  static Holdings randomized() => Holdings(
+        currencies
+            .map(
+              (currency) => Holding(
+                currency: currency,
+                dollarValue: _randomDollars(max: 20),
+              ),
+            )
+            .toList(),
+      );
+
+  static Dollars _randomDollars({required int max}) =>
+      Dollars((Random().nextDouble() * max * 100).round() / 100.0);
 }
 
 class Currency {
