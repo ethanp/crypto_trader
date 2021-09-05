@@ -27,11 +27,14 @@ class FakeTrader extends Trader {
             .map(
               (c) => Holding(
                 currency: c,
-                dollarValue: Dollars(Random().nextDouble() * 20),
+                dollarValue: _randomDollars(max: 20),
               ),
             )
             .toList(),
       );
+
+  Dollars _randomDollars({required int max}) =>
+      Dollars((Random().nextDouble() * max * 100).round() / 100.0);
 }
 
 class CoinbaseProTrader extends Trader {

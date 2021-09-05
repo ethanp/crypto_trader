@@ -23,8 +23,11 @@ class Portfolio extends StatelessWidget {
     return Flexible(
       child: Column(children: [
         Flexible(
-            child: PieChart(
-                PieChartData(sections: [PieChartSectionData(value: 5)]))),
+          child: PieChart(PieChartData(
+              sections: snapshot
+                  ?.map((c) => PieChartSectionData(value: c.dollarValue.amt))
+                  .toList())),
+        ),
         Flexible(
           child: ListView.builder(
             itemBuilder: (ctx, idx) => _row(idx, snapshot),
