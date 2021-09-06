@@ -10,7 +10,7 @@ class CoinbaseApi {
   static final productionEndpoint = 'api.$coinbaseProAddress';
   static final sandboxEndpoint = 'api-public.sandbox.$coinbaseProAddress';
 
-  CoinbaseApi({this.useSandbox = false});
+  CoinbaseApi({this.useSandbox = true});
 
   final bool useSandbox;
 
@@ -18,11 +18,14 @@ class CoinbaseApi {
       useSandbox ? sandboxEndpoint : productionEndpoint;
 
   /// https://docs.pro.coinbase.com/?php#place-a-new-order
-  Future<String> order() async {
+  Future<String> limitOrder() async {
     final Map<String, String> body = {
+      // Amount in "base currency", which I think is USD in my case
       "size": "0.01",
+      // Price per crypto-coin
       "price": "0.100",
       "side": "buy",
+      // Buy BTC using USD
       "product_id": "BTC-USD"
     };
     final String path = '/orders';

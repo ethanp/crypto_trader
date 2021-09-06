@@ -10,15 +10,12 @@ abstract class Trader extends ChangeNotifier {
   @protected
   void buy(Holding holding);
 
-  Future<void> spend(Dollars dollars) async {
-    final Holdings holdings = await getMyHoldings();
-    final Holding holding = holdings.biggestShortfall;
-    final Holding purchase = Holding(
-      currency: holding.currency,
-      dollarValue: dollars,
-    );
-    buy(purchase);
-  }
+  Future<void> spend(Dollars dollars) async => buy(
+        Holding(
+          currency: (await getMyHoldings()).biggestShortfall.currency,
+          dollarValue: dollars,
+        ),
+      );
 
   Future<Holdings> getMyHoldings();
 
@@ -49,7 +46,10 @@ class FakeTrader extends Trader {
 
 class CoinbaseProTrader extends Trader {
   @override
-  void buy(Holding holding) => throw UnimplementedError();
+  void buy(Holding holding) {
+    CoinbaseApi().limitOrder();
+    throw UnimplementedError();
+  }
 
   /// Calls https://docs.pro.coinbase.com/?ruby#list-accounts
   @override

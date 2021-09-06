@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class Portfolio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    context.watch<Notifier>();
+    context.watch<Notifier>(); // Register for manual UI refreshes.
     return Center(
         child: FutureBuilder<Holdings>(
             future: Trader.api.getMyHoldings(),
@@ -18,14 +18,16 @@ class Portfolio extends StatelessWidget {
                     : Column(children: [
                         SizedBox(height: 30),
                         Flexible(child: _table(holdings.data!)),
-                        _portfolioTotal(holdings.data!),
+                        _portfolioTotal(
+                            holdings.data!, Theme.of(context).textTheme),
                       ])));
   }
 
   Widget _table(Holdings holdings) {
     return DataTable(
-      // TODO(low priority): this is not working.
+      // TODO(low priority): Sorting is by name, not by this index?
       sortColumnIndex: 5,
+      columnSpacing: 26,
       sortAscending: false,
       columns: ['Color', 'Name', 'Value', 'Percentage', 'Allocation', 'Error']
           .map((colName) => DataColumn(label: Text(colName)))
@@ -40,7 +42,7 @@ class Portfolio extends StatelessWidget {
             Text('${percentage.round()}%'),
             Text('${holding.currency.percentAllocation}%'),
             _difference(holding, holdings),
-          ].map((w) => DataCell(w)).toList(),
+          ].map((w) => DataCell(Center(child: w))).toList(),
         );
       }).toList(),
     );
@@ -65,6 +67,11 @@ class Portfolio extends StatelessWidget {
     );
   }
 
-  Widget _portfolioTotal(Holdings holdings) =>
-      Text('Total: ${holdings.totalValue}');
+  Widget _portfolioTotal(Holdings holdings, TextTheme textTheme) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Total: ', style: textTheme.headline4),
+          Text('${holdings.totalValue}', style: textTheme.headline3),
+        ],
+      );
 }
