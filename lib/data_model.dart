@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Dollars {
-  const Dollars(this.amt);
+  Dollars(this.amt);
 
-  final double amt;
+  double amt;
 
   @override
   String toString() => NumberFormat.simpleCurrency().format(amt);
@@ -38,6 +38,8 @@ class Holding {
   String toString() {
     return 'Holding{currency: $currency, dollarValue: $dollarValue}';
   }
+
+  String get asPurchaseStr => '$dollarValue of ${currency.name}';
 }
 
 class Holdings {
@@ -63,7 +65,10 @@ class Holdings {
       Dollars((Random().nextDouble() * max * 100).round() / 100.0);
 
   Holding get biggestShortfall => holdings
-      .reduce((a, b) => a.difference(this) > b.difference(this) ? a : b);
+      .reduce((a, b) => a.difference(this) < b.difference(this) ? a : b);
+
+  Holding of({required Currency currency}) =>
+      holdings.firstWhere((element) => element.currency == currency);
 }
 
 class Currency {

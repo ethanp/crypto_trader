@@ -11,9 +11,13 @@ abstract class Trader extends ChangeNotifier {
   void buy(Holding holding);
 
   Future<void> spend(Dollars dollars) async {
-    final hs = await getMyHoldings();
-    final h = hs.biggestShortfall;
-    print(h);
+    final Holdings holdings = await getMyHoldings();
+    final Holding holding = holdings.biggestShortfall;
+    final Holding purchase = Holding(
+      currency: holding.currency,
+      dollarValue: dollars,
+    );
+    buy(purchase);
   }
 
   Future<Holdings> getMyHoldings();
@@ -22,7 +26,7 @@ abstract class Trader extends ChangeNotifier {
 }
 
 class FakeTrader extends Trader {
-  Holdings? holdings;
+  static Holdings? holdings;
 
   @override
   Future<Holdings> getMyHoldings() {
@@ -31,7 +35,16 @@ class FakeTrader extends Trader {
   }
 
   @override
-  void buy(Holding holding) => throw UnimplementedError();
+  Future<void> buy(Holding holding) async {
+    print('Buying ${holding.asPurchaseStr}');
+    final holdings = await getMyHoldings();
+    // Seems ok to violate dot-dot principle here since it's a fake :)
+    holdings.of(currency: holding.currency).dollarValue.amt +=
+        holding.dollarValue.amt;
+    holdings.of(currency: dollars).dollarValue.amt -= holding.dollarValue.amt;
+    // TODO I need to trigger screen refresh somehow at this point I think??
+    //   ...Yikes...
+  }
 }
 
 class CoinbaseProTrader extends Trader {
