@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 
 abstract class Trader extends ChangeNotifier {
   @protected
-  void buy(Holding holding);
+  Future<String> buy(Holding holding);
 
-  Future<void> spend(Dollars dollars) async => buy(
+  Future<String> spend(Dollars dollars) async => buy(
         Holding(
           currency: (await getMyHoldings()).biggestShortfall.currency,
           dollarValue: dollars,
@@ -30,7 +30,7 @@ class FakeTrader extends Trader {
   }
 
   @override
-  Future<void> buy(Holding holding) async {
+  Future<String> buy(Holding holding) async {
     print('Buying ${holding.asPurchaseStr}');
     final holdings = await getMyHoldings();
     // Seems ok to violate the "dot-dot principle" here since it's a fake :)
@@ -38,14 +38,18 @@ class FakeTrader extends Trader {
     final Dollars from = holdings.of(currency: dollars).dollarValue;
     to.amt += holding.dollarValue.amt;
     from.amt -= holding.dollarValue.amt;
+    return 'Succeeded';
   }
 }
 
 class CoinbaseProTrader extends Trader {
+  /// https://docs.pro.coinbase.com/?ruby#place-a-new-order
   @override
-  Future<String> buy(Holding holding) async =>
-      // TODO also parse the response, assuming there's useful info in there.
-      await CoinbaseApi().limitOrder(holding);
+  Future<String> buy(Holding holding) async {
+    final String orderResponse = await CoinbaseApi().limitOrder(holding);
+    final Map<String, dynamic> decoded = jsonDecode(orderResponse);
+    return decoded['id'];
+  }
 
   /// Calls https://docs.pro.coinbase.com/?ruby#list-accounts
   @override
