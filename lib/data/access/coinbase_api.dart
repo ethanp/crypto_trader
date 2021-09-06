@@ -3,6 +3,8 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:crypto_trader/data/access/config.dart';
+import 'package:crypto_trader/data/data_sources.dart';
+import 'package:crypto_trader/data_model.dart';
 import 'package:http/http.dart' as http;
 
 class CoinbaseApi {
@@ -18,15 +20,18 @@ class CoinbaseApi {
       useSandbox ? sandboxEndpoint : productionEndpoint;
 
   /// https://docs.pro.coinbase.com/?php#place-a-new-order
-  Future<String> limitOrder() async {
+  Future<String> limitOrder(Holding holding) async {
+    final Dollars price =
+        await CoinbaseProPrices().getCurrentPrice(of: holding.currency);
+    final amount = Prices.inOther(holding.currency, holding.dollarValue);
     final Map<String, String> body = {
-      // Amount in "base currency", which I think is USD in my case
-      "size": "0.01",
-      // Price per crypto-coin
-      "price": "0.100",
+      // Amount in "base currency", which is BTC in this case, eg. "0.01".
+      "size": "$amount",
+      // Price per crypto-coin (limit order), eg. "0.100".
+      "price": "${price.amt}",
       "side": "buy",
-      // Buy BTC using USD
-      "product_id": "BTC-USD"
+      // Buy `currency` using USD
+      "product_id": "${holding.currency.callLetters}-USD"
     };
     final String path = '/orders';
     final url = Uri.https(_endpoint, path);

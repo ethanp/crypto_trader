@@ -4,8 +4,6 @@ import 'package:crypto_trader/data/access/coinbase_api.dart';
 import 'package:crypto_trader/data_model.dart';
 import 'package:flutter/material.dart';
 
-/// Watch out for https://flutter.dev/desktop#setting-up-entitlements
-
 abstract class Trader extends ChangeNotifier {
   @protected
   void buy(Holding holding);
@@ -35,21 +33,19 @@ class FakeTrader extends Trader {
   Future<void> buy(Holding holding) async {
     print('Buying ${holding.asPurchaseStr}');
     final holdings = await getMyHoldings();
-    // Seems ok to violate dot-dot principle here since it's a fake :)
-    holdings.of(currency: holding.currency).dollarValue.amt +=
-        holding.dollarValue.amt;
-    holdings.of(currency: dollars).dollarValue.amt -= holding.dollarValue.amt;
-    // TODO I need to trigger screen refresh somehow at this point I think??
-    //   ...Yikes...
+    // Seems ok to violate the "dot-dot principle" here since it's a fake :)
+    final Dollars to = holdings.of(currency: holding.currency).dollarValue;
+    final Dollars from = holdings.of(currency: dollars).dollarValue;
+    to.amt += holding.dollarValue.amt;
+    from.amt -= holding.dollarValue.amt;
   }
 }
 
 class CoinbaseProTrader extends Trader {
   @override
-  void buy(Holding holding) {
-    CoinbaseApi().limitOrder();
-    throw UnimplementedError();
-  }
+  Future<String> buy(Holding holding) async =>
+      // TODO also parse the response, assuming there's useful info in there.
+      await CoinbaseApi().limitOrder(holding);
 
   /// Calls https://docs.pro.coinbase.com/?ruby#list-accounts
   @override
@@ -88,17 +84,24 @@ class CoinbaseAccount {
 }
 
 abstract class Prices extends ChangeNotifier {
-  Future<Dollars> inDollars(Currency currency, double amount) async {
-    final Dollars priceInDollars =
-        await Prices.api.getCurrentPrice(of: currency);
-    return priceInDollars * amount;
-  }
-
   @protected
   Future<Dollars> getCurrentPrice({
     required Currency of,
     Currency units = dollars,
   });
+
+  static Future<Dollars> inDollars(Currency currency, double amount) async {
+    final Dollars priceInDollars =
+        await Prices.api.getCurrentPrice(of: currency);
+    return priceInDollars * amount;
+  }
+
+  // TODO(wrong): Wrote this without thinking about it; must be wrong.
+  static Future<Holding> inOther(Currency currency, Dollars dollars) async {
+    final Dollars priceInDollars =
+        await Prices.api.getCurrentPrice(of: currency);
+    return priceInDollars / dollars.amt;
+  }
 
   static Prices get api => FakePrices();
 }

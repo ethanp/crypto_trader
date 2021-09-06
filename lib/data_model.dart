@@ -14,6 +14,8 @@ class Dollars {
   operator +(double o) => Dollars(amt + o);
 
   operator *(double o) => Dollars(amt * o);
+
+  operator /(double o) => Dollars(amt / o);
 }
 
 class Holding {
