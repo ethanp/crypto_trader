@@ -5,6 +5,26 @@ import 'package:crypto_trader/data_model.dart';
 import 'package:flutter/material.dart';
 
 abstract class Trader extends ChangeNotifier {
+  // TODO(low priority): Cache expiration.
+  Holdings? _holdingsCache;
+
+  Future<Holdings> getMyHoldings() async {
+    if (_holdingsCache == null) {
+      // Note that even though we're attempting to cache the result of this
+      // call, bc we call it twice before it has a chance to return, it will
+      // try to load the data twice. This could be fixed with "real"
+      // synchronization.
+      print('Loading holdings');
+      _holdingsCache = await holdingsInternal();
+    } else {
+      print('Using cached holdings');
+    }
+    return Future.value(_holdingsCache);
+  }
+
+  @protected
+  Future<Holdings> holdingsInternal();
+
   @protected
   Future<String> buy(Holding holding);
 
@@ -15,19 +35,12 @@ abstract class Trader extends ChangeNotifier {
         ),
       );
 
-  Future<Holdings> getMyHoldings();
-
-  static Trader get api => FakeTrader();
+  static Trader api = FakeTrader();
 }
 
 class FakeTrader extends Trader {
-  static Holdings? holdings;
-
   @override
-  Future<Holdings> getMyHoldings() {
-    if (holdings == null) holdings = Holdings.randomized();
-    return Future.value(holdings);
-  }
+  Future<Holdings> holdingsInternal() => Future.value(Holdings.randomized());
 
   @override
   Future<String> buy(Holding holding) async {
@@ -53,7 +66,7 @@ class CoinbaseProTrader extends Trader {
 
   /// Calls https://docs.pro.coinbase.com/?ruby#list-accounts
   @override
-  Future<Holdings> getMyHoldings() async {
+  Future<Holdings> holdingsInternal() async {
     final String holdingsResponse =
         await CoinbaseApi().get(path: '/accounts', private: true);
     final List<dynamic> accountListRaw = jsonDecode(holdingsResponse);
@@ -107,7 +120,7 @@ abstract class Prices extends ChangeNotifier {
     return priceInDollars / dollars.amt;
   }
 
-  static Prices get api => FakePrices();
+  static Prices api = FakePrices();
 }
 
 class FakePrices extends Prices {
