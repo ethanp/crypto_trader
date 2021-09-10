@@ -3,22 +3,25 @@ import 'dart:convert';
 import 'package:crypto_trader/data/access/coinbase_api.dart';
 import 'package:crypto_trader/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:synchronized/synchronized.dart';
 
 abstract class Trader extends ChangeNotifier {
   // TODO(low priority): Cache expiration.
   Holdings? _holdingsCache;
 
+  final _synchronizer = new Lock(reentrant: true);
+
   Future<Holdings> getMyHoldings() async {
-    if (_holdingsCache == null) {
-      // Note that even though we're attempting to cache the result of this
-      // call, bc we call it twice before it has a chance to return, it will
-      // try to load the data twice. This could be fixed with "real"
-      // synchronization.
-      print('Loading holdings');
-      _holdingsCache = await holdingsInternal();
-    } else {
-      print('Using cached holdings');
-    }
+    _synchronizer.synchronized(() async {
+      if (_holdingsCache == null) {
+        // Note that even though we're attempting to cache the result of this
+        // call, bc we call it twice before it has a chance to return, it will
+        // try to load the data twice. This could be fixed with "real"
+        // synchronization.
+        print('Loading holdings');
+        _holdingsCache = await holdingsInternal();
+      }
+    });
     return Future.value(_holdingsCache);
   }
 
@@ -28,14 +31,20 @@ abstract class Trader extends ChangeNotifier {
   @protected
   Future<String> buy(Holding holding);
 
-  Future<String> spend(Dollars dollars) async => buy(
-        Holding(
-          currency: (await getMyHoldings()).biggestShortfall.currency,
-          dollarValue: dollars,
+  Future<String> spend(Dollars dollars) async => _synchronizer.synchronized(
+        () async => buy(
+          Holding(
+            currency: (await getMyHoldings()).biggestShortfall.currency,
+            dollarValue: dollars,
+          ),
         ),
       );
 
   static Trader api = FakeTrader();
+
+  void _invalidateHoldings() => _synchronizer.synchronized(() {
+        _holdingsCache = null;
+      });
 }
 
 class FakeTrader extends Trader {
@@ -59,6 +68,7 @@ class CoinbaseProTrader extends Trader {
   /// https://docs.pro.coinbase.com/?ruby#place-a-new-order
   @override
   Future<String> buy(Holding holding) async {
+    _invalidateHoldings();
     final String orderResponse = await CoinbaseApi().limitOrder(holding);
     final Map<String, dynamic> decoded = jsonDecode(orderResponse);
     return decoded['id'];
