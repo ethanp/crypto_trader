@@ -5,5 +5,5 @@ import 'package:provider/provider.dart';
 import 'helpers.dart';
 
 void main() => runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => Notifier())],
+    providers: [ChangeNotifierProvider(create: (_) => UiRefresher())],
     child: MyApp()));

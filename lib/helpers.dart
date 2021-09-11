@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Notifier extends ChangeNotifier {
-  void triggerUiRebuild() => notifyListeners();
+class UiRefresher extends ChangeNotifier {
+  void refreshUi() => notifyListeners();
 
-  static void registerForManualUiRefreshes(BuildContext context) =>
-      context.watch<Notifier>();
+  static void register(BuildContext context) => context.watch<UiRefresher>();
 }

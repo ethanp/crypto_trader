@@ -10,7 +10,7 @@ import 'total_holdings.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Notifier.registerForManualUiRefreshes(context);
+    UiRefresher.register(context);
     return Scaffold(
       appBar: AppBar(title: Text('Crypto: DCA with passive rebalancing')),
       body: Column(children: [
