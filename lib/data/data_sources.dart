@@ -24,6 +24,9 @@ abstract class Trader extends ChangeNotifier {
   @protected
   Future<String> buy(Holding holding);
 
+  @protected
+  Future<String> depositInternal(Dollars dollars);
+
   Future<String> spend(Dollars dollars) async =>
       _synchronizer.synchronized(() async {
         return buy(
@@ -35,10 +38,7 @@ abstract class Trader extends ChangeNotifier {
       });
 
   Future<String> deposit(Dollars dollars) async =>
-      _synchronizer.synchronized(() async {
-        print('TODO implement deposit');
-        return '';
-      });
+      _synchronizer.synchronized(() async => depositInternal(dollars));
 
   void _invalidateHoldings() =>
       _synchronizer.synchronized(() => _holdingsCache = null);
@@ -52,13 +52,21 @@ class FakeTrader extends Trader {
 
   @override
   Future<String> buy(Holding holding) async {
-    print('Buying ${holding.asPurchaseStr}');
+    print('Fake-buying ${holding.asPurchaseStr}');
     final holdings = await getMyHoldings();
     // Seems ok to violate the "dot-dot principle" here since it's a fake :)
     final Dollars to = holdings.of(currency: holding.currency).dollarValue;
     final Dollars from = holdings.of(currency: dollars).dollarValue;
     to.amt += holding.dollarValue.amt;
     from.amt -= holding.dollarValue.amt;
+    return 'Succeeded';
+  }
+
+  @override
+  Future<String> depositInternal(Dollars deposit) async {
+    print('Fake-transferring $deposit from Schwab');
+    final holdings = await getMyHoldings();
+    holdings.of(currency: dollars).dollarValue.amt += deposit.amt;
     return 'Succeeded';
   }
 }
@@ -87,6 +95,12 @@ class CoinbaseProTrader extends Trader {
           .map((raw) => CoinbaseAccount(raw))
           .where((acct) => acct.isSupported)
           .map((acct) => acct.asHolding)));
+
+  @override
+  Future<String> depositInternal(Dollars dollars) {
+    // TODO: implement depositInternal
+    throw UnimplementedError();
+  }
 }
 
 class CoinbaseAccount {

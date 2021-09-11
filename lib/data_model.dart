@@ -145,7 +145,9 @@ List<Currency> get portfolioCurrencies => [
       dollars,
       ethereum,
       lightcoin,
-    ]..sort((a, b) => a.name.compareTo(b.name));
+    ]..sort(_alphabeticalByName);
 
 Map<String, Currency> get portfolioCurrenciesMap =>
     portfolioCurrencies.asMap().map((k, v) => MapEntry(v.callLetters, v));
+
+int _alphabeticalByName(Currency a, Currency b) => a.name.compareTo(b.name);
