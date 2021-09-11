@@ -8,17 +8,33 @@ class Portfolio extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: FutureBuilder<Holdings>(
-            future: Trader.api.getMyHoldings(),
-            builder: (BuildContext ctx, AsyncSnapshot<Holdings> holdings) =>
-                !holdings.hasData
-                    ? Text('Loading')
-                    : Column(children: [
-                        SizedBox(height: 30),
-                        Flexible(child: _table(holdings.data!)),
-                      ])));
+      future: Trader.api.getMyHoldings(),
+      builder: (ctx, holdings) =>
+          !holdings.hasData ? Text('Loading') : _table(holdings.data!),
+    ));
   }
 
   Widget _table(Holdings holdings) {
+    return Column(
+      children: [
+        SizedBox(height: 30),
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.brown, width: 5),
+                borderRadius: BorderRadius.all(Radius.circular(3)),
+              ),
+              child: _dataTable(holdings),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  DataTable _dataTable(Holdings holdings) {
     return DataTable(
       // TODO(low priority): Sorting is by name, not by this index?
       sortColumnIndex: 5,
