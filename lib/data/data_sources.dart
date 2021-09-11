@@ -123,7 +123,6 @@ class CoinbaseAccount {
 }
 
 abstract class Prices extends ChangeNotifier {
-  @protected
   Future<Dollars> currentPrice({
     required Currency of,
     Currency units = dollars,
@@ -132,12 +131,6 @@ abstract class Prices extends ChangeNotifier {
   static Future<Dollars> inDollars(Currency currency, double amount) async {
     final Dollars priceInDollars = await Prices.api.currentPrice(of: currency);
     return priceInDollars * amount;
-  }
-
-  // TODO(wrong): Wrote this without thinking about it; must be wrong.
-  static Future<Holding> inOther(Currency currency, Dollars dollars) async {
-    final Dollars priceInDollars = await Prices.api.currentPrice(of: currency);
-    return priceInDollars / dollars.amt;
   }
 
   static Prices api = FakePrices();

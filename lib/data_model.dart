@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:crypto_trader/data/data_sources.dart';
 import 'package:intl/intl.dart';
 
 class Dollars {
@@ -18,6 +19,10 @@ class Dollars {
   operator *(double o) => Dollars(amt * o);
 
   operator /(double o) => Dollars(amt / o);
+
+  // TODO: I never thought through whether this one is correct.
+  Future<double> translateTo(Currency currency) async =>
+      await Prices.api.currentPrice(of: currency) / amt;
 }
 
 class Holding {

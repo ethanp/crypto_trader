@@ -23,7 +23,7 @@ class CoinbaseApi {
   Future<String> limitOrder(Holding order) async {
     final Dollars price =
         await CoinbaseProPrices().currentPrice(of: order.currency);
-    final amount = Prices.inOther(order.currency, order.dollarValue);
+    final amount = order.dollarValue.translateTo(order.currency);
     final Map<String, String> body = {
       // Amount in "base currency", which is BTC in this case, eg. "0.01".
       "size": "$amount",
