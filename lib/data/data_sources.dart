@@ -13,14 +13,7 @@ abstract class Trader extends ChangeNotifier {
 
   Future<Holdings> getMyHoldings() async {
     _synchronizer.synchronized(() async {
-      if (_holdingsCache == null) {
-        // Note that even though we're attempting to cache the result of this
-        // call, bc we call it twice before it has a chance to return, it will
-        // try to load the data twice. This could be fixed with "real"
-        // synchronization.
-        print('Loading holdings');
-        _holdingsCache = await holdingsInternal();
-      }
+      _holdingsCache ??= await holdingsInternal();
     });
     return Future.value(_holdingsCache);
   }
@@ -31,20 +24,26 @@ abstract class Trader extends ChangeNotifier {
   @protected
   Future<String> buy(Holding holding);
 
-  Future<String> spend(Dollars dollars) async => _synchronizer.synchronized(
-        () async => buy(
+  Future<String> spend(Dollars dollars) async =>
+      _synchronizer.synchronized(() async {
+        return buy(
           Holding(
-            currency: (await getMyHoldings()).biggestShortfall.currency,
+            currency: (await getMyHoldings()).shortest.currency,
             dollarValue: dollars,
           ),
-        ),
-      );
+        );
+      });
+
+  Future<String> deposit(Dollars dollars) async =>
+      _synchronizer.synchronized(() async {
+        print('TODO implement deposit');
+        return '';
+      });
+
+  void _invalidateHoldings() =>
+      _synchronizer.synchronized(() => _holdingsCache = null);
 
   static Trader api = FakeTrader();
-
-  void _invalidateHoldings() => _synchronizer.synchronized(() {
-        _holdingsCache = null;
-      });
 }
 
 class FakeTrader extends Trader {

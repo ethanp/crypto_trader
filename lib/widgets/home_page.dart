@@ -3,7 +3,7 @@ import 'package:crypto_trader/data_model.dart';
 import 'package:crypto_trader/widgets/portfolio.dart';
 import 'package:flutter/material.dart';
 
-import 'spend_button.dart';
+import 'spend_buttons.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(title: Text('Crypto: DCA with passive rebalancing')),
       body: Column(children: [
         Flexible(child: Portfolio()),
-        SpendButton(),
+        SpendButtons(),
         SizedBox(height: 50),
       ]),
       floatingActionButton: _buyEthButton(),

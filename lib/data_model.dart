@@ -45,7 +45,7 @@ class Holding {
 }
 
 class Holdings {
-  Holdings(this.holdings);
+  const Holdings(this.holdings);
 
   final List<Holding> holdings;
 
@@ -66,7 +66,9 @@ class Holdings {
   static Dollars _randomDollars({required int max}) =>
       Dollars((Random().nextDouble() * max * 100).round() / 100.0);
 
-  Holding get biggestShortfall => holdings
+  /// The [Holding] with the largest shortfall in percentage of portfolio
+  /// compared to what was allocated.
+  Holding get shortest => holdings
       .reduce((a, b) => a.difference(this) < b.difference(this) ? a : b);
 
   Holding of({required Currency currency}) =>
