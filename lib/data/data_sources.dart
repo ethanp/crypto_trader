@@ -48,7 +48,7 @@ abstract class Trader extends ChangeNotifier {
 
 class FakeTrader extends Trader {
   @override
-  Future<Holdings> holdingsInternal() => Future.value(Holdings.randomized());
+  Future<Holdings> holdingsInternal() => Future.value(Holdings.random());
 
   @override
   Future<String> buy(Holding holding) async {
@@ -66,9 +66,9 @@ class FakeTrader extends Trader {
 class CoinbaseProTrader extends Trader {
   /// https://docs.pro.coinbase.com/?ruby#place-a-new-order
   @override
-  Future<String> buy(Holding holding) async {
+  Future<String> buy(Holding order) async {
     _invalidateHoldings();
-    final String orderResponse = await CoinbaseApi().limitOrder(holding);
+    final String orderResponse = await CoinbaseApi().limitOrder(order);
     final Map<String, dynamic> decoded = jsonDecode(orderResponse);
     return decoded['id'];
   }
@@ -94,12 +94,11 @@ class CoinbaseAccount {
 
   final dynamic acct;
 
-  bool get isSupported => supportedCurrencies.containsKey(_callLetters);
+  bool get isSupported => portfolioCurrenciesMap.containsKey(_callLetters);
 
   Future<Holding> get asHolding async {
     final Currency currency = Currency.byLetters(_callLetters);
-    final Dollars priceInDollars =
-        await Prices.api.getCurrentPrice(of: currency);
+    final Dollars priceInDollars = await Prices.api.currentPrice(of: currency);
     return Holding(
         currency: currency, dollarValue: priceInDollars * _balanceInCurrency);
   }
@@ -111,21 +110,19 @@ class CoinbaseAccount {
 
 abstract class Prices extends ChangeNotifier {
   @protected
-  Future<Dollars> getCurrentPrice({
+  Future<Dollars> currentPrice({
     required Currency of,
     Currency units = dollars,
   });
 
   static Future<Dollars> inDollars(Currency currency, double amount) async {
-    final Dollars priceInDollars =
-        await Prices.api.getCurrentPrice(of: currency);
+    final Dollars priceInDollars = await Prices.api.currentPrice(of: currency);
     return priceInDollars * amount;
   }
 
   // TODO(wrong): Wrote this without thinking about it; must be wrong.
   static Future<Holding> inOther(Currency currency, Dollars dollars) async {
-    final Dollars priceInDollars =
-        await Prices.api.getCurrentPrice(of: currency);
+    final Dollars priceInDollars = await Prices.api.currentPrice(of: currency);
     return priceInDollars / dollars.amt;
   }
 
@@ -134,7 +131,7 @@ abstract class Prices extends ChangeNotifier {
 
 class FakePrices extends Prices {
   @override
-  Future<Dollars> getCurrentPrice({
+  Future<Dollars> currentPrice({
     required Currency of,
     Currency units = dollars,
   }) =>
@@ -143,7 +140,7 @@ class FakePrices extends Prices {
 
 class CoinbaseProPrices extends Prices {
   @override
-  Future<Dollars> getCurrentPrice({
+  Future<Dollars> currentPrice({
     required Currency of,
     Currency units = dollars,
   }) async {

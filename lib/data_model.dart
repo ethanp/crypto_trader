@@ -8,6 +8,9 @@ class Dollars {
 
   double amt;
 
+  factory Dollars.random({required int max}) =>
+      Dollars((Random().nextDouble() * max * 100).round() / 100.0);
+
   @override
   String toString() => NumberFormat.simpleCurrency().format(amt);
 
@@ -28,7 +31,7 @@ class Holding {
   final Dollars dollarValue;
 
   double asPercentageOf(Holdings holdings) {
-    final double total = holdings.totalValue.amt;
+    final double total = holdings.totalCryptoValue.amt;
     final double ratio = dollarValue.amt / total;
     return ratio * 100;
   }
@@ -49,22 +52,13 @@ class Holdings {
 
   final List<Holding> holdings;
 
-  get totalValue =>
-      holdings.fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue.amt);
+  Dollars get totalCryptoValue => holdings
+      .where((holding) => holding.currency != dollars)
+      .fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue.amt);
 
-  static Holdings randomized() => Holdings(
-        currencies
-            .map(
-              (currency) => Holding(
-                currency: currency,
-                dollarValue: _randomDollars(max: 20),
-              ),
-            )
-            .toList(),
-      );
-
-  static Dollars _randomDollars({required int max}) =>
-      Dollars((Random().nextDouble() * max * 100).round() / 100.0);
+  static Holdings random() => Holdings(portfolioCurrencies
+      .map((c) => Holding(currency: c, dollarValue: Dollars.random(max: 20)))
+      .toList());
 
   /// The [Holding] with the largest shortfall in percentage of portfolio
   /// compared to what was allocated.
@@ -89,7 +83,7 @@ class Currency {
   final int percentAllocation;
 
   static Currency byLetters(String callLetters) =>
-      supportedCurrencies[callLetters]!;
+      portfolioCurrenciesMap[callLetters]!;
 
   @override
   bool operator ==(Object other) =>
@@ -144,7 +138,7 @@ const lightcoin = Currency(
   percentAllocation: 10,
 );
 
-List<Currency> get currencies => [
+List<Currency> get portfolioCurrencies => [
       bitcoin,
       bitcoinCash,
       cardano,
@@ -153,5 +147,5 @@ List<Currency> get currencies => [
       lightcoin,
     ]..sort((a, b) => a.name.compareTo(b.name));
 
-Map<String, Currency> get supportedCurrencies =>
-    currencies.asMap().map((k, v) => MapEntry(v.callLetters, v));
+Map<String, Currency> get portfolioCurrenciesMap =>
+    portfolioCurrencies.asMap().map((k, v) => MapEntry(v.callLetters, v));

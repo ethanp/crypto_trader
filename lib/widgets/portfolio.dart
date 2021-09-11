@@ -61,7 +61,7 @@ class Portfolio extends StatelessWidget {
       height: 10,
       width: 10,
       decoration: BoxDecoration(
-        color: supportedCurrencies[currency.callLetters]!.chartColor,
+        color: portfolioCurrenciesMap[currency.callLetters]!.chartColor,
         shape: BoxShape.circle,
       ),
     );
@@ -70,8 +70,8 @@ class Portfolio extends StatelessWidget {
   Widget _portfolioTotal(Holdings holdings, TextTheme textTheme) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Total: ', style: textTheme.headline4),
-          Text('${holdings.totalValue}', style: textTheme.headline3),
+          Text('Total crypto holdings: ', style: textTheme.headline4),
+          Text('${holdings.totalCryptoValue}', style: textTheme.headline3),
         ],
       );
 }

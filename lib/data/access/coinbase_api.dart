@@ -20,10 +20,10 @@ class CoinbaseApi {
       useSandbox ? sandboxEndpoint : productionEndpoint;
 
   /// https://docs.pro.coinbase.com/?php#place-a-new-order
-  Future<String> limitOrder(Holding holding) async {
+  Future<String> limitOrder(Holding order) async {
     final Dollars price =
-        await CoinbaseProPrices().getCurrentPrice(of: holding.currency);
-    final amount = Prices.inOther(holding.currency, holding.dollarValue);
+        await CoinbaseProPrices().currentPrice(of: order.currency);
+    final amount = Prices.inOther(order.currency, order.dollarValue);
     final Map<String, String> body = {
       // Amount in "base currency", which is BTC in this case, eg. "0.01".
       "size": "$amount",
@@ -31,7 +31,7 @@ class CoinbaseApi {
       "price": "${price.amt}",
       "side": "buy",
       // Buy `currency` using USD
-      "product_id": "${holding.currency.callLetters}-USD"
+      "product_id": "${order.currency.callLetters}-USD"
     };
     final String path = '/orders';
     final url = Uri.https(_endpoint, path);
