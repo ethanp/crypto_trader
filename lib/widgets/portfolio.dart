@@ -36,26 +36,21 @@ class Portfolio extends StatelessWidget {
 
   Widget _dataTable(Holdings holdings) {
     return DataTable(
-      // TODO(low priority): Sorting is by name, not by this index?
-      sortColumnIndex: 5,
       columnSpacing: 26,
-      sortAscending: false,
-      columns: ['Color', 'Name', 'Value', 'Percentage', 'Allocation', 'Error']
+      columns: ['Name', 'Value', 'Percentage', 'Allocation', 'Error']
           .map((colName) => DataColumn(label: Text(colName)))
           .toList(),
-      rows: List<DataRow>.generate(holdings.cryptos.length, (int idx) {
-        final holding = holdings.cryptos[idx];
-        final double percentage = holding.asPercentageOf(holdings);
+      rows: List<DataRow>.generate(holdings.cryptoHoldings.length, (int idx) {
+        final holding = holdings.cryptoHoldings[idx];
         return DataRow(
           color: _alternatinglyGrey(idx),
           cells: [
-            _colorCircle(holding.currency),
             Text(
               holding.currency.name,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(holding.dollarValue.toString()),
-            Text('${percentage.round()}%'),
+            Text('${holding.asPercentageOf(holdings).round()}%'),
             Text('${holding.currency.percentAllocation}%'),
             _difference(holding, holdings),
           ].map((w) => DataCell(Center(child: w))).toList(),
@@ -75,16 +70,5 @@ class Portfolio extends StatelessWidget {
     final int differenceInt = difference.abs().round();
     final suffix = difference > 0 ? '% too much' : '% too little';
     return Text('$differenceInt$suffix', style: TextStyle(color: color));
-  }
-
-  Widget _colorCircle(Currency currency) {
-    return Container(
-      height: 10,
-      width: 10,
-      decoration: BoxDecoration(
-        color: portfolioCurrenciesMap[currency.callLetters]!.chartColor,
-        shape: BoxShape.circle,
-      ),
-    );
   }
 }

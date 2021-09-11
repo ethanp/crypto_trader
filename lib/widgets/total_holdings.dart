@@ -29,7 +29,7 @@ class TotalHoldings extends StatelessWidget {
       children: [
         _element(
           title: 'Cash available',
-          value: holdings?.of(currency: dollars).dollarValue.toString(),
+          value: holdings?.of(dollars).dollarValue.toString(),
           textTheme: textTheme,
         ),
         _element(

@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Dollars {
@@ -52,11 +51,11 @@ class Holdings {
 
   final List<Holding> holdings;
 
-  Dollars get totalCryptoValue =>
-      cryptos.fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue.amt);
+  Dollars get totalCryptoValue => cryptoHoldings.fold<Dollars>(
+      Dollars(0), (acc, e) => acc + e.dollarValue.amt);
 
-  List<Holding> get cryptos =>
-      holdings.where((holding) => holding.currency != dollars).toList();
+  List<Holding> get cryptoHoldings =>
+      holdings.where((h) => h.currency != dollars).toList();
 
   static Holdings random() => Holdings(portfolioCurrencies
       .map((c) => Holding(currency: c, dollarValue: Dollars.random(max: 20)))
@@ -64,24 +63,22 @@ class Holdings {
 
   /// The [Holding] with the largest shortfall in percentage of portfolio
   /// compared to what was allocated.
-  Holding get shortest => holdings
+  Holding get shortest => cryptoHoldings
       .reduce((a, b) => a.difference(this) < b.difference(this) ? a : b);
 
-  Holding of({required Currency currency}) =>
-      holdings.firstWhere((element) => element.currency == currency);
+  Holding of(Currency currency) =>
+      holdings.firstWhere((e) => e.currency == currency);
 }
 
 class Currency {
   const Currency({
     required this.name,
     required this.callLetters,
-    required this.chartColor,
     required this.percentAllocation,
   });
 
   final String name;
   final String callLetters;
-  final Color chartColor;
   final int percentAllocation;
 
   static Currency byLetters(String callLetters) =>
@@ -101,42 +98,39 @@ class Currency {
   String toString() {
     return 'Currency{name: $name, callLetters: $callLetters}';
   }
+
+  Holding holding({required Dollars dollarValue}) =>
+      Holding(currency: this, dollarValue: dollarValue);
 }
 
 const bitcoin = Currency(
   name: 'Bitcoin',
   callLetters: 'BTC',
-  chartColor: Colors.blue,
   percentAllocation: 5,
 );
 const bitcoinCash = Currency(
   name: 'Bitcoin Cash',
   callLetters: 'BCH',
-  chartColor: Colors.red,
   percentAllocation: 15,
 );
 const cardano = Currency(
   name: 'Cardano',
   callLetters: 'ADA',
-  chartColor: Colors.green,
   percentAllocation: 30,
 );
 const dollars = Currency(
   name: 'US Dollars',
   callLetters: 'USD',
-  chartColor: Colors.purple,
   percentAllocation: 0,
 );
 const ethereum = Currency(
   name: 'Ethereum',
   callLetters: 'ETH',
-  chartColor: Colors.orange,
   percentAllocation: 40,
 );
 const lightcoin = Currency(
   name: 'Lightcoin',
   callLetters: 'LTC',
-  chartColor: Colors.yellow,
   percentAllocation: 10,
 );
 

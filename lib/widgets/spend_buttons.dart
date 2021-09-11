@@ -35,8 +35,10 @@ class SpendButtons extends StatelessWidget {
       child: FutureBuilder<Holdings>(
         future: Trader.api.getMyHoldings(),
         builder: (ctx, snapshot) {
-          final currency = snapshot.data?.shortest.currency.name;
-          return _text(ctx, 'Spend $_amount on ${currency ?? '(Loading...)'}');
+          final currency = snapshot.data?.shortest.currency
+              .holding(dollarValue: _amount)
+              .asPurchaseStr;
+          return _text(ctx, 'Buy ${currency ?? '(Loading...)'}');
         },
       ),
     );

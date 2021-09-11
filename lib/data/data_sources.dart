@@ -55,8 +55,8 @@ class FakeTrader extends Trader {
     print('Fake-buying ${holding.asPurchaseStr}');
     final holdings = await getMyHoldings();
     // Seems ok to violate the "dot-dot principle" here since it's a fake :)
-    final Dollars to = holdings.of(currency: holding.currency).dollarValue;
-    final Dollars from = holdings.of(currency: dollars).dollarValue;
+    final Dollars to = holdings.of(holding.currency).dollarValue;
+    final Dollars from = holdings.of(dollars).dollarValue;
     to.amt += holding.dollarValue.amt;
     from.amt -= holding.dollarValue.amt;
     return 'Succeeded';
@@ -66,7 +66,7 @@ class FakeTrader extends Trader {
   Future<String> depositInternal(Dollars deposit) async {
     print('Fake-transferring $deposit from Schwab');
     final holdings = await getMyHoldings();
-    holdings.of(currency: dollars).dollarValue.amt += deposit.amt;
+    holdings.of(dollars).dollarValue.amt += deposit.amt;
     return 'Succeeded';
   }
 }
