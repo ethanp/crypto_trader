@@ -27,12 +27,17 @@ class Portfolio extends StatelessWidget {
       columns: ['Color', 'Name', 'Value', 'Percentage', 'Allocation', 'Error']
           .map((colName) => DataColumn(label: Text(colName)))
           .toList(),
-      rows: holdings.holdings.map((holding) {
+      rows: List<DataRow>.generate(holdings.holdings.length, (int idx) {
+        final holding = holdings.holdings[idx];
         final double percentage = holding.asPercentageOf(holdings);
         return DataRow(
+          color: _alternatinglyGrey(idx),
           cells: [
             _colorCircle(holding.currency),
-            Text(holding.currency.name),
+            Text(
+              holding.currency.name,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             Text(holding.dollarValue.toString()),
             Text('${percentage.round()}%'),
             Text('${holding.currency.percentAllocation}%'),
@@ -42,6 +47,11 @@ class Portfolio extends StatelessWidget {
       }).toList(),
     );
   }
+
+  /// Grey for even rows, default for odd.
+  MaterialStateProperty<Color?> _alternatinglyGrey(int idx) =>
+      MaterialStateProperty.resolveWith<Color?>(
+          (states) => idx.isEven ? Colors.grey.withOpacity(0.3) : null);
 
   Widget _difference(Holding holding, Holdings holdings) {
     var difference = holding.difference(holdings);
