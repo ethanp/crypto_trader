@@ -16,9 +16,9 @@ class MyApp extends StatelessWidget {
     return ThemeData(
       primarySwatch: Colors.blue,
       textTheme: TextTheme(
-        headline3: TextStyle(
-          color: Colors.green[700],
-        ),
+        button: TextStyle(color: Colors.white, fontSize: 20),
+        headline4: TextStyle(color: Colors.grey[900]),
+        headline3: TextStyle(color: Colors.green[700]),
       ),
     );
   }

@@ -1,19 +1,22 @@
 import 'package:crypto_trader/data/data_sources.dart';
 import 'package:crypto_trader/data_model.dart';
+import 'package:crypto_trader/helpers.dart';
 import 'package:crypto_trader/widgets/portfolio.dart';
 import 'package:flutter/material.dart';
 
 import 'spend_buttons.dart';
+import 'total_holdings.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Notifier.registerForManualUiRefreshes(context);
     return Scaffold(
       appBar: AppBar(title: Text('Crypto: DCA with passive rebalancing')),
       body: Column(children: [
-        Flexible(child: Portfolio()),
+        TotalHoldings(),
         SpendButtons(),
-        SizedBox(height: 50),
+        Flexible(child: Portfolio()),
       ]),
       floatingActionButton: _buyEthButton(),
     );
@@ -34,9 +37,9 @@ class HomePage extends StatelessWidget {
 
   void _buyEth() {
     print('Buying ETH...');
-    CoinbaseProTrader().buy(Holding(
+    CoinbaseProTrader().spendInternal(Holding(
       currency: ethereum,
-      dollarValue: Dollars(25),
+      dollarValue: Dollars(2),
     ));
   }
 }

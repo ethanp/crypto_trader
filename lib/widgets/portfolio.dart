@@ -1,14 +1,11 @@
 import 'package:crypto_trader/data/data_sources.dart';
 import 'package:crypto_trader/data_model.dart';
-import 'package:crypto_trader/helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class Portfolio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    context.watch<Notifier>(); // Register for manual UI refreshes.
     return Center(
         child: FutureBuilder<Holdings>(
             future: Trader.api.getMyHoldings(),
@@ -18,8 +15,6 @@ class Portfolio extends StatelessWidget {
                     : Column(children: [
                         SizedBox(height: 30),
                         Flexible(child: _table(holdings.data!)),
-                        _portfolioTotal(
-                            holdings.data!, Theme.of(context).textTheme),
                       ])));
   }
 
@@ -66,12 +61,4 @@ class Portfolio extends StatelessWidget {
       ),
     );
   }
-
-  Widget _portfolioTotal(Holdings holdings, TextTheme textTheme) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Total crypto holdings: ', style: textTheme.headline4),
-          Text('${holdings.totalCryptoValue}', style: textTheme.headline3),
-        ],
-      );
 }

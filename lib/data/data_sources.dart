@@ -22,14 +22,14 @@ abstract class Trader extends ChangeNotifier {
   Future<Holdings> holdingsInternal();
 
   @protected
-  Future<String> buy(Holding holding);
+  Future<String> spendInternal(Holding holding);
 
   @protected
   Future<String> depositInternal(Dollars dollars);
 
   Future<String> spend(Dollars dollars) async =>
       _synchronizer.synchronized(() async {
-        return buy(
+        return spendInternal(
           Holding(
             currency: (await getMyHoldings()).shortest.currency,
             dollarValue: dollars,
@@ -51,7 +51,7 @@ class FakeTrader extends Trader {
   Future<Holdings> holdingsInternal() => Future.value(Holdings.random());
 
   @override
-  Future<String> buy(Holding holding) async {
+  Future<String> spendInternal(Holding holding) async {
     print('Fake-buying ${holding.asPurchaseStr}');
     final holdings = await getMyHoldings();
     // Seems ok to violate the "dot-dot principle" here since it's a fake :)
@@ -74,7 +74,7 @@ class FakeTrader extends Trader {
 class CoinbaseProTrader extends Trader {
   /// https://docs.pro.coinbase.com/?ruby#place-a-new-order
   @override
-  Future<String> buy(Holding order) async {
+  Future<String> spendInternal(Holding order) async {
     _invalidateHoldings();
     final String orderResponse = await CoinbaseApi().limitOrder(order);
     final Map<String, dynamic> decoded = jsonDecode(orderResponse);

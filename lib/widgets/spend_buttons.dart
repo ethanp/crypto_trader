@@ -22,7 +22,7 @@ class SpendButtons extends StatelessWidget {
         Trader.api.deposit(_amount);
         context.read<Notifier>().triggerUiRebuild();
       },
-      child: Text('Deposit $_amount from Schwab'),
+      child: _text(context, 'Deposit $_amount from Schwab'),
     );
   }
 
@@ -36,9 +36,16 @@ class SpendButtons extends StatelessWidget {
         future: Trader.api.getMyHoldings(),
         builder: (ctx, snapshot) {
           final currency = snapshot.data?.shortest.currency.name;
-          return Text('Spend $_amount on ${currency ?? '(Loading...)'}');
+          return _text(ctx, 'Spend $_amount on ${currency ?? '(Loading...)'}');
         },
       ),
+    );
+  }
+
+  Widget _text(BuildContext context, String text) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Text(text, style: Theme.of(context).textTheme.button),
     );
   }
 }
