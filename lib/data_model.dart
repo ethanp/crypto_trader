@@ -52,9 +52,11 @@ class Holdings {
 
   final List<Holding> holdings;
 
-  Dollars get totalCryptoValue => holdings
-      .where((holding) => holding.currency != dollars)
-      .fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue.amt);
+  Dollars get totalCryptoValue =>
+      cryptos.fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue.amt);
+
+  List<Holding> get cryptos =>
+      holdings.where((holding) => holding.currency != dollars).toList();
 
   static Holdings random() => Holdings(portfolioCurrencies
       .map((c) => Holding(currency: c, dollarValue: Dollars.random(max: 20)))

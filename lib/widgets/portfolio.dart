@@ -34,7 +34,7 @@ class Portfolio extends StatelessWidget {
     );
   }
 
-  DataTable _dataTable(Holdings holdings) {
+  Widget _dataTable(Holdings holdings) {
     return DataTable(
       // TODO(low priority): Sorting is by name, not by this index?
       sortColumnIndex: 5,
@@ -43,8 +43,8 @@ class Portfolio extends StatelessWidget {
       columns: ['Color', 'Name', 'Value', 'Percentage', 'Allocation', 'Error']
           .map((colName) => DataColumn(label: Text(colName)))
           .toList(),
-      rows: List<DataRow>.generate(holdings.holdings.length, (int idx) {
-        final holding = holdings.holdings[idx];
+      rows: List<DataRow>.generate(holdings.cryptos.length, (int idx) {
+        final holding = holdings.cryptos[idx];
         final double percentage = holding.asPercentageOf(holdings);
         return DataRow(
           color: _alternatinglyGrey(idx),
@@ -60,7 +60,7 @@ class Portfolio extends StatelessWidget {
             _difference(holding, holdings),
           ].map((w) => DataCell(Center(child: w))).toList(),
         );
-      }).toList(),
+      }),
     );
   }
 
