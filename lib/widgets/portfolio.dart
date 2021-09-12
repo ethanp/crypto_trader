@@ -23,27 +23,46 @@ class Portfolio extends StatelessWidget {
   }
 
   Widget _dataTable(Holdings holdings) {
-    return DataTable(
-      columnSpacing: 26,
-      columns: ['Name', 'Value', 'Percentage', 'Allocation', 'Error']
-          .map((colName) => DataColumn(label: Text(colName)))
-          .toList(),
-      rows: holdings.cryptoHoldings.zipWithIndex((Holding holding, int idx) {
-        return DataRow(
-          color: _alternatinglyGrey(idx),
-          cells: [
-            Text(
-              holding.currency.name,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(holding.dollarValue.toString()),
+    final rowData = [
+      CellExtractor(
+        label: 'Name',
+        extractWidget: (holding) => Text(
+          holding.currency.name,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      CellExtractor(
+        label: 'Value',
+        extractWidget: (holding) => Text(holding.dollarValue.toString()),
+      ),
+      CellExtractor(
+        label: 'Percentage',
+        extractWidget: (holding) =>
             Text('${holding.asPercentageOf(holdings).round()}%'),
+      ),
+      CellExtractor(
+        label: 'Allocation',
+        extractWidget: (holding) =>
             Text('${holding.currency.percentAllocation}%'),
-            _difference(holding, holdings),
-          ].map((w) => DataCell(Center(child: w))).toList(),
-        );
-      }),
-    );
+      ),
+      CellExtractor(
+        label: 'Error',
+        extractWidget: (holding) => _difference(holding, holdings),
+      ),
+    ];
+    return DataTable(
+        columnSpacing: 26,
+        columns: rowData
+            .map((data) => data.label)
+            .map((colName) => DataColumn(label: Text(colName)))
+            .toList(),
+        rows: holdings.cryptoHoldings.zipWithIndex((Holding holding, int idx) =>
+            DataRow(
+                color: _alternatinglyGrey(idx),
+                cells: rowData
+                    .map((extractor) => extractor.extractWidget(holding))
+                    .map((widget) => DataCell(Center(child: widget)))
+                    .toList())));
   }
 
   /// Grey for even rows, default for odd.
@@ -58,4 +77,11 @@ class Portfolio extends StatelessWidget {
     final suffix = difference > 0 ? '% too much' : '% too little';
     return Text('$differenceInt$suffix', style: TextStyle(color: color));
   }
+}
+
+class CellExtractor {
+  const CellExtractor({required this.label, required this.extractWidget});
+
+  final String label;
+  final Widget Function(Holding) extractWidget;
 }
