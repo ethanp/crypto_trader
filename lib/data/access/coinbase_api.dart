@@ -24,7 +24,7 @@ class CoinbaseApi {
         body: {
           'amount': '${dollars.amt}',
           'currency': 'USD',
-          'payment_method_id': 'TODO fill in'
+          'payment_method_id': await _getPaymentMethodId(),
         },
       );
 
@@ -40,6 +40,13 @@ class CoinbaseApi {
           "funds": "${order.dollarValue.amt}",
         },
       );
+
+  /// https://docs.pro.coinbase.com/#payment-methods
+  Future<String> _getPaymentMethodId() async {
+    final response = await get(path: '/payment-methods', private: true);
+    final List<dynamic> decoded = jsonDecode(response);
+    return decoded.firstWhere((e) => e['name'].contains("SCHWAB"))['id'];
+  }
 
   Future<String> _post({
     required String path,
