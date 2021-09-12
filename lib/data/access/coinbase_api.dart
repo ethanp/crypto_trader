@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:crypto_trader/data/access/config.dart';
-import 'package:crypto_trader/data/data_sources.dart';
 import 'package:crypto_trader/data_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,25 +18,52 @@ class CoinbaseApi {
   late final String _endpoint =
       useSandbox ? sandboxEndpoint : productionEndpoint;
 
+  /// https://docs.pro.coinbase.com/#payment-method
+  Future<String> deposit(Dollars dollars) async => await _post(
+        path: '/deposits/payment-method',
+        body: {
+          'amount': '${dollars.amt}',
+          'currency': 'USD',
+          'payment_method_id': 'TODO fill in'
+        },
+      );
+
   /// https://docs.pro.coinbase.com/?php#place-a-new-order
-  Future<String> limitOrder(Holding order) async {
-    final Dollars price =
-        // Beware: Using a FakePrices() instance here would be dangerous!
-        await CoinbaseProPrices().currentPrice(of: order.currency);
-    final amount = order.dollarValue.translateTo(order.currency);
-    final Map<String, String> body = {
-      // Amount in "base currency", which is BTC in this case, eg. "0.01".
-      "size": "$amount",
-      // Price per crypto-coin (limit order), eg. "0.100".
-      "price": "${price.amt}",
-      "side": "buy",
-      // Buy `currency` using USD
-      "product_id": "${order.currency.callLetters}-USD"
-    };
-    final String path = '/orders';
+  Future<String> marketOrder(Holding order) async => await _post(
+        path: '/orders',
+        body: {
+          "type": "market",
+          "side": "buy",
+          // Buy `currency` using USD.
+          "product_id": "${order.currency.callLetters}-USD",
+          // In "quote currency", which is USD in this case, eg. "$0.01".
+          "funds": "${order.dollarValue.amt}",
+        },
+      );
+
+  Future<String> _post({
+    required String path,
+    required Map<String, String> body,
+  }) async {
     final url = Uri.https(_endpoint, path);
-    final headers = await _privateHeaders(method: 'GET', path: path);
-    final res = await http.post(url, headers: headers, body: body);
+    final headers = await _privateHeaders(
+      method: 'POST',
+      path: path,
+      body: jsonEncode(body),
+    );
+    print('posting meow');
+    final res = await http.post(
+      url,
+      headers: headers,
+      body: jsonEncode(body),
+    );
+    if (res.statusCode != 200) {
+      throw StateError('\n\nError in POST $url from Coinbase API!\n'
+          'response code: ${res.statusCode}\n'
+          'response body: ${res.body}\n'
+          'sent headers: $headers\n'
+          'sent body: $body\n\n');
+    }
     return res.body;
   }
 
@@ -56,7 +82,7 @@ class CoinbaseApi {
           'body: ${res.body}\n'
           'headers: $headers\n\n');
     }
-    print('Returning from $path');
+    // print('Returning from $path');
     return res.body;
   }
 

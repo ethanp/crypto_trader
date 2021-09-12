@@ -81,7 +81,8 @@ class CoinbaseProTrader extends Trader {
   @override
   Future<String> spendInternal(Holding order) async {
     _invalidateHoldings();
-    final String orderResponse = await CoinbaseApi().limitOrder(order);
+    final String orderResponse = await CoinbaseApi().marketOrder(order);
+    print('Order: $orderResponse');
     final Map<String, dynamic> decoded = jsonDecode(orderResponse);
     return decoded['id'];
   }
@@ -102,9 +103,12 @@ class CoinbaseProTrader extends Trader {
           .map((acct) => acct.asHolding)));
 
   @override
-  Future<String> depositInternal(Dollars dollars) {
-    // TODO: implement depositInternal
-    throw UnimplementedError();
+  Future<String> depositInternal(Dollars dollars) async {
+    _invalidateHoldings();
+    final String depositResponse = await CoinbaseApi().deposit(dollars);
+    print('Deposit: $depositResponse');
+    final Map<String, dynamic> decoded = jsonDecode(depositResponse);
+    return decoded['id'];
   }
 }
 
