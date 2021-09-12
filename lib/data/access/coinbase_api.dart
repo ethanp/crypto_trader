@@ -22,6 +22,7 @@ class CoinbaseApi {
   /// https://docs.pro.coinbase.com/?php#place-a-new-order
   Future<String> limitOrder(Holding order) async {
     final Dollars price =
+        // Beware: Using a FakePrices() instance here would be dangerous!
         await CoinbaseProPrices().currentPrice(of: order.currency);
     final amount = order.dollarValue.translateTo(order.currency);
     final Map<String, String> body = {
@@ -49,7 +50,7 @@ class CoinbaseApi {
         private ? await _privateHeaders(method: 'GET', path: path) : null;
     final res = await http.get(url, headers: headers);
     if (res.statusCode != 200) {
-      print('Error in get from Coinbase API!');
+      print('Error in GET $url from Coinbase API!');
       print('status code: ${res.statusCode}, body: ${res.body}');
     }
     return res.body;
@@ -68,7 +69,7 @@ class CoinbaseApi {
     return <String, String>{
       "accept": "application/json",
       "content-type": "application/json",
-      "User-Agent": "gdax-flutter unofficial coinbase pro api library",
+      "User-Agent": "Unofficial Flutter coinbase pro api library",
       'CB-ACCESS-KEY': config.key,
       'CB-ACCESS-SIGN': _signature(timestamp, method, path, body, config),
       'CB-ACCESS-TIMESTAMP': timestamp.toString(),

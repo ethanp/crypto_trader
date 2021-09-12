@@ -1,5 +1,6 @@
 import 'package:crypto_trader/data/data_sources.dart';
 import 'package:crypto_trader/data_model.dart';
+import 'package:crypto_trader/helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,29 +10,16 @@ class Portfolio extends StatelessWidget {
     return Center(
         child: FutureBuilder<Holdings>(
       future: Trader.api.getMyHoldings(),
-      builder: (ctx, holdings) =>
-          !holdings.hasData ? Text('Loading') : _table(holdings.data!),
-    ));
-  }
-
-  Widget _table(Holdings holdings) {
-    return Column(
-      children: [
-        SizedBox(height: 30),
-        Flexible(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Container(
+      builder: (ctx, holdings) => !holdings.hasData
+          ? Text('Loading')
+          : Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.brown, width: 5),
                 borderRadius: BorderRadius.all(Radius.circular(3)),
               ),
-              child: _dataTable(holdings),
+              child: _dataTable(holdings.data!),
             ),
-          ),
-        ),
-      ],
-    );
+    ));
   }
 
   Widget _dataTable(Holdings holdings) {
@@ -40,8 +28,7 @@ class Portfolio extends StatelessWidget {
       columns: ['Name', 'Value', 'Percentage', 'Allocation', 'Error']
           .map((colName) => DataColumn(label: Text(colName)))
           .toList(),
-      rows: List<DataRow>.generate(holdings.cryptoHoldings.length, (int idx) {
-        final holding = holdings.cryptoHoldings[idx];
+      rows: holdings.cryptoHoldings.zipWithIndex((Holding holding, int idx) {
         return DataRow(
           color: _alternatinglyGrey(idx),
           cells: [
