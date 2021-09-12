@@ -5,6 +5,13 @@ import 'package:crypto_trader/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
 
+class Environment {
+  // static Trader trader = FakeTrader();
+  // static Prices prices = FakePrices();
+  static Trader trader = CoinbaseProTrader();
+  static Prices prices = CoinbaseProPrices();
+}
+
 abstract class Trader extends ChangeNotifier {
   // TODO(low priority): Cache expiration.
   Holdings? _holdingsCache;
@@ -42,8 +49,6 @@ abstract class Trader extends ChangeNotifier {
 
   void _invalidateHoldings() =>
       _synchronizer.synchronized(() => _holdingsCache = null);
-
-  static Trader api = FakeTrader();
 }
 
 class FakeTrader extends Trader {
@@ -112,7 +117,8 @@ class CoinbaseAccount {
 
   Future<Holding> get asHolding async {
     final Currency currency = Currency.byLetters(_callLetters);
-    final Dollars priceInDollars = await Prices.api.currentPrice(of: currency);
+    final Dollars priceInDollars =
+        await Environment.prices.currentPrice(of: currency);
     return Holding(
         currency: currency, dollarValue: priceInDollars * _balanceInCurrency);
   }
@@ -129,11 +135,10 @@ abstract class Prices extends ChangeNotifier {
   });
 
   static Future<Dollars> inDollars(Currency currency, double amount) async {
-    final Dollars priceInDollars = await Prices.api.currentPrice(of: currency);
+    final Dollars priceInDollars =
+        await Environment.prices.currentPrice(of: currency);
     return priceInDollars * amount;
   }
-
-  static Prices api = FakePrices();
 }
 
 class FakePrices extends Prices {

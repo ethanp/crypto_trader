@@ -19,7 +19,7 @@ class SpendButtons extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(primary: Colors.green),
       onPressed: () {
-        Trader.api.deposit(_amount);
+        Environment.trader.deposit(_amount);
         context.read<UiRefresher>().refreshUi();
       },
       child: _text(context, 'Deposit $_amount from Schwab'),
@@ -29,11 +29,11 @@ class SpendButtons extends StatelessWidget {
   Widget _spendButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Trader.api.spend(_amount);
+        Environment.trader.spend(_amount);
         context.read<UiRefresher>().refreshUi();
       },
       child: FutureBuilder<Holdings>(
-        future: Trader.api.getMyHoldings(),
+        future: Environment.trader.getMyHoldings(),
         builder: (ctx, snapshot) {
           final currency = snapshot.data?.shortest.currency
               .holding(dollarValue: _amount)

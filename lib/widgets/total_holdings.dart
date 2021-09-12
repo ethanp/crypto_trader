@@ -12,7 +12,7 @@ class TotalHoldings extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: FutureBuilder<Holdings>(
-            future: Trader.api.getMyHoldings(),
+            future: Environment.trader.getMyHoldings(),
             builder: (ctx, holdings) {
               final textTheme = Theme.of(ctx).textTheme;
               return _displayHoldings(textTheme, holdings.data);

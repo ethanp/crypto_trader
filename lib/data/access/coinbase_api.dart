@@ -50,8 +50,10 @@ class CoinbaseApi {
         private ? await _privateHeaders(method: 'GET', path: path) : null;
     final res = await http.get(url, headers: headers);
     if (res.statusCode != 200) {
-      print('Error in GET $url from Coinbase API!');
-      print('status code: ${res.statusCode}, body: ${res.body}');
+      throw StateError('\n\nError in GET $url from Coinbase API!\n'
+          'status code: ${res.statusCode}\n'
+          'body: ${res.body}\n'
+          'headers: $headers\n\n');
     }
     return res.body;
   }

@@ -22,7 +22,7 @@ class Dollars {
 
   // TODO: I never thought through whether this one is correct.
   Future<double> translateTo(Currency currency) async =>
-      await Prices.api.currentPrice(of: currency) / amt;
+      await Environment.prices.currentPrice(of: currency) / amt;
 }
 
 class Holding {

@@ -9,7 +9,7 @@ class Portfolio extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: FutureBuilder<Holdings>(
-      future: Trader.api.getMyHoldings(),
+      future: Environment.trader.getMyHoldings(),
       builder: (ctx, holdings) => !holdings.hasData
           ? Text('Loading')
           : Container(
@@ -68,7 +68,7 @@ class Portfolio extends StatelessWidget {
   /// Grey for even rows, default for odd.
   MaterialStateProperty<Color?> _alternatinglyGrey(int idx) =>
       MaterialStateProperty.resolveWith<Color?>(
-          (states) => idx.isEven ? Colors.grey.withOpacity(0.3) : null);
+          (states) => idx.isEven ? Colors.grey.withOpacity(0.4) : null);
 
   Widget _difference(Holding holding, Holdings holdings) {
     var difference = holding.difference(holdings);

@@ -6,4 +6,4 @@ import 'helpers.dart';
 
 void main() => runApp(MultiProvider(
     providers: [ChangeNotifierProvider(create: (_) => UiRefresher())],
-    child: MyApp()));
+    child: AppTheme()));
