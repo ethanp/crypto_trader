@@ -8,8 +8,6 @@ class UiRefresher extends ChangeNotifier {
 }
 
 extension Zipper<T> on List<T> {
-  List<U> zipWithIndex<U>(U Function(T, int) func) {
-    int idx = 0;
-    return map((elem) => func(elem, idx++)).toList();
-  }
+  List<U> zipWithIndex<U>(U Function(T, int) func) =>
+      List.generate(this.length, (idx) => func(this[idx], idx));
 }
