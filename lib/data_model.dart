@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:crypto_trader/data/data_sources.dart';
 import 'package:intl/intl.dart';
 
+import 'helpers.dart';
+
 class Dollars {
   Dollars(this.amt);
 
@@ -111,17 +113,17 @@ class Currency {
 const bitcoin = Currency(
   name: 'Bitcoin',
   callLetters: 'BTC',
-  percentAllocation: 5,
+  percentAllocation: 40,
 );
 const bitcoinCash = Currency(
   name: 'Bitcoin Cash',
   callLetters: 'BCH',
-  percentAllocation: 15,
+  percentAllocation: 8,
 );
 const cardano = Currency(
   name: 'Cardano',
   callLetters: 'ADA',
-  percentAllocation: 30,
+  percentAllocation: 15,
 );
 const dollars = Currency(
   name: 'US Dollars',
@@ -131,22 +133,26 @@ const dollars = Currency(
 const ethereum = Currency(
   name: 'Ethereum',
   callLetters: 'ETH',
-  percentAllocation: 40,
+  percentAllocation: 30,
 );
 const lightcoin = Currency(
   name: 'Lightcoin',
   callLetters: 'LTC',
-  percentAllocation: 10,
+  percentAllocation: 7,
 );
 
-List<Currency> get portfolioCurrencies => [
-      bitcoin,
-      bitcoinCash,
-      cardano,
-      dollars,
-      ethereum,
-      lightcoin,
-    ]..sort(_alphabeticalByName);
+List<Currency> get portfolioCurrencies {
+  final list = [
+    bitcoin,
+    bitcoinCash,
+    cardano,
+    dollars,
+    ethereum,
+    lightcoin,
+  ];
+  assert(list.map((e) => e.percentAllocation).sum == 100);
+  return list..sort(_alphabeticalByName);
+}
 
 Map<String, Currency> get portfolioCurrenciesMap =>
     portfolioCurrencies.asMap().map((k, v) => MapEntry(v.callLetters, v));

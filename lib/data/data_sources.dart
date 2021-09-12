@@ -19,7 +19,7 @@ abstract class Trader extends ChangeNotifier {
   final _synchronizer = new Lock(reentrant: true);
 
   Future<Holdings> getMyHoldings() async {
-    _synchronizer.synchronized(() async {
+    await _synchronizer.synchronized(() async {
       _holdingsCache ??= await holdingsInternal();
     });
     return Future.value(_holdingsCache);
