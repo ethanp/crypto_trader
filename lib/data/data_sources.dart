@@ -96,11 +96,12 @@ class CoinbaseProTrader extends Trader {
     return await _parseHoldings(accountListRaw);
   }
 
-  Future<Holdings> _parseHoldings(List<dynamic> accountListRaw) async =>
-      Holdings(await Future.wait(accountListRaw
-          .map((raw) => CoinbaseAccount(raw))
-          .where((acct) => acct.isSupported)
-          .map((acct) => acct.asHolding)));
+  Future<Holdings> _parseHoldings(List<dynamic> accountListRaw) async {
+    return Holdings(await Future.wait(accountListRaw
+        .map((raw) => CoinbaseAccount(raw))
+        .where((acct) => acct.isSupported)
+        .map((acct) => acct.asHolding)));
+  }
 
   @override
   Future<String> depositInternal(Dollars dollars) async {
@@ -117,7 +118,10 @@ class CoinbaseAccount {
 
   final dynamic acct;
 
-  bool get isSupported => portfolioCurrenciesMap.containsKey(_callLetters);
+  bool get isSupported {
+    print(portfolioCurrenciesMap);
+    return portfolioCurrenciesMap.containsKey(_callLetters);
+  }
 
   Future<Holding> get asHolding async {
     final Currency currency = Currency.byLetters(_callLetters);

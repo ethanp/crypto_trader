@@ -113,12 +113,12 @@ class Currency {
 const bitcoin = Currency(
   name: 'Bitcoin',
   callLetters: 'BTC',
-  percentAllocation: 40,
+  percentAllocation: 45,
 );
 const bitcoinCash = Currency(
   name: 'Bitcoin Cash',
   callLetters: 'BCH',
-  percentAllocation: 8,
+  percentAllocation: 5,
 );
 const cardano = Currency(
   name: 'Cardano',
@@ -138,20 +138,25 @@ const ethereum = Currency(
 const lightcoin = Currency(
   name: 'Lightcoin',
   callLetters: 'LTC',
-  percentAllocation: 7,
+  percentAllocation: 5,
 );
 
 List<Currency> get portfolioCurrencies {
-  final list = [
+  return _validate([
     bitcoin,
     bitcoinCash,
     cardano,
     dollars,
     ethereum,
     lightcoin,
-  ];
-  assert(list.map((e) => e.percentAllocation).sum == 100);
-  return list..sort(_alphabeticalByName);
+  ])
+    ..sort(_alphabeticalByName);
+}
+
+List<Currency> _validate(List<Currency> list) {
+  final sum = list.map((e) => e.percentAllocation).sum;
+  if (sum != 100) print('ERROR: PercentAllocation == $sum, not 100');
+  return list;
 }
 
 Map<String, Currency> get portfolioCurrenciesMap =>

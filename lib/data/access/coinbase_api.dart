@@ -78,7 +78,7 @@ class CoinbaseApi {
     required String path,
     bool private = false,
   }) async {
-    print('GETting $path private:$private');
+    print('Getting $path private:$private');
     final url = Uri.https(_endpoint, path);
     final headers =
         private ? await _privateHeaders(method: 'GET', path: path) : null;
@@ -89,7 +89,6 @@ class CoinbaseApi {
           'body: ${res.body}\n'
           'headers: $headers\n\n');
     }
-    // print('Returning from $path');
     return res.body;
   }
 

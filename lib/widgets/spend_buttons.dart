@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SpendButtons extends StatelessWidget {
-  final _amount = Dollars(0.01);
+  final _amount = Dollars(10);
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +19,9 @@ class SpendButtons extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(primary: Colors.green),
       onPressed: () {
-        Environment.trader.deposit(_amount);
-        context.read<UiRefresher>().refreshUi();
+        Environment.trader
+            .deposit(_amount)
+            .whenComplete(() => context.read<UiRefresher>().refreshUi());
       },
       child: _text(context, 'Deposit $_amount from Schwab'),
     );
@@ -29,8 +30,9 @@ class SpendButtons extends StatelessWidget {
   Widget _spendButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Environment.trader.spend(_amount);
-        context.read<UiRefresher>().refreshUi();
+        Environment.trader
+            .spend(_amount)
+            .whenComplete(() => context.read<UiRefresher>().refreshUi());
       },
       child: FutureBuilder<Holdings>(
         future: Environment.trader.getMyHoldings(),
