@@ -6,26 +6,22 @@ class TotalHoldings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 65),
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
       child: Card(
         color: Colors.yellow[100],
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: FutureBuilder<Holdings>(
-            future: Environment.trader.getMyHoldings(),
-            builder: (ctx, holdings) {
-              final textTheme = Theme.of(ctx).textTheme;
-              return _displayHoldings(textTheme, holdings.data);
-            },
-          ),
+        child: FutureBuilder<Holdings>(
+          future: Environment.trader.getMyHoldings(),
+          builder: (ctx, holdings) {
+            final textTheme = Theme.of(ctx).textTheme;
+            return _displayHoldings(textTheme, holdings.data);
+          },
         ),
       ),
     );
   }
 
   Widget _displayHoldings(TextTheme textTheme, Holdings? holdings) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Column(
       children: [
         _element(
           title: 'Cash available',
@@ -46,9 +42,12 @@ class TotalHoldings extends StatelessWidget {
     required String? value,
     required TextTheme textTheme,
   }) {
-    return Row(children: [
-      Text('$title: ', style: textTheme.headline4),
-      Text('${value ?? 'Loading...'}', style: textTheme.headline3),
-    ]);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(children: [
+        Text('$title: ', style: textTheme.headline4),
+        Text('${value ?? 'Loading...'}', style: textTheme.headline3),
+      ]),
+    );
   }
 }

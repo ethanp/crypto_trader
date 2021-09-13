@@ -118,10 +118,7 @@ class CoinbaseAccount {
 
   final dynamic acct;
 
-  bool get isSupported {
-    print(portfolioCurrenciesMap);
-    return portfolioCurrenciesMap.containsKey(_callLetters);
-  }
+  bool get isSupported => portfolioCurrenciesMap.containsKey(_callLetters);
 
   Future<Holding> get asHolding async {
     final Currency currency = Currency.byLetters(_callLetters);

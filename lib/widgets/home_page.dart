@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     UiRefresher.register(context);
     return Scaffold(
-      appBar: AppBar(title: Text('Crypto: DCA with passive rebalancing')),
+      appBar: AppBar(title: Text('Crypto: auto-balancing DCA')),
       body: Column(children: [
         TotalHoldings(),
         SpendButtons(),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'home_page.dart';
@@ -17,8 +18,15 @@ class AppTheme extends StatelessWidget {
       primarySwatch: Colors.blue,
       textTheme: TextTheme(
         button: TextStyle(color: Colors.white, fontSize: 20),
-        headline4: TextStyle(color: Colors.grey[900], fontSize: 24),
-        headline3: TextStyle(color: Colors.green[700], fontSize: 28),
+        headline4: TextStyle(
+          color: Colors.grey[900],
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+        headline3: TextStyle(
+          color: Colors.green[700],
+          fontSize: 26,
+        ),
       ),
     );
   }

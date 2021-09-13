@@ -9,7 +9,7 @@ class SpendButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [_depositButton(context), _spendButton(context)],
     );
@@ -28,20 +28,23 @@ class SpendButtons extends StatelessWidget {
   }
 
   Widget _spendButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        Environment.trader
-            .spend(_amount)
-            .whenComplete(() => context.read<UiRefresher>().refreshUi());
-      },
-      child: FutureBuilder<Holdings>(
-        future: Environment.trader.getMyHoldings(),
-        builder: (ctx, snapshot) {
-          final currency = snapshot.data?.shortest.currency
-              .holding(dollarValue: _amount)
-              .asPurchaseStr;
-          return _text(ctx, 'Buy ${currency ?? '(Loading...)'}');
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: ElevatedButton(
+        onPressed: () {
+          Environment.trader
+              .spend(_amount)
+              .whenComplete(() => context.read<UiRefresher>().refreshUi());
         },
+        child: FutureBuilder<Holdings>(
+          future: Environment.trader.getMyHoldings(),
+          builder: (ctx, snapshot) {
+            final currency = snapshot.data?.shortest.currency
+                .holding(dollarValue: _amount)
+                .asPurchaseStr;
+            return _text(ctx, 'Buy ${currency ?? '(Loading...)'}');
+          },
+        ),
       ),
     );
   }

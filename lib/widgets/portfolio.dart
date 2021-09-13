@@ -36,12 +36,12 @@ class Portfolio extends StatelessWidget {
         extractWidget: (holding) => Text(holding.dollarValue.toString()),
       ),
       CellExtractor(
-        label: 'Percentage',
+        label: 'Actual',
         extractWidget: (holding) =>
             Text('${holding.asPercentageOf(holdings).round()}%'),
       ),
       CellExtractor(
-        label: 'Allocation',
+        label: 'Allocated',
         extractWidget: (holding) =>
             Text('${holding.currency.percentAllocation}%'),
       ),
@@ -51,7 +51,7 @@ class Portfolio extends StatelessWidget {
       ),
     ];
     return DataTable(
-        columnSpacing: 26,
+        columnSpacing: 10,
         columns: rowData
             .map((data) => data.label)
             .map((colName) => DataColumn(label: Text(colName)))
