@@ -7,19 +7,26 @@ import 'package:flutter/material.dart';
 class Portfolio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: FutureBuilder<Holdings>(
+    return FutureBuilder<Holdings>(
       future: Environment.trader.getMyHoldings(),
       builder: (ctx, holdings) => !holdings.hasData
           ? Text('Loading')
-          : Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.brown, width: 5),
-                borderRadius: BorderRadius.all(Radius.circular(3)),
-              ),
-              child: _dataTable(holdings.data!),
+          : Column(
+              children: [
+                Expanded(child: SizedBox(height: 30)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.brown, width: 5),
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                    ),
+                    child: _dataTable(holdings.data!),
+                  ),
+                ),
+              ],
             ),
-    ));
+    );
   }
 
   Widget _dataTable(Holdings holdings) {
