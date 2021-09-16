@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SpendButtons extends StatelessWidget {
-  final _amount = Dollars(10);
+  // TODO allow user to modify this
+  final _amount = Dollars(60);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      // TODO it reloads the info after spend but not after deposit.
+      //  What's the difference between the two implementation-wise?
       children: [_depositButton(context), _spendButton(context)],
     );
   }
@@ -33,6 +36,8 @@ class SpendButtons extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           Environment.trader
+              // TODO: Consider using the full cash balance instead of set
+              //  amount, or both.
               .spend(_amount)
               .whenComplete(() => context.read<UiRefresher>().refreshUi());
         },

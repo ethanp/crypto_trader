@@ -64,6 +64,7 @@ class CoinbaseApi {
       headers: headers,
       body: jsonEncode(body),
     );
+    // TODO show this to the user too
     if (res.statusCode != 200) {
       throw StateError('\n\nError in POST $url from Coinbase API!\n'
           'response code: ${res.statusCode}\n'
@@ -83,11 +84,12 @@ class CoinbaseApi {
     final headers =
         private ? await _privateHeaders(method: 'GET', path: path) : null;
     final res = await http.get(url, headers: headers);
+    // TODO show this to the user too
     if (res.statusCode != 200) {
       throw StateError('\n\nError in GET $url from Coinbase API!\n'
-          'status code: ${res.statusCode}\n'
-          'body: ${res.body}\n'
-          'headers: $headers\n\n');
+          'response code: ${res.statusCode}\n'
+          'response body: ${res.body}\n'
+          'sent headers: $headers\n\n');
     }
     return res.body;
   }

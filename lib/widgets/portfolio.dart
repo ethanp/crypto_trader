@@ -13,9 +13,9 @@ class Portfolio extends StatelessWidget {
           ? Text('Loading')
           : Column(
               children: [
-                Expanded(child: SizedBox(height: 30)),
+                Expanded(child: SizedBox(height: 0)),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  padding: const EdgeInsets.only(bottom: 40),
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.brown, width: 5),

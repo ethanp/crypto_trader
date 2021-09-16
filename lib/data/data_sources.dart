@@ -15,12 +15,18 @@ class Environment {
 abstract class Trader extends ChangeNotifier {
   // TODO(low priority): Cache expiration.
   Holdings? _holdingsCache;
+  bool _cacheValid = false;
 
   final _synchronizer = new Lock(reentrant: true);
 
   Future<Holdings> getMyHoldings() async {
     await _synchronizer.synchronized(() async {
-      _holdingsCache ??= await holdingsInternal();
+      var bool = !_cacheValid || _holdingsCache == null;
+      print('Getting holdings? $bool');
+      if (bool) {
+        _holdingsCache = await holdingsInternal();
+        _cacheValid = true;
+      }
     });
     return Future.value(_holdingsCache);
   }
@@ -35,7 +41,7 @@ abstract class Trader extends ChangeNotifier {
   Future<String> depositInternal(Dollars dollars);
 
   Future<String> spend(Dollars dollars) async =>
-      _synchronizer.synchronized(() async {
+      await _synchronizer.synchronized(() async {
         return spendInternal(
           Holding(
             currency: (await getMyHoldings()).shortest.currency,
@@ -45,10 +51,16 @@ abstract class Trader extends ChangeNotifier {
       });
 
   Future<String> deposit(Dollars dollars) async =>
-      _synchronizer.synchronized(() async => depositInternal(dollars));
+      await _synchronizer.synchronized(() async {
+        return depositInternal(dollars);
+      });
 
-  void _invalidateHoldings() =>
-      _synchronizer.synchronized(() => _holdingsCache = null);
+  // TODO for some reason this isn't working at all.
+  //  Maybe the debugger would help?
+  //  Maybe registering for UI refreshes on the widgets whose data actually
+  //   changes would fix it, instead of only registering the top-level Widget.
+  Future<void> invalidateHoldings() async =>
+      await _synchronizer.synchronized(() => _cacheValid = false);
 }
 
 class FakeTrader extends Trader {
@@ -77,38 +89,34 @@ class FakeTrader extends Trader {
 }
 
 class CoinbaseProTrader extends Trader {
-  /// https://docs.pro.coinbase.com/?ruby#place-a-new-order
-  @override
-  Future<String> spendInternal(Holding order) async {
-    _invalidateHoldings();
-    final String orderResponse = await CoinbaseApi().marketOrder(order);
-    print('Order: $orderResponse');
-    final Map<String, dynamic> decoded = jsonDecode(orderResponse);
-    return decoded['id'];
-  }
-
   /// Calls https://docs.pro.coinbase.com/?ruby#list-accounts
   @override
   Future<Holdings> holdingsInternal() async {
     final String holdingsResponse =
         await CoinbaseApi().get(path: '/accounts', private: true);
     final List<dynamic> accountListRaw = jsonDecode(holdingsResponse);
-    return await _parseHoldings(accountListRaw);
-  }
-
-  Future<Holdings> _parseHoldings(List<dynamic> accountListRaw) async {
     return Holdings(await Future.wait(accountListRaw
         .map((raw) => CoinbaseAccount(raw))
         .where((acct) => acct.isSupported)
         .map((acct) => acct.asHolding)));
   }
 
+  /// https://docs.pro.coinbase.com/?ruby#place-a-new-order
+  @override
+  Future<String> spendInternal(Holding order) async {
+    final String orderResponse = await CoinbaseApi().marketOrder(order);
+    print('Order: $orderResponse');
+    final Map<String, dynamic> decoded = jsonDecode(orderResponse);
+    await invalidateHoldings();
+    return decoded['id'];
+  }
+
   @override
   Future<String> depositInternal(Dollars dollars) async {
-    _invalidateHoldings();
     final String depositResponse = await CoinbaseApi().deposit(dollars);
     print('Deposit: $depositResponse');
     final Map<String, dynamic> decoded = jsonDecode(depositResponse);
+    await invalidateHoldings();
     return decoded['id'];
   }
 }

@@ -1,8 +1,13 @@
+import 'package:crypto_trader/data/data_sources.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UiRefresher extends ChangeNotifier {
-  void refreshUi() => notifyListeners();
+  void refreshUi() {
+    print('Refreshing UI');
+    Environment.trader.getMyHoldings();
+    notifyListeners();
+  }
 
   static void register(BuildContext context) => context.watch<UiRefresher>();
 }
