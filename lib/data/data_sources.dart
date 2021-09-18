@@ -56,9 +56,9 @@ abstract class Trader extends ChangeNotifier {
       });
 
   // TODO for some reason this isn't working at all.
-  //  Maybe the debugger would help?
-  //  Maybe registering for UI refreshes on the widgets whose data actually
-  //   changes would fix it, instead of only registering the top-level Widget.
+  //  • Maybe the debugger would help?
+  //  • Maybe registering for UI refreshes on the widgets whose data actually
+  //    changes would fix it, instead of only registering the top-level Widget.
   Future<void> invalidateHoldings() async =>
       await _synchronizer.synchronized(() => _cacheValid = false);
 }
@@ -72,8 +72,8 @@ class FakeTrader extends Trader {
     print('Fake-buying ${holding.asPurchaseStr}');
     final holdings = await getMyHoldings();
     // Seems ok to violate the "dot-dot principle" here since it's a fake :)
-    final Dollars to = holdings.of(holding.currency).dollarValue;
-    final Dollars from = holdings.of(dollars).dollarValue;
+    final Dollars to = holdings.of(holding.currency);
+    final Dollars from = holdings.of(dollars);
     to.amt += holding.dollarValue.amt;
     from.amt -= holding.dollarValue.amt;
     return 'Succeeded';
@@ -83,7 +83,7 @@ class FakeTrader extends Trader {
   Future<String> depositInternal(Dollars deposit) async {
     print('Fake-transferring $deposit from Schwab');
     final holdings = await getMyHoldings();
-    holdings.of(dollars).dollarValue.amt += deposit.amt;
+    holdings.of(dollars).amt += deposit.amt;
     return 'Succeeded';
   }
 }

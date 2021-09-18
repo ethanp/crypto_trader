@@ -73,8 +73,8 @@ class Holdings {
   Holding get shortest => cryptoHoldings
       .reduce((a, b) => a.difference(this) < b.difference(this) ? a : b);
 
-  Holding of(Currency currency) =>
-      holdings.firstWhere((e) => e.currency == currency);
+  Dollars of(Currency currency) =>
+      holdings.firstWhere((e) => e.currency == currency).dollarValue;
 }
 
 class Currency {
@@ -113,7 +113,7 @@ class Currency {
 const bitcoin = Currency(
   name: 'Bitcoin',
   callLetters: 'BTC',
-  percentAllocation: 45,
+  percentAllocation: 42,
 );
 const bitcoinCash = Currency(
   name: 'Bitcoin Cash',
@@ -123,7 +123,7 @@ const bitcoinCash = Currency(
 const cardano = Currency(
   name: 'Cardano',
   callLetters: 'ADA',
-  percentAllocation: 15,
+  percentAllocation: 18,
 );
 const dollars = Currency(
   name: 'US Dollars',
