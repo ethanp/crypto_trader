@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// TODO(bug): Hiding the keyboard undoes the most recent update to the field.
 class EnableKeyboardHiding extends StatelessWidget {
   const EnableKeyboardHiding({required this.child});
 

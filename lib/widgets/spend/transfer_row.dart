@@ -6,38 +6,60 @@ import 'package:intl/intl.dart';
 import 'amount_field.dart';
 import 'spend_button.dart';
 
-class TransferRow extends StatelessWidget {
-  final Future<String> Function(Dollars) action;
-  final String Function(Holdings) buttonText;
-  final Dollars Function(Holdings) initialInput;
-
+/// Allows you to dismiss the keyboard, but leaves the value in the field the
+/// same.
+class TransferRow extends StatefulWidget {
   const TransferRow({
+    required this.initialInput,
     required this.action,
     required this.buttonText,
-    required this.initialInput,
   });
+
+  final Dollars Function(Holdings) initialInput;
+  final Future<String> Function(Dollars) action;
+  final String Function(Holdings) buttonText;
+
+  @override
+  State<TransferRow> createState() => _TransferRowState();
+}
+
+class _TransferRowState extends State<TransferRow> {
+  late final TextEditingController fieldController;
+
+  @override
+  void initState() {
+    fieldController = TextEditingController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Holdings>(
       future: Environment.trader.getMyHoldings(),
       builder: (ctx, snapshot) {
-        if (snapshot.data == null) return Text('Loading');
-        final Holdings holdings = snapshot.data!;
-        final fieldController = TextEditingController(
-          text: NumberFormat('##0.##').format(initialInput(holdings).rounded),
-        );
+        _initFieldText(snapshot.data);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Row(
             children: [
               AmountField(fieldController),
               SizedBox(width: 15),
-              SpendButton(action, buttonText, fieldController, holdings),
+              SpendButton(
+                widget.action,
+                widget.buttonText,
+                fieldController,
+                snapshot.data,
+              ),
             ],
           ),
         );
       },
     );
+  }
+
+  void _initFieldText(Holdings? holdings) {
+    if (holdings != null && fieldController.text.isEmpty)
+      fieldController.text =
+          NumberFormat('##0.##').format(widget.initialInput(holdings).rounded);
   }
 }

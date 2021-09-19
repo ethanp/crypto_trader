@@ -10,7 +10,7 @@ class SpendButton extends StatelessWidget {
   final Future<String> Function(Dollars) action;
   final String Function(Holdings) buttonText;
   final TextEditingController input;
-  final Holdings holdings;
+  final Holdings? holdings;
 
   const SpendButton(this.action, this.buttonText, this.input, this.holdings);
 
@@ -34,7 +34,7 @@ class SpendButton extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Text(buttonText(holdings)),
+        child: Text(holdings == null ? 'Loading' : buttonText(holdings!)),
       ),
     );
   }
