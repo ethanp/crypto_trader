@@ -123,7 +123,8 @@ class TransferRow extends StatelessWidget {
         keyboardType: TextInputType.numberWithOptions(decimal: true),
         // These are called before `onChanged:`
         inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'[\.0-9]'))
+          FilteringTextInputFormatter.allow(RegExp(r'[\.0-9]')),
+          LengthLimitingTextInputFormatter(5),
         ],
       ),
     );
@@ -137,9 +138,9 @@ class TransferRow extends StatelessWidget {
     else if (double.tryParse(input) == null)
       return 'Not \$';
     else if (double.parse(input) < 10)
-      return 'Too small';
+      return '≥\$10';
     else if (double.parse(input) >= 100)
-      return 'Too big';
+      return '<\$100';
     else if (input.indexOf('.') < input.length - 3)
       return 'Not \$';
     else

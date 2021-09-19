@@ -76,11 +76,9 @@ class Portfolio extends StatelessWidget {
           (states) => idx.isEven ? Colors.grey.withOpacity(0.4) : null);
 
   Widget _difference(Holding holding, Holdings holdings) {
-    var difference = holding.difference(holdings);
+    final difference = holding.difference(holdings);
     final color = difference >= 0 ? Colors.red : Colors.green;
-    final int differenceInt = difference.abs().round();
-    final suffix = difference > 0 ? '% too much' : '% too little';
-    return Text('$differenceInt$suffix', style: TextStyle(color: color));
+    return Text('${difference.round()}%', style: TextStyle(color: color));
   }
 }
 
