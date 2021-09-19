@@ -24,6 +24,7 @@ class TransferRow extends StatefulWidget {
 }
 
 class _TransferRowState extends State<TransferRow> {
+  /// Lives in State so that it survives across Widget re-builds.
   late final TextEditingController fieldController;
 
   @override
@@ -39,16 +40,23 @@ class _TransferRowState extends State<TransferRow> {
       builder: (ctx, snapshot) {
         _initFieldText(snapshot.data);
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AmountField(fieldController),
+              SizedBox(
+                height: 70,
+                child: AmountField(fieldController),
+              ),
               SizedBox(width: 15),
-              SpendButton(
-                widget.action,
-                widget.buttonText,
-                fieldController,
-                snapshot.data,
+              SizedBox(
+                height: 40,
+                child: SpendButton(
+                  widget.action,
+                  widget.buttonText,
+                  fieldController,
+                  snapshot.data,
+                ),
               ),
             ],
           ),
