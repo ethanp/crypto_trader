@@ -70,14 +70,13 @@ class TransferRow extends StatelessWidget {
   ) {
     return OutlinedButton(
       onPressed: () {
-        if (_inputIsValid(input.text)) {
-          _transact(input)
-              // Func is required for type-bug in the Future API :/
-              .then((_) {}, onError: (Object err) => _showError(context, err))
-              .then((value) => _eventuallyRefresh(context));
-        } else {
-          _requireValidInput(context, input);
-        }
+        // Get the NEWEST version of the input text.
+        final amount = input.text;
+        if (!_inputIsValid(amount)) return _inputSnackbar(context, amount);
+        _transact(amount)
+            // Func is required for type-bug in the Future API :/
+            .then((_) {}, onError: (Object err) => _showError(context, err))
+            .then((value) => _eventuallyRefresh(context));
       },
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -86,13 +85,11 @@ class TransferRow extends StatelessWidget {
     );
   }
 
-  Future<String> _transact(TextEditingController input) =>
-      transact(Dollars(double.parse(input.text)));
+  Future<String> _transact(String amount) =>
+      transact(Dollars(double.parse(amount)));
 
-  void _requireValidInput(BuildContext context, TextEditingController input) {
-    _snackbar(context, 'Not sending invalid input ${input.text}',
-        Duration(seconds: 3));
-  }
+  void _inputSnackbar(BuildContext context, String amount) =>
+      _snackbar(context, 'Invalid amount \$$amount', Duration(seconds: 3));
 
   void _showError(BuildContext context, Object err) =>
       _snackbar(context, err.toString(), Duration(minutes: 1));
