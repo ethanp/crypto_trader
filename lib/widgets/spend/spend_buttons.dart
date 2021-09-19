@@ -7,20 +7,17 @@ import 'transfer_row.dart';
 class SpendButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        TransferRow(
-          action: Environment.trader.deposit,
-          buttonText: (holdings) => 'Deposit Dollars',
-          initialInput: (holdings) => Dollars(50),
-        ),
-        TransferRow(
-          action: Environment.trader.spend,
-          buttonText: (holdings) => 'Buy ${holdings.shortest.currency.name}',
-          initialInput: (holdings) => holdings.of(dollars),
-        )
-      ],
-    );
+    return Column(children: [
+      TransferRow(
+        action: Environment.trader.deposit,
+        buttonText: (holdings) => 'Deposit Dollars',
+        initialInput: (holdings) => Dollars(50),
+      ),
+      TransferRow(
+        action: Environment.trader.spend,
+        buttonText: (holdings) => 'Buy ${holdings.shortest.currency.name}',
+        initialInput: (holdings) => holdings.of(dollars),
+      )
+    ]);
   }
 }
