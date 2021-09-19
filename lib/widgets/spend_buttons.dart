@@ -2,6 +2,7 @@ import 'package:crypto_trader/data/data_sources.dart';
 import 'package:crypto_trader/data_model.dart';
 import 'package:crypto_trader/helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class SpendButtons extends StatelessWidget {
@@ -11,80 +12,51 @@ class SpendButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       // TODO it reloads the info after spend but not after deposit.
       //  What's the difference between the two implementation-wise?
-      children: [_depositRow(context), _spendRow(context)],
-    );
-  }
-
-  Widget _depositRow(BuildContext context) {
-    final textFieldController = TextEditingController(text: 50.toString());
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      //  Not much?? Tried it again and it still is so Sept 18, '21.
       children: [
-        _amountField(textFieldController),
-        SizedBox(width: 15),
-        _depositButton(context, textFieldController),
+        TransferRow(
+          transact: Environment.trader.deposit,
+          buttonText: (holdings) => 'Transfer from Schwab',
+          initialInput: (holdings) => Dollars(50),
+        ),
+        TransferRow(
+          transact: Environment.trader.spend,
+          buttonText: (holdings) => 'Buy ${holdings.shortest.currency.name}',
+          initialInput: (holdings) => holdings.of(dollars),
+        )
       ],
     );
   }
+}
 
-  ElevatedButton _depositButton(
-    BuildContext context,
-    TextEditingController textFieldController,
-  ) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(primary: Colors.green),
-      onPressed: () {
-        Environment.trader
-            .deposit(Dollars(double.parse(textFieldController.text)))
-            .whenComplete(() => context.read<UiRefresher>().refreshUi());
-      },
-      child: _text(context, 'Deposit from Schwab'),
-    );
-  }
+class TransferRow extends StatelessWidget {
+  final Future<String> Function(Dollars) transact;
+  final String Function(Holdings) buttonText;
+  final Dollars Function(Holdings) initialInput;
 
-  SizedBox _amountField(TextEditingController textFieldController) {
-    return SizedBox(
-      width: 60,
-      child: TextFormField(
-        controller: textFieldController,
-        decoration: const InputDecoration(
-          border: UnderlineInputBorder(),
-          labelText: '\$ Amount',
-        ),
-        textAlign: TextAlign.center,
-        onChanged: null,
-      ),
-    );
-  }
+  const TransferRow({
+    required this.transact,
+    required this.buttonText,
+    required this.initialInput,
+  });
 
-  Widget _spendRow(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return FutureBuilder<Holdings>(
       future: Environment.trader.getMyHoldings(),
       builder: (ctx, snapshot) {
         if (snapshot.data == null) return Text('Loading');
         final Holdings holdings = snapshot.data!;
-        final currency = holdings.shortest.currency;
         final fieldController = TextEditingController(
-            text: holdings.of(dollars).amt.toInt().toString());
+          text: NumberFormat('##0.##').format(initialInput(holdings).rounded),
+        );
         return Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                width: 30,
-                child: TextFormField(controller: fieldController),
-              ),
+              _field(fieldController),
               SizedBox(width: 15),
-              ElevatedButton(
-                onPressed: () {
-                  Environment.trader
-                      .spend(Dollars(double.parse(fieldController.text)))
-                      .whenComplete(
-                          () => context.read<UiRefresher>().refreshUi());
-                },
-                child: _text(ctx, 'Buy ${currency.name}'),
-              ),
+              _button(fieldController, ctx, holdings),
             ],
           ),
         );
@@ -92,10 +64,38 @@ class SpendButtons extends StatelessWidget {
     );
   }
 
-  Widget _text(BuildContext context, String text) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Text(text, style: Theme.of(context).textTheme.button),
+  OutlinedButton _button(
+    TextEditingController input,
+    BuildContext context,
+    Holdings holdings,
+  ) {
+    return OutlinedButton(
+      onPressed: () => transact(Dollars(double.parse(input.text)))
+          .then((value) => context.read<UiRefresher>().refreshUi())
+          .catchError((Object err) => _errorSnackbar(context, err)),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Text(buttonText(holdings)),
+      ),
+    );
+  }
+
+  void _errorSnackbar(BuildContext ctx, Object error) =>
+      ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(content: Text('$error'), duration: Duration(minutes: 1)));
+
+  SizedBox _field(TextEditingController fieldController) {
+    return SizedBox(
+      width: 60,
+      child: TextFormField(
+        controller: fieldController,
+        decoration: const InputDecoration(
+          border: UnderlineInputBorder(),
+          labelText: '\$ Amount',
+        ),
+        textAlign: TextAlign.center,
+        onChanged: null,
+      ),
     );
   }
 }

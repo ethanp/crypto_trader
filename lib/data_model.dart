@@ -25,6 +25,8 @@ class Dollars {
   // TODO: I never thought through whether this one is correct.
   Future<double> translateTo(Currency currency) async =>
       await Environment.prices.currentPrice(of: currency) / amt;
+
+  double get rounded => double.parse(this.amt.toStringAsFixed(2));
 }
 
 class Holding {

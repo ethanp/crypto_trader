@@ -21,13 +21,23 @@ abstract class Trader extends ChangeNotifier {
 
   Future<Holdings> getMyHoldings() async {
     await _synchronizer.synchronized(() async {
-      var bool = !_cacheValid || _holdingsCache == null;
-      print('Getting holdings? $bool');
-      if (bool) {
+      var shouldRefreshCache = !_cacheValid || _holdingsCache == null;
+      if (!shouldRefreshCache)
+        print('Not refreshing holdings cache');
+      else {
+        var debugStr = 'REFRESHING holdings cache! ';
+        if (!_cacheValid) debugStr += 'cache was invalidated';
+        if (_holdingsCache == null) {
+          if (!_cacheValid) debugStr += ' AND';
+          debugStr += 'cache was null';
+        }
+        print(debugStr);
         _holdingsCache = await holdingsInternal();
         _cacheValid = true;
+        print('Refilled holdings cache');
       }
     });
+    print('Returning my holdings');
     return Future.value(_holdingsCache);
   }
 
@@ -42,6 +52,7 @@ abstract class Trader extends ChangeNotifier {
 
   Future<String> spend(Dollars dollars) async =>
       await _synchronizer.synchronized(() async {
+        print('Spending $dollars');
         return spendInternal(
           Holding(
             currency: (await getMyHoldings()).shortest.currency,
@@ -52,6 +63,7 @@ abstract class Trader extends ChangeNotifier {
 
   Future<String> deposit(Dollars dollars) async =>
       await _synchronizer.synchronized(() async {
+        print('Depositing $dollars');
         return depositInternal(dollars);
       });
 

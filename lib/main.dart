@@ -1,4 +1,4 @@
-import 'package:crypto_trader/widgets/ui.dart';
+import 'package:crypto_trader/widgets/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

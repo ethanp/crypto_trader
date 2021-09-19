@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
-import 'package:crypto_trader/data/access/config.dart';
 import 'package:crypto_trader/data_model.dart';
 import 'package:http/http.dart' as http;
+
+import 'config.dart';
 
 class CoinbaseApi {
   static final coinbaseProAddress = 'pro.coinbase.com';
