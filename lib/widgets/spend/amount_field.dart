@@ -15,6 +15,8 @@ class AmountField extends StatelessWidget {
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           labelText: '\$ Amount',
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(vertical: 10),
         ),
         textAlign: TextAlign.center,
         validator: validateInput,

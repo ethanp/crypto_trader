@@ -17,6 +17,12 @@ class SpendButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(
+          width: .5,
+          color: Colors.blueAccent,
+        ),
+      ),
       onPressed: () {
         // Get the NEWEST version of the input text.
         final amount = input.text;
