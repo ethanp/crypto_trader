@@ -6,10 +6,18 @@ import 'home_page.dart';
 class AppTheme extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: _appTheme(),
-      home: HomePage(),
+    return GestureDetector(
+      // This enables keyboard dismissal.
+      // Source: https://flutterigniter.com/dismiss-keyboard-form-lose-focus/
+      onTap: () {
+        // https://stackoverflow.com/a/62327156/1959155
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: _appTheme(),
+        home: HomePage(),
+      ),
     );
   }
 

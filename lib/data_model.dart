@@ -64,7 +64,8 @@ class Holdings {
       Dollars(0), (acc, e) => acc + e.dollarValue.amt);
 
   List<Holding> get cryptoHoldings =>
-      holdings.where((h) => h.currency != dollars).toList();
+      holdings.where((h) => h.currency != dollars).toList()
+        ..sort((a, b) => _alphabeticalByName(a.currency, b.currency));
 
   static Holdings random() => Holdings(portfolioCurrencies
       .map((c) => Holding(currency: c, dollarValue: Dollars.random(max: 20)))

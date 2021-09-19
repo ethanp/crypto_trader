@@ -63,17 +63,18 @@ class Portfolio extends StatelessWidget {
             .map((data) => data.label)
             .map((colName) => DataColumn(label: Text(colName)))
             .toList(),
-        rows: holdings.cryptoHoldings.zipWithIndex((Holding holding, int idx) =>
-            DataRow(
-                color: _alternatinglyGrey(idx),
-                cells: rowData
-                    .map((extractor) => extractor.extractWidget(holding))
-                    .map((widget) => DataCell(Center(child: widget)))
-                    .toList())));
+        rows: (holdings.cryptoHoldings
+              ..sort((a, b) => a.currency.name.compareTo(b.currency.name)))
+            .zipWithIndex((Holding holding, int idx) => DataRow(
+                color: _oddGreyEvenWhite(idx),
+                cells: rowData.zipWithIndex((extractor, colIdx) {
+                  var widget = extractor.extractWidget(holding);
+                  if (colIdx != 0) widget = Center(child: widget);
+                  return DataCell(widget);
+                }).toList())));
   }
 
-  /// Grey for even rows, default for odd.
-  MaterialStateProperty<Color?> _alternatinglyGrey(int idx) =>
+  MaterialStateProperty<Color?> _oddGreyEvenWhite(int idx) =>
       MaterialStateProperty.resolveWith<Color?>(
           (states) => idx.isEven ? Colors.grey.withOpacity(0.4) : null);
 

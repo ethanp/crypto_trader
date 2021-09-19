@@ -4,6 +4,7 @@ import 'package:crypto_trader/data/data_sources.dart';
 import 'package:crypto_trader/data_model.dart';
 import 'package:crypto_trader/helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -14,12 +15,12 @@ class SpendButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         TransferRow(
-          transact: Environment.trader.deposit,
+          action: Environment.trader.deposit,
           buttonText: (holdings) => 'Deposit Dollars',
           initialInput: (holdings) => Dollars(50),
         ),
         TransferRow(
-          transact: Environment.trader.spend,
+          action: Environment.trader.spend,
           buttonText: (holdings) => 'Buy ${holdings.shortest.currency.name}',
           initialInput: (holdings) => holdings.of(dollars),
         )
@@ -29,12 +30,12 @@ class SpendButtons extends StatelessWidget {
 }
 
 class TransferRow extends StatelessWidget {
-  final Future<String> Function(Dollars) transact;
+  final Future<String> Function(Dollars) action;
   final String Function(Holdings) buttonText;
   final Dollars Function(Holdings) initialInput;
 
   const TransferRow({
-    required this.transact,
+    required this.action,
     required this.buttonText,
     required this.initialInput,
   });
@@ -53,7 +54,7 @@ class TransferRow extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(
             children: [
-              _field(fieldController),
+              _field(fieldController, ctx),
               SizedBox(width: 15),
               _button(fieldController, ctx, holdings),
             ],
@@ -86,7 +87,7 @@ class TransferRow extends StatelessWidget {
   }
 
   Future<String> _transact(String amount) =>
-      transact(Dollars(double.parse(amount)));
+      action(Dollars(double.parse(amount)));
 
   void _inputSnackbar(BuildContext context, String amount) =>
       _snackbar(context, 'Invalid amount \$$amount', Duration(seconds: 3));
@@ -107,7 +108,7 @@ class TransferRow extends StatelessWidget {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(text), duration: duration));
 
-  SizedBox _field(TextEditingController fieldController) {
+  SizedBox _field(TextEditingController fieldController, BuildContext context) {
     return SizedBox(
       width: 80,
       child: TextFormField(
@@ -119,6 +120,11 @@ class TransferRow extends StatelessWidget {
         textAlign: TextAlign.center,
         validator: _validateInput,
         autovalidateMode: AutovalidateMode.always,
+        keyboardType: TextInputType.numberWithOptions(decimal: true),
+        // These are called before `onChanged:`
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'[\.0-9]'))
+        ],
       ),
     );
   }
