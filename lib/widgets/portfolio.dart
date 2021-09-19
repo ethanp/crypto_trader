@@ -59,17 +59,14 @@ class Portfolio extends StatelessWidget {
     ];
     return DataTable(
         columnSpacing: 10,
-        columns: rowData
-            .map((data) => data.label)
-            .map((colName) => DataColumn(label: Text(colName)))
-            .toList(),
-        rows: (holdings.cryptoHoldings
-              ..sort((a, b) => a.currency.name.compareTo(b.currency.name)))
+        columns:
+            rowData.map((data) => DataColumn(label: Text(data.label))).toList(),
+        rows: holdings.cryptoHoldings
             .zipWithIndex((Holding holding, int idx) => DataRow(
                 color: _oddGreyEvenWhite(idx),
-                cells: rowData.zipWithIndex((extractor, colIdx) {
+                cells: rowData.map((extractor) {
                   var widget = extractor.extractWidget(holding);
-                  if (colIdx != 0) widget = Center(child: widget);
+                  if (extractor.label != 'Name') widget = Center(child: widget);
                   return DataCell(widget);
                 }).toList())));
   }
