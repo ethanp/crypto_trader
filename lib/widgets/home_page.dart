@@ -3,7 +3,7 @@ import 'package:crypto_trader/widgets/portfolio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'spend_buttons.dart';
+import 'spend/spend_buttons.dart';
 import 'total_holdings.dart';
 
 class HomePage extends StatelessWidget {
