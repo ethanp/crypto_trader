@@ -105,8 +105,15 @@ class TransferRow extends StatelessWidget {
   }
 
   void _snackbar(BuildContext context, String text, Duration duration) =>
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(text), duration: duration));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(text),
+        duration: duration,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          onPressed: () {},
+          textColor: Colors.blueGrey[200],
+        ),
+      ));
 
   SizedBox _field(TextEditingController fieldController, BuildContext context) {
     return SizedBox(

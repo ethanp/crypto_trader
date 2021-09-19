@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
 
 class Environment {
-  // static Trader trader = FakeTrader();
-  // static Prices prices = FakePrices();
-  static Trader trader = CoinbaseProTrader();
-  static Prices prices = CoinbaseProPrices();
+  static Trader trader = FakeTrader();
+  static Prices prices = FakePrices();
+  // static Trader trader = CoinbaseProTrader();
+  // static Prices prices = CoinbaseProPrices();
 }
 
 abstract class Trader extends ChangeNotifier {
@@ -28,7 +28,7 @@ abstract class Trader extends ChangeNotifier {
         var debugStr = 'REFRESHING holdings cache! ';
         if (!_cacheValid) debugStr += 'cache was invalidated';
         if (_holdingsCache == null) {
-          if (!_cacheValid) debugStr += ' AND';
+          if (!_cacheValid) debugStr += ' AND ';
           debugStr += 'cache was null';
         }
         print(debugStr);

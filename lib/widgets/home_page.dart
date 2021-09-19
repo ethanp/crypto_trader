@@ -23,8 +23,11 @@ class HomePage extends StatelessWidget {
       body: Column(children: [
         TotalHoldings(),
         SpendButtons(),
-        Flexible(child: Portfolio()),
+        if (keyboardIsShowing(context)) Flexible(child: Portfolio()),
       ]),
     );
   }
+
+  bool keyboardIsShowing(BuildContext context) =>
+      MediaQuery.of(context).viewInsets.bottom == 0;
 }
