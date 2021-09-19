@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UiRefresher extends ChangeNotifier {
-  void refreshUi() {
+  Future<void> refreshUi() async {
     print('Refreshing UI');
-    Environment.trader.getMyHoldings();
+    await Environment.trader.forceRefreshHoldings();
     notifyListeners();
   }
 

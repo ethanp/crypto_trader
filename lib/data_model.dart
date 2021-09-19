@@ -77,6 +77,9 @@ class Holdings {
 
   Dollars of(Currency currency) =>
       holdings.firstWhere((e) => e.currency == currency).dollarValue;
+
+  @override
+  String toString() => 'Holdings{\n${holdings.join('\n')}\n';
 }
 
 class Currency {

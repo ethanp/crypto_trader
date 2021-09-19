@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crypto_trader/data/data_sources.dart';
 import 'package:crypto_trader/data_model.dart';
 import 'package:crypto_trader/helpers.dart';
@@ -10,13 +12,10 @@ class SpendButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      // TODO it reloads the info after spend but not after deposit.
-      //  What's the difference between the two implementation-wise?
-      //  Not much?? Tried it again and it still is so Sept 18, '21.
       children: [
         TransferRow(
           transact: Environment.trader.deposit,
-          buttonText: (holdings) => 'Transfer from Schwab',
+          buttonText: (holdings) => 'Deposit Dollars',
           initialInput: (holdings) => Dollars(50),
         ),
         TransferRow(
@@ -70,9 +69,16 @@ class TransferRow extends StatelessWidget {
     Holdings holdings,
   ) {
     return OutlinedButton(
-      onPressed: () => transact(Dollars(double.parse(input.text)))
-          .then((value) => context.read<UiRefresher>().refreshUi())
-          .catchError((Object err) => _errorSnackbar(context, err)),
+      onPressed: () {
+        if (_inputIsValid(input.text)) {
+          _transact(input)
+              // Func is required for type-bug in the Future API :/
+              .then((_) {}, onError: (Object err) => _showError(context, err))
+              .then((value) => _eventuallyRefresh(context));
+        } else {
+          _requireValidInput(context, input);
+        }
+      },
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Text(buttonText(holdings)),
@@ -80,22 +86,60 @@ class TransferRow extends StatelessWidget {
     );
   }
 
-  void _errorSnackbar(BuildContext ctx, Object error) =>
-      ScaffoldMessenger.of(ctx).showSnackBar(
-          SnackBar(content: Text('$error'), duration: Duration(minutes: 1)));
+  Future<String> _transact(TextEditingController input) =>
+      transact(Dollars(double.parse(input.text)));
+
+  void _requireValidInput(BuildContext context, TextEditingController input) {
+    _snackbar(context, 'Not sending invalid input ${input.text}',
+        Duration(seconds: 3));
+  }
+
+  void _showError(BuildContext context, Object err) =>
+      _snackbar(context, err.toString(), Duration(minutes: 1));
+
+  Future<void> _eventuallyRefresh(BuildContext context) {
+    _snackbar(context, 'Waiting for Coinbase', Duration(seconds: 8));
+    print('Scheduling refresh');
+    // We need this delay because the transfer from Schwab takes a
+    // few seconds to be reflected. 4 wasn't enough so using 8.
+    return Future.delayed(
+        Duration(seconds: 8), () => context.read<UiRefresher>().refreshUi());
+  }
+
+  void _snackbar(BuildContext context, String text, Duration duration) =>
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(text), duration: duration));
 
   SizedBox _field(TextEditingController fieldController) {
     return SizedBox(
-      width: 60,
+      width: 80,
       child: TextFormField(
         controller: fieldController,
         decoration: const InputDecoration(
-          border: UnderlineInputBorder(),
+          border: OutlineInputBorder(),
           labelText: '\$ Amount',
         ),
         textAlign: TextAlign.center,
-        onChanged: null,
+        validator: _validateInput,
+        autovalidateMode: AutovalidateMode.always,
       ),
     );
+  }
+
+  bool _inputIsValid(String? input) => _validateInput(input) == null;
+
+  String? _validateInput(String? input) {
+    if (input == null || input.isEmpty)
+      return 'Empty';
+    else if (double.tryParse(input) == null)
+      return 'Not \$';
+    else if (double.parse(input) < 10)
+      return 'Too small';
+    else if (double.parse(input) >= 100)
+      return 'Too big';
+    else if (input.indexOf('.') < input.length - 3)
+      return 'Not \$';
+    else
+      return null;
   }
 }

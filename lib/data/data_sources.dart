@@ -34,10 +34,9 @@ abstract class Trader extends ChangeNotifier {
         print(debugStr);
         _holdingsCache = await holdingsInternal();
         _cacheValid = true;
-        print('Refilled holdings cache');
+        print('Refilled holdings cache $_holdingsCache');
       }
     });
-    print('Returning my holdings');
     return Future.value(_holdingsCache);
   }
 
@@ -73,6 +72,11 @@ abstract class Trader extends ChangeNotifier {
   //    changes would fix it, instead of only registering the top-level Widget.
   Future<void> invalidateHoldings() async =>
       await _synchronizer.synchronized(() => _cacheValid = false);
+
+  Future<void> forceRefreshHoldings() async {
+    if (_cacheValid) await invalidateHoldings();
+    await getMyHoldings();
+  }
 }
 
 class FakeTrader extends Trader {
