@@ -1,18 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'enable_keyboard_hiding.dart';
 import 'home_page.dart';
 
 class AppTheme extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      // This enables keyboard dismissal.
-      // Source: https://flutterigniter.com/dismiss-keyboard-form-lose-focus/
-      onTap: () {
-        // https://stackoverflow.com/a/62327156/1959155
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
+    return EnableKeyboardHiding(
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: _appTheme(),
