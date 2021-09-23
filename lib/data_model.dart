@@ -16,15 +16,15 @@ class Dollars {
   @override
   String toString() => NumberFormat.simpleCurrency().format(amt);
 
-  operator +(double o) => Dollars(amt + o);
+  Dollars operator +(double o) => Dollars(amt + o);
 
-  operator *(double o) => Dollars(amt * o);
+  Dollars operator *(double o) => Dollars(amt * o);
 
-  operator /(double o) => Dollars(amt / o);
+  Dollars operator /(Dollars o) => Dollars(amt / o.amt);
 
   // TODO: I never thought through whether this one is correct.
   Future<double> translateTo(Currency currency) async =>
-      await Environment.prices.currentPrice(of: currency) / amt;
+      (await Environment.prices.currentPrice(of: currency) / this).amt;
 
   double get rounded => double.parse(this.amt.toStringAsFixed(2));
 }
@@ -38,19 +38,9 @@ class Holding {
   final Currency currency;
   final Dollars dollarValue;
 
-  double asPercentageOf(Holdings holdings) {
-    final double total = holdings.totalCryptoValue.amt;
-    final double ratio = dollarValue.amt / total;
-    return ratio * 100;
-  }
-
-  double difference(Holdings holdings) =>
-      asPercentageOf(holdings) - currency.percentAllocation;
-
   @override
-  String toString() {
-    return 'Holding{currency: $currency, dollarValue: $dollarValue}';
-  }
+  String toString() =>
+      'Holding{currency: $currency, dollarValue: $dollarValue}';
 
   String get asPurchaseStr => '$dollarValue of ${currency.name}';
 }
@@ -73,14 +63,20 @@ class Holdings {
 
   /// The [Holding] with the largest shortfall in percentage of portfolio
   /// compared to what was allocated.
-  Holding get shortest => cryptoHoldings
-      .reduce((a, b) => a.difference(this) < b.difference(this) ? a : b);
+  Holding get shortest => cryptoHoldings.reduce((Holding a, Holding b) =>
+      difference(a.currency) < difference(b.currency) ? a : b);
 
-  Dollars of(Currency currency) =>
+  Dollars dollarsOf(Currency currency) =>
       holdings.firstWhere((e) => e.currency == currency).dollarValue;
 
   @override
   String toString() => 'Holdings{\n${holdings.join('\n')}\n';
+
+  double percentageContaining(Currency currency) =>
+      (dollarsOf(currency) / totalCryptoValue * 100).amt;
+
+  double difference(Currency currency) =>
+      percentageContaining(currency) - currency.percentAllocation;
 }
 
 class Currency {
@@ -158,6 +154,9 @@ List<Currency> get portfolioCurrencies {
   ])
     ..sort(_alphabeticalByName);
 }
+
+List<Currency> get portfolioCryptoCurrencies =>
+    portfolioCurrencies.where((c) => c != dollars).toList();
 
 List<Currency> _validate(List<Currency> list) {
   final sum = list.map((e) => e.percentAllocation).sum;

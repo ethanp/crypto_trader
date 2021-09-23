@@ -18,7 +18,7 @@ class SpendButtons extends StatelessWidget {
         TransferRow(
           action: Environment.trader.spend,
           buttonText: (holdings) => 'Buy ${holdings.shortest.currency.name}',
-          initialInput: (holdings) => holdings.of(dollars),
+          initialInput: (holdings) => holdings.dollarsOf(dollars),
         )
       ]),
     );
