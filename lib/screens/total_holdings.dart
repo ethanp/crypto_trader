@@ -5,16 +5,23 @@ import 'package:flutter/material.dart';
 class TotalHoldings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-      child: Card(
-        color: Colors.yellow[100],
+    final theme = Theme.of(context);
+    return Card(
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20),
+          bottomRight: Radius.circular(20),
+        ),
+      ),
+      color: theme.primaryColor,
+      elevation: 15,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: FutureBuilder<Holdings>(
           future: Environment.trader.getMyHoldings(),
-          builder: (ctx, holdings) {
-            final textTheme = Theme.of(ctx).textTheme;
-            return _displayHoldings(textTheme, holdings.data);
-          },
+          builder: (_ctx, holdings) =>
+              _displayHoldings(theme.textTheme, holdings.data),
         ),
       ),
     );
@@ -43,7 +50,7 @@ class TotalHoldings extends StatelessWidget {
     required TextTheme textTheme,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(5),
       child: Row(children: [
         Text('$title: ', style: textTheme.headline4),
         Text('${value ?? 'Loading...'}', style: textTheme.headline3),

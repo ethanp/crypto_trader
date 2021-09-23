@@ -40,7 +40,7 @@ class _TransferRowState extends State<TransferRow> {
       builder: (ctx, snapshot) {
         _initFieldText(snapshot.data);
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -48,7 +48,7 @@ class _TransferRowState extends State<TransferRow> {
                 height: 70,
                 child: AmountField(fieldController),
               ),
-              SizedBox(width: 15),
+              SizedBox(width: 30),
               SizedBox(
                 height: 40,
                 child: SpendButton(

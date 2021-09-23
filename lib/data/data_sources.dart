@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
 
 class Environment {
-  static Trader trader = FakeTrader();
-  static Prices prices = FakePrices();
-  // static Trader trader = CoinbaseProTrader();
-  // static Prices prices = CoinbaseProPrices();
+  static const bool fake = false;
+  static Trader trader = fake ? FakeTrader() : CoinbaseProTrader();
+  static Prices prices = fake ? FakePrices() : CoinbaseProPrices();
 }
 
 abstract class Trader extends ChangeNotifier {

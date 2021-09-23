@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UiRefresher extends ChangeNotifier {
-  Future<void> refreshUi() async {
+  static void register(BuildContext context) => context.watch<UiRefresher>();
+
+  static Future<void> refresh(BuildContext c) async =>
+      c.read<UiRefresher>()._refreshUi();
+
+  Future<void> _refreshUi() async {
     print('Refreshing UI');
     await Environment.trader.forceRefreshHoldings();
     notifyListeners();
   }
-
-  static void register(BuildContext context) => context.watch<UiRefresher>();
 }
 
 extension Zipper<T> on List<T> {

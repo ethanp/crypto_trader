@@ -11,20 +11,22 @@ class Portfolio extends StatelessWidget {
       future: Environment.trader.getMyHoldings(),
       builder: (ctx, holdings) => !holdings.hasData
           ? Text('Loading')
-          : Column(
-              children: [
-                Expanded(child: SizedBox(height: 0)),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 40),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.brown, width: 5),
-                      borderRadius: BorderRadius.all(Radius.circular(3)),
+          : Flexible(
+              child: Column(
+                children: [
+                  Expanded(child: SizedBox(height: 0)),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.brown, width: 5),
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                      ),
+                      child: _dataTable(holdings.data!),
                     ),
-                    child: _dataTable(holdings.data!),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
     );
   }

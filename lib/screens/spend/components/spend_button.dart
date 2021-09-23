@@ -1,7 +1,6 @@
 import 'package:crypto_trader/data_model.dart';
 import 'package:crypto_trader/helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'amount_field.dart';
 import 'text_with_countdown.dart';
@@ -16,26 +15,18 @@ class SpendButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        side: BorderSide(
-          width: .5,
-          color: Colors.blueAccent,
-        ),
-      ),
+    return ElevatedButton(
       onPressed: () {
         // Get the NEWEST version of the input text.
         final amount = input.text;
         if (!_inputIsValid(amount)) return _inputSnackbar(context, amount);
+        _snackbar(context, 'Transacting $amount', Duration(seconds: 2));
         _transact(amount)
             // Func is required for type-bug in the Future API :/
             .then((_) {}, onError: (Object err) => _showError(context, err))
             .then((value) => _eventuallyRefresh(context));
       },
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Text(holdings == null ? 'Loading' : buttonText(holdings!)),
-      ),
+      child: Text(holdings == null ? 'Loading' : buttonText(holdings!)),
     );
   }
 
@@ -49,12 +40,12 @@ class SpendButton extends StatelessWidget {
       _snackbar(context, err.toString(), Duration(minutes: 1));
 
   Future<void> _eventuallyRefresh(BuildContext context) {
-    _snackbar(context, 'Waiting for Coinbase', Duration(seconds: 8));
+    _snackbar(context, 'Waiting for Coinbase', Duration(seconds: 6));
     print('Scheduling refresh');
     // We need this delay because the transfer from Schwab takes a
     // few seconds to be reflected. 4 wasn't enough so using 8.
     return Future.delayed(
-        Duration(seconds: 8), () => context.read<UiRefresher>().refreshUi());
+        Duration(seconds: 8), () => UiRefresher.refresh(context));
   }
 
   void _snackbar(BuildContext context, String text, Duration duration) =>
