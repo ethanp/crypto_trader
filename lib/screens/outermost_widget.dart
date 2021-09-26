@@ -3,7 +3,7 @@ import 'package:crypto_trader/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'components/body.dart';
+import 'body.dart';
 
 class OutermostWidget extends StatelessWidget {
   @override

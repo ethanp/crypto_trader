@@ -1,9 +1,8 @@
 import 'package:crypto_trader/data/model/data_model.dart';
 import 'package:crypto_trader/helpers.dart';
+import 'package:crypto_trader/widgets/spend/spend_widgets.dart';
+import 'package:crypto_trader/widgets/text_with_countdown.dart';
 import 'package:flutter/material.dart';
-
-import 'amount_field.dart';
-import 'text_with_countdown.dart';
 
 class SpendButton extends StatelessWidget {
   final Future<String> Function(Dollars) action;

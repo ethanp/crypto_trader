@@ -1,4 +1,4 @@
-import 'package:crypto_trader/screens/home_page/outermost_widget.dart';
+import 'package:crypto_trader/screens/outermost_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // TODO(bug): The test is not passing.

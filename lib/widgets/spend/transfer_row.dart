@@ -1,10 +1,8 @@
 import 'package:crypto_trader/data/controller/data_controller.dart';
 import 'package:crypto_trader/data/model/data_model.dart';
+import 'package:crypto_trader/widgets/spend/spend_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-import 'amount_field.dart';
-import 'spend_button.dart';
 
 /// Allows you to dismiss the keyboard, but leaves the value in the field the
 /// same.

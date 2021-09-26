@@ -1,5 +1,6 @@
 import 'package:crypto_trader/data/controller/data_controller.dart';
 import 'package:crypto_trader/data/model/data_model.dart';
+import 'package:crypto_trader/widgets/portfolio/portfolio_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,101 +11,35 @@ class Portfolio extends StatelessWidget {
       future: Environment.trader.getMyHoldings(),
       builder: (ctx, holdings) => Flexible(
         child: Column(children: [
-          Expanded(
-              child: Stack(
-            children: [
-              Center(
-                  child: Text(
-                'Chart will go here',
-                style: Theme.of(context).textTheme.headline5,
-              )),
-              Placeholder(color: Colors.black26),
-            ],
-          )),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 40),
-            child: _cards(holdings.data),
-          ),
+          Expanded(child: _chart(context)),
+          _cards(holdings.data),
         ]),
       ),
     );
   }
 
-  Widget _cards(Holdings? holdings) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: Currencies.allCryptoCurrencies
-            .map((currency) => MyCard(holdings, currency))
-            .toList(),
-      ),
-    );
-  }
-}
-
-class MyCard extends StatelessWidget {
-  const MyCard(this.holdings, this.currency);
-
-  final Holdings? holdings;
-  final Currency currency;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 20,
-      color: Colors.blue[100],
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(children: [
-          _name(context),
-          _holding(context),
-          _percentageOfPortfolio(context),
-        ]),
-      ),
-    );
-  }
-
-  Widget _percentageOfPortfolio(BuildContext context) {
-    return holdings == null
-        ? Text('Loading')
-        : Row(children: [
-            Text(
-              '${holdings!.percentageContaining(currency).round()}%'
-              ' / '
-              '${currency.percentAllocation}%',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            SizedBox(width: 10),
-            _difference(holdings!.difference(currency)),
-          ]);
-  }
-
-  Text _holding(BuildContext context) {
-    return Text(
-      holdings?.dollarsOf(currency).toString() ?? 'Loading',
-      style: Theme.of(context).textTheme.headline6,
-    );
-  }
-
-  Widget _name(BuildContext context) {
-    return Row(children: [
-      Text(
-        currency.callLetters,
-        style: Theme.of(context)
-            .textTheme
-            .headline6!
-            .copyWith(color: Colors.grey[600]),
-      ),
-      SizedBox(width: 10),
-      Text(
-        currency.name,
+  Widget _chart(BuildContext context) {
+    return Stack(children: [
+      Center(
+          child: Text(
+        'Chart will go here',
         style: Theme.of(context).textTheme.headline5,
-      ),
+      )),
+      Placeholder(color: Colors.black26),
     ]);
   }
 
-  Widget _difference(double difference) {
-    final Color color = difference >= 0 ? Colors.red : Colors.green;
-    return Text('${difference.round()}%', style: TextStyle(color: color));
+  Widget _cards(Holdings? holdings) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 40),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: Currencies.allCryptoCurrencies
+              .map((currency) => PortfolioCard(holdings, currency))
+              .toList(),
+        ),
+      ),
+    );
   }
 }

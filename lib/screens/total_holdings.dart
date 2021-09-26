@@ -20,27 +20,28 @@ class TotalHoldings extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: FutureBuilder<Holdings>(
           future: Environment.trader.getMyHoldings(),
-          builder: (_ctx, holdings) =>
-              _displayHoldings(theme.textTheme, holdings.data),
+          builder: (_ctx, holdings) => Column(children: [
+            _cashAvailable(holdings.data, theme.textTheme),
+            _cryptoHoldings(holdings.data, theme.textTheme),
+          ]),
         ),
       ),
     );
   }
 
-  Widget _displayHoldings(TextTheme textTheme, Holdings? holdings) {
-    return Column(
-      children: [
-        _element(
-          title: 'Cash available',
-          value: holdings?.dollarsOf(Currencies.dollars).toString(),
-          textTheme: textTheme,
-        ),
-        _element(
-          title: 'Crypto holdings',
-          value: holdings?.totalCryptoValue.toString(),
-          textTheme: textTheme,
-        ),
-      ],
+  Widget _cashAvailable(Holdings? holdings, TextTheme textTheme) {
+    return _element(
+      title: 'Cash available',
+      value: holdings?.dollarsOf(Currencies.dollars).toString(),
+      textTheme: textTheme,
+    );
+  }
+
+  Widget _cryptoHoldings(Holdings? holdings, TextTheme textTheme) {
+    return _element(
+      title: 'Crypto holdings',
+      value: holdings?.totalCryptoValue.toString(),
+      textTheme: textTheme,
     );
   }
 

@@ -1,6 +1,6 @@
 import 'package:crypto_trader/helpers.dart';
 import 'package:crypto_trader/screens/portfolio.dart';
-import 'package:crypto_trader/screens/spend/spend_buttons.dart';
+import 'package:crypto_trader/screens/spend_buttons.dart';
 import 'package:crypto_trader/screens/total_holdings.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +14,10 @@ class Body extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: Text('Crypto: auto-balancing DCA'),
-        leading: InkWell(
-          onTap: () => UiRefresher.refresh(context),
-          child: Icon(Icons.refresh),
+        leading: IconButton(
+          onPressed: () => UiRefresher.refresh(context),
+          tooltip: 'Refresh data',
+          icon: Icon(Icons.refresh),
         ),
       ),
       body: Column(children: [
