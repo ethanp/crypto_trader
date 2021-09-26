@@ -1,15 +1,9 @@
 import 'dart:convert';
 
 import 'package:crypto_trader/data/access/coinbase_api.dart';
-import 'package:crypto_trader/data_model.dart';
+import 'package:crypto_trader/data/model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
-
-class Environment {
-  static const bool fake = false;
-  static Trader trader = fake ? FakeTrader() : CoinbaseProTrader();
-  static Prices prices = fake ? FakePrices() : CoinbaseProPrices();
-}
 
 abstract class Trader extends ChangeNotifier {
   // TODO(low priority): Cache expiration.
@@ -88,7 +82,7 @@ class FakeTrader extends Trader {
     final holdings = await getMyHoldings();
     // Seems ok to violate the "dot-dot principle" here since it's a fake :)
     final Dollars to = holdings.dollarsOf(holding.currency);
-    final Dollars from = holdings.dollarsOf(dollars);
+    final Dollars from = holdings.dollarsOf(Currencies.dollars);
     to.amt += holding.dollarValue.amt;
     from.amt -= holding.dollarValue.amt;
     return 'Succeeded';
@@ -98,7 +92,7 @@ class FakeTrader extends Trader {
   Future<String> depositInternal(Dollars deposit) async {
     print('Fake-transferring $deposit from Schwab');
     final holdings = await getMyHoldings();
-    holdings.dollarsOf(dollars).amt += deposit.amt;
+    holdings.dollarsOf(Currencies.dollars).amt += deposit.amt;
     return 'Succeeded';
   }
 }
@@ -133,64 +127,5 @@ class CoinbaseProTrader extends Trader {
     final Map<String, dynamic> decoded = jsonDecode(depositResponse);
     await invalidateHoldings();
     return decoded['id'];
-  }
-}
-
-class CoinbaseAccount {
-  CoinbaseAccount(this.acct);
-
-  final dynamic acct;
-
-  bool get isSupported => portfolioCurrenciesMap.containsKey(_callLetters);
-
-  Future<Holding> get asHolding async {
-    final Currency currency = Currency.byLetters(_callLetters);
-    final Dollars priceInDollars =
-        await Environment.prices.currentPrice(of: currency);
-    return Holding(
-        currency: currency, dollarValue: priceInDollars * _balanceInCurrency);
-  }
-
-  String get _callLetters => acct['currency'];
-
-  double get _balanceInCurrency => double.parse(acct['balance']);
-}
-
-abstract class Prices extends ChangeNotifier {
-  Future<Dollars> currentPrice({
-    required Currency of,
-    Currency units = dollars,
-  });
-
-  static Future<Dollars> inDollars(Currency currency, double amount) async {
-    final Dollars priceInDollars =
-        await Environment.prices.currentPrice(of: currency);
-    return priceInDollars * amount;
-  }
-}
-
-class FakePrices extends Prices {
-  @override
-  Future<Dollars> currentPrice({
-    required Currency of,
-    Currency units = dollars,
-  }) =>
-      Future.value(Dollars(100));
-}
-
-class CoinbaseProPrices extends Prices {
-  @override
-  Future<Dollars> currentPrice({
-    required Currency of,
-    Currency units = dollars,
-  }) async {
-    final String from = of.callLetters;
-    final String to = units.callLetters;
-    if (from == to) return Dollars(1);
-    final String path = '/products/$from-$to/ticker';
-    final String apiResponse = await CoinbaseApi().get(path: path);
-    final String priceStr = jsonDecode(apiResponse)['price'];
-    final double price = double.parse(priceStr);
-    return Dollars(price);
   }
 }

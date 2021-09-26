@@ -1,5 +1,5 @@
-import 'package:crypto_trader/data/data_sources.dart';
-import 'package:crypto_trader/data_model.dart';
+import 'package:crypto_trader/data/controller/data_controller.dart';
+import 'package:crypto_trader/data/model/data_model.dart';
 import 'package:flutter/material.dart';
 
 import 'components/transfer_row.dart';
@@ -8,7 +8,7 @@ class SpendButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 40),
+      padding: EdgeInsets.only(top: 80, bottom: 60),
       child: Column(children: [
         TransferRow(
           action: Environment.trader.deposit,
@@ -18,7 +18,7 @@ class SpendButtons extends StatelessWidget {
         TransferRow(
           action: Environment.trader.spend,
           buttonText: (holdings) => 'Buy ${holdings.shortest.currency.name}',
-          initialInput: (holdings) => holdings.dollarsOf(dollars),
+          initialInput: (holdings) => holdings.dollarsOf(Currencies.dollars),
         )
       ]),
     );

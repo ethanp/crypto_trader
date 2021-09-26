@@ -1,5 +1,5 @@
-import 'package:crypto_trader/data/data_sources.dart';
-import 'package:crypto_trader/data_model.dart';
+import 'package:crypto_trader/data/controller/data_controller.dart';
+import 'package:crypto_trader/data/model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

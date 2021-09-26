@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
-import 'package:crypto_trader/data_model.dart';
+import 'package:crypto_trader/data/controller/data_controller.dart';
+import 'package:crypto_trader/data/model/data_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'config.dart';
@@ -141,4 +142,24 @@ class CoinbaseApi {
         DateTime.now().millisecondsSinceEpoch / 1000;
     return secondsSinceEpoch.round();
   }
+}
+
+class CoinbaseAccount {
+  CoinbaseAccount(this.acct);
+
+  final dynamic acct;
+
+  bool get isSupported => Currencies.allCurrenciesMap.containsKey(_callLetters);
+
+  Future<Holding> get asHolding async {
+    final Currency currency = Currency.byLetters(_callLetters);
+    final Dollars priceInDollars =
+        await Environment.prices.currentPrice(of: currency);
+    return Holding(
+        currency: currency, dollarValue: priceInDollars * _balanceInCurrency);
+  }
+
+  String get _callLetters => acct['currency'];
+
+  double get _balanceInCurrency => double.parse(acct['balance']);
 }

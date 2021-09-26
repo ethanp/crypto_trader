@@ -1,5 +1,5 @@
-import 'package:crypto_trader/data/data_sources.dart';
-import 'package:crypto_trader/data_model.dart';
+import 'package:crypto_trader/data/controller/data_controller.dart';
+import 'package:crypto_trader/data/model/data_model.dart';
 import 'package:flutter/material.dart';
 
 class TotalHoldings extends StatelessWidget {
@@ -32,7 +32,7 @@ class TotalHoldings extends StatelessWidget {
       children: [
         _element(
           title: 'Cash available',
-          value: holdings?.dollarsOf(dollars).toString(),
+          value: holdings?.dollarsOf(Currencies.dollars).toString(),
           textTheme: textTheme,
         ),
         _element(
