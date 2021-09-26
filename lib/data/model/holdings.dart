@@ -1,4 +1,4 @@
-import 'data_model.dart';
+import '../../import_facade/data_model.dart';
 
 class Holdings {
   const Holdings(this.holdings);

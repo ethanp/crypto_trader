@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:crypto_trader/data/controller/data_controller.dart';
+import 'package:crypto_trader/import_facade/data_controller.dart';
 import 'package:intl/intl.dart';
 
-import 'data_model.dart';
+import '../../import_facade/data_model.dart';
 
 class Dollars {
   Dollars(this.amt);

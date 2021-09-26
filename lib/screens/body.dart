@@ -1,4 +1,4 @@
-import 'package:crypto_trader/helpers.dart';
+import 'package:crypto_trader/import_facade/ui_refresher.dart';
 import 'package:crypto_trader/screens/portfolio.dart';
 import 'package:crypto_trader/screens/spend_buttons.dart';
 import 'package:crypto_trader/screens/total_holdings.dart';

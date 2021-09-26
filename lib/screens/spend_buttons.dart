@@ -1,6 +1,6 @@
-import 'package:crypto_trader/data/controller/data_controller.dart';
-import 'package:crypto_trader/data/model/data_model.dart';
-import 'package:crypto_trader/widgets/spend/spend_widgets.dart';
+import 'package:crypto_trader/import_facade/data_controller.dart';
+import 'package:crypto_trader/import_facade/data_model.dart';
+import 'package:crypto_trader/import_facade/spend_widgets.dart';
 import 'package:flutter/material.dart';
 
 class SpendButtons extends StatelessWidget {
