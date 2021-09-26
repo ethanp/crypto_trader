@@ -66,13 +66,16 @@ class CoinbaseApi {
       headers: headers,
       body: jsonEncode(body),
     );
-    // TODO show this to the user too
     if (res.statusCode != 200) {
-      throw StateError('\n\nError in POST $url from Coinbase API!\n'
-          'response code: ${res.statusCode}\n'
-          'response body: ${res.body}\n'
-          'sent headers: $headers\n'
-          'sent body: $body\n\n');
+      if (res.body.toLowerCase().contains('insufficient funds')) {
+        throw StateError('Insufficient Funds');
+      } else {
+        throw StateError('\n\nError in POST $url from Coinbase API!\n'
+            'response code: ${res.statusCode}\n'
+            'response body: ${res.body}\n'
+            'sent headers: $headers\n'
+            'sent body: $body\n\n');
+      }
     }
     return res.body;
   }

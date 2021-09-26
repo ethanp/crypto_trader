@@ -1,3 +1,4 @@
+import 'package:crypto_trader/data/controller/data_controller.dart';
 import 'package:crypto_trader/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'components/body.dart';
 class OutermostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print('Using ${Environment.trader.runtimeType}');
     return MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => UiRefresher())],
       child: _enableKeyboardHiding(
