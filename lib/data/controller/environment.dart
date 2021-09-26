@@ -1,4 +1,4 @@
-import 'package:crypto_trader/import_facade/data_controller.dart';
+import 'package:crypto_trader/import_facade/controller.dart';
 
 class Environment {
   static const bool fake = false;

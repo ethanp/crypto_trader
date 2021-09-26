@@ -1,6 +1,6 @@
-import 'package:crypto_trader/import_facade/data_controller.dart';
-import 'package:crypto_trader/import_facade/data_model.dart';
-import 'package:crypto_trader/widgets/portfolio/portfolio_card.dart';
+import 'package:crypto_trader/import_facade/controller.dart';
+import 'package:crypto_trader/import_facade/model.dart';
+import 'package:crypto_trader/widgets/portfolio_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

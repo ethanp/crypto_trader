@@ -1,5 +1,5 @@
-import 'package:crypto_trader/import_facade/data_model.dart';
 import 'package:crypto_trader/import_facade/extensions.dart';
+import 'package:crypto_trader/import_facade/model.dart';
 
 class Currencies {
   static const bitcoin = Currency(

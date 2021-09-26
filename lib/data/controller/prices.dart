@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:crypto_trader/data/access/coinbase_api.dart';
-import 'package:crypto_trader/import_facade/data_controller.dart';
-import 'package:crypto_trader/import_facade/data_model.dart';
+import 'package:crypto_trader/import_facade/controller.dart';
+import 'package:crypto_trader/import_facade/model.dart';
 import 'package:flutter/material.dart';
 
 abstract class Prices extends ChangeNotifier {

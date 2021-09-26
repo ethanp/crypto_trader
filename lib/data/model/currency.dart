@@ -1,4 +1,4 @@
-import '../../import_facade/data_model.dart';
+import '../../import_facade/model.dart';
 
 class Currency {
   const Currency({
