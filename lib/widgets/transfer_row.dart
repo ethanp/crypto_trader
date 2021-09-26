@@ -46,7 +46,7 @@ class _TransferRowState extends State<TransferRow> {
                 height: 70,
                 child: AmountField(fieldController),
               ),
-              SizedBox(width: 30),
+              const SizedBox(width: 30),
               SizedBox(
                 height: 40,
                 child: SpendButton(

@@ -32,7 +32,7 @@ class PortfolioCard extends StatelessWidget {
             .headline6!
             .copyWith(color: Colors.grey[600]),
       ),
-      SizedBox(width: 10),
+      const SizedBox(width: 10),
       Text(
         currency.name,
         style: Theme.of(context).textTheme.headline5,
@@ -51,7 +51,7 @@ class PortfolioCard extends StatelessWidget {
     if (holdings == null) return Text('Loading');
     return Row(children: [
       _percentages(Theme.of(context)),
-      SizedBox(width: 10),
+      const SizedBox(width: 10),
       _difference(),
     ]);
   }
