@@ -7,13 +7,11 @@ import 'package:flutter/material.dart';
 class Portfolio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return WithHoldings(
-      builder: (holdings) => Expanded(
-        child: Column(children: [
-          _chart(context),
-          _cards(holdings),
-        ]),
-      ),
+    return Flexible(
+      child: Column(children: [
+        _chart(context),
+        _cards(),
+      ]),
     );
   }
 
@@ -31,14 +29,14 @@ class Portfolio extends StatelessWidget {
     );
   }
 
-  Widget _cards(Holdings? holdings) {
+  Widget _cards() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 40, top: 20),
         child: Row(
           children: Currencies.allCryptoCurrencies
-              .map((currency) => PortfolioCard(holdings, currency))
+              .map((c) => WithHoldings(builder: (h) => PortfolioCard(h, c)))
               .toList(),
         ),
       ),
