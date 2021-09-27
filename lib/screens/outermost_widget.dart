@@ -1,6 +1,5 @@
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/ui_refresher.dart';
-import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +16,6 @@ class OutermostWidget extends StatelessWidget {
       child: _enableKeyboardHiding(
         child: MaterialApp(
           title: 'Crypto Trader',
-          theme: currentAppTheme,
           home: Body(),
         ),
       ),
@@ -38,11 +36,4 @@ class OutermostWidget extends StatelessWidget {
       child: child,
     );
   }
-
-  static ThemeData get currentAppTheme => ThemeData(
-        primarySwatch: kPrimaryColor,
-        textTheme: TextTheme(
-          button: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-      );
 }

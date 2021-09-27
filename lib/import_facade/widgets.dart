@@ -10,4 +10,6 @@ export 'package:crypto_trader/widgets/text_with_countdown.dart';
 export 'package:crypto_trader/widgets/transfer_row.dart';
 export 'package:crypto_trader/widgets/with_holdings.dart';
 
+// Not sure where else to put this?
+// It's used by two different widgets.
 const kPrimaryColor = Colors.blue;

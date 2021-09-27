@@ -24,7 +24,8 @@ class SpendButton extends StatelessWidget {
             .then((_) {}, onError: (Object err) => _showError(context, err))
             .then((value) => _eventuallyRefresh(context));
       },
-      child: Text(holdings == null ? 'Loading' : buttonText(holdings!)),
+      child: Text(holdings == null ? 'Loading' : buttonText(holdings!),
+          style: spendButtonTextStyle),
     );
   }
 
@@ -59,4 +60,7 @@ class SpendButton extends StatelessWidget {
 
   static bool _inputIsValid(String? input) =>
       AmountField.validateInput(input) == null;
+
+  static final spendButtonTextStyle =
+      TextStyle(color: Colors.white, fontSize: 20);
 }
