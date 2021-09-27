@@ -10,7 +10,7 @@ class PortfolioCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 20,
+      elevation: 10,
       color: Colors.blue[100],
       child: Padding(
         padding: const EdgeInsets.all(8),

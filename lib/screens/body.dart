@@ -1,7 +1,5 @@
 import 'package:crypto_trader/import_facade/ui_refresher.dart';
-import 'package:crypto_trader/screens/portfolio.dart';
-import 'package:crypto_trader/screens/spend_buttons.dart';
-import 'package:crypto_trader/screens/total_holdings.dart';
+import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {

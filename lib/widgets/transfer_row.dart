@@ -1,4 +1,3 @@
-import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
@@ -33,10 +32,9 @@ class _TransferRowState extends State<TransferRow> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Holdings>(
-      future: Environment.trader.getMyHoldings(),
-      builder: (ctx, snapshot) {
-        _initFieldText(snapshot.data);
+    return WithHoldings(
+      builder: (snapshot) {
+        _initFieldText(snapshot);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
           child: Row(
@@ -53,7 +51,7 @@ class _TransferRowState extends State<TransferRow> {
                   widget.action,
                   widget.buttonText,
                   fieldController,
-                  snapshot.data,
+                  snapshot,
                 ),
               ),
             ],

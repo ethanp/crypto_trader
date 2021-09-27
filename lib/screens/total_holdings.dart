@@ -1,5 +1,5 @@
-import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
+import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 
 class TotalHoldings extends StatelessWidget {
@@ -8,38 +8,39 @@ class TotalHoldings extends StatelessWidget {
     final theme = Theme.of(context);
     return Card(
       margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
-        ),
-      ),
       color: theme.primaryColor,
       elevation: 15,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        child: FutureBuilder<Holdings>(
-          future: Environment.trader.getMyHoldings(),
-          builder: (_ctx, holdings) => Column(children: [
-            _cashAvailable(holdings.data, theme.textTheme),
-            _cryptoHoldings(holdings.data, theme.textTheme),
-          ]),
+      child: _addGradient(
+        theme: theme,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          child: WithHoldings(
+            builder: (holdings) => _cryptoHoldings(holdings, theme.textTheme),
+          ),
         ),
       ),
     );
   }
 
-  Widget _cashAvailable(Holdings? holdings, TextTheme textTheme) {
-    return _element(
-      title: 'Cash available',
-      value: holdings?.dollarsOf(Currencies.dollars).toString(),
-      textTheme: textTheme,
+  Widget _addGradient({required ThemeData theme, required Widget child}) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            theme.primaryColor,
+            theme.secondaryHeaderColor,
+          ],
+        ),
+      ),
+      child: child,
     );
   }
 
   Widget _cryptoHoldings(Holdings? holdings, TextTheme textTheme) {
     return _element(
-      title: 'Crypto holdings',
+      title: 'Total crypto holdings',
       value: holdings?.totalCryptoValue.toString(),
       textTheme: textTheme,
     );

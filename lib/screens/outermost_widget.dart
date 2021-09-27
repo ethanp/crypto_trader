@@ -1,6 +1,7 @@
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/ui_refresher.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'body.dart';
@@ -8,43 +9,48 @@ import 'body.dart';
 class OutermostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('Using ${Environment.trader.runtimeType}');
+    _alwaysRenderInPortraitOrientation();
+    _printWhichEnvironmentIsActive();
     return MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => UiRefresher())],
       child: _enableKeyboardHiding(
         child: MaterialApp(
           title: 'Crypto Trader',
-          theme: standardTheme,
+          theme: currentAppTheme,
           home: Body(),
         ),
       ),
     );
   }
 
+  void _printWhichEnvironmentIsActive() =>
+      print('Using ${Environment.fake ? 'FAKE' : 'REAL'} Coinbase API');
+
+  void _alwaysRenderInPortraitOrientation() =>
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  /// Hide the keyboard on global tap.
   Widget _enableKeyboardHiding({required Widget child}) {
     return GestureDetector(
-      /// Hide the keyboard on global tap.
-      ///
-      /// Sources:
-      ///   • https://flutterigniter.com/dismiss-keyboard-form-lose-focus/
-      ///   • https://stackoverflow.com/a/62327156/1959155
+      /// Source: https://stackoverflow.com/a/62327156/1959155
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: child,
     );
   }
 
-  static ThemeData get standardTheme => ThemeData(
+  static ThemeData get currentAppTheme => ThemeData(
         primarySwatch: Colors.blue,
+        secondaryHeaderColor: Colors.blue[900],
         textTheme: TextTheme(
           button: TextStyle(color: Colors.white, fontSize: 20),
           headline4: TextStyle(
             color: Colors.grey[100],
-            fontSize: 20,
+            fontSize: 15,
             fontWeight: FontWeight.w600,
           ),
           headline3: TextStyle(
             color: Colors.green[200],
-            fontSize: 26,
+            fontSize: 20,
           ),
         ),
       );
