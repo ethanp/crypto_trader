@@ -9,21 +9,21 @@ class SpendButtons extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: 20, bottom: 60),
       child: Column(children: [
-        _cashAvailable(Theme.of(context)),
+        _cashAvailable(),
         _deposit(),
         _spend(),
       ]),
     );
   }
 
-  Widget _cashAvailable(ThemeData theme) {
+  Widget _cashAvailable() {
     return Padding(
       padding: const EdgeInsets.all(30),
       child: WithHoldings(builder: (holdings) {
         final dollars = holdings?.dollarsOf(Currencies.dollars).toString();
         return Text(
           'Cash available: ' + (dollars ?? 'Loading'),
-          style: theme.textTheme.headline6,
+          style: kCashAvailableStyle,
         );
       }),
     );
@@ -44,4 +44,6 @@ class SpendButtons extends StatelessWidget {
       initialInput: (holdings) => holdings.dollarsOf(Currencies.dollars),
     );
   }
+
+  static final kCashAvailableStyle = TextStyle(fontSize: 20);
 }

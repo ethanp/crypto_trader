@@ -2,7 +2,7 @@ import 'package:crypto_trader/import_facade/model.dart';
 import 'package:flutter/material.dart';
 
 class PortfolioCard extends StatelessWidget {
-  const PortfolioCard(this.holdings, this.currency);
+  PortfolioCard(this.holdings, this.currency);
 
   final Holdings? holdings;
   final Currency currency;
@@ -15,58 +15,67 @@ class PortfolioCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(children: [
-          _name(context),
-          _holding(context),
+          _name(),
+          _holding(),
           _percentageOfPortfolio(context),
         ]),
       ),
     );
   }
 
-  Widget _name(BuildContext context) {
+  Widget _name() {
     return Row(children: [
-      Text(
-        currency.callLetters,
-        style: Theme.of(context)
-            .textTheme
-            .headline6!
-            .copyWith(color: Colors.grey[600]),
-      ),
+      Text(currency.callLetters, style: kCallLettersStyle),
       const SizedBox(width: 10),
       Text(
         currency.name,
-        style: Theme.of(context).textTheme.headline5,
+        style: kCurrencyNameStyle,
       ),
     ]);
   }
 
-  Widget _holding(BuildContext context) {
+  Widget _holding() {
     return Text(
       holdings?.dollarsOf(currency).toString() ?? 'Loading',
-      style: Theme.of(context).textTheme.headline6,
+      style: kHoldingValueStyle,
     );
   }
 
   Widget _percentageOfPortfolio(BuildContext context) {
     if (holdings == null) return Text('Loading');
     return Row(children: [
-      _percentages(Theme.of(context)),
+      _percentages(),
       const SizedBox(width: 10),
       _difference(),
     ]);
   }
 
-  Widget _percentages(ThemeData theme) {
+  Widget _percentages() {
     final actualPercentage = holdings!.percentageContaining(currency).round();
     return Text(
       '$actualPercentage% / ${currency.percentAllocation}%',
-      style: theme.textTheme.bodyText1,
+      style: kPercentagesStyle,
     );
   }
 
   Widget _difference() {
     final difference = holdings!.difference(currency);
     final Color color = difference >= 0 ? Colors.red : Colors.green;
-    return Text('${difference.round()}%', style: TextStyle(color: color));
+    return Text('${difference.round()}%',
+        style: kPercentagesStyle.copyWith(color: color));
   }
+
+  final kCallLettersStyle = TextStyle(
+    fontSize: 17,
+    color: Colors.grey[600],
+    fontWeight: FontWeight.w700,
+  );
+  final kCurrencyNameStyle = TextStyle(fontSize: 20);
+  final kPercentagesStyle = TextStyle(
+    fontWeight: FontWeight.w500,
+  );
+  final kHoldingValueStyle = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.w500,
+  );
 }

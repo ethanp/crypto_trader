@@ -1,5 +1,6 @@
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/ui_refresher.dart';
+import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -39,19 +40,9 @@ class OutermostWidget extends StatelessWidget {
   }
 
   static ThemeData get currentAppTheme => ThemeData(
-        primarySwatch: Colors.blue,
-        secondaryHeaderColor: Colors.blue[900],
+        primarySwatch: kPrimaryColor,
         textTheme: TextTheme(
           button: TextStyle(color: Colors.white, fontSize: 20),
-          headline4: TextStyle(
-            color: Colors.grey[100],
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-          ),
-          headline3: TextStyle(
-            color: Colors.green[200],
-            fontSize: 20,
-          ),
         ),
       );
 }

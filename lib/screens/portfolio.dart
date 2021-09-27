@@ -23,7 +23,7 @@ class Portfolio extends StatelessWidget {
         Center(
           child: Text(
             'Chart will go here',
-            style: Theme.of(context).textTheme.headline5,
+            style: kChartPlaceholderStyle,
           ),
         ),
         Placeholder(color: Colors.black26),
@@ -44,4 +44,6 @@ class Portfolio extends StatelessWidget {
       ),
     );
   }
+
+  static final kChartPlaceholderStyle = TextStyle(fontSize: 20);
 }
