@@ -53,32 +53,47 @@ class TotalHoldings extends StatelessWidget {
       builder: (Dollars? earnings) => _element(
         title: 'Total crypto earnings',
         value: earnings?.toString(),
+        percent: _percent(holdings, earnings),
       ),
     );
+  }
+
+  double _percent(Holdings? holdings, Dollars? earnings) {
+    // Default 1 instead of 0 so we don't get a NaN during division below.
+    final total = holdings?.totalCryptoValue.amt ?? 1.0;
+    final earnedAmt = earnings?.amt ?? 0.0;
+    return earnedAmt / total * 100;
   }
 
   Widget _element({
     required String title,
     required String? value,
+    double? percent,
   }) {
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Row(children: [
-        Text('$title: ', style: kHoldingsLabelStyle),
-        Text('${value ?? 'Loading...'}', style: kHoldingsAmountStyle),
+        Text('$title: ', style: labelStyle),
+        Text('${value ?? 'Loading...'}', style: amountStyle),
+        if (percent != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 14),
+            child: Text('+${percent.toInt()}%', style: percentStyle),
+          ),
       ]),
     );
   }
 
-  static final kHoldingsLabelStyle = TextStyle(
+  static final labelStyle = TextStyle(
     color: Colors.grey[100],
     fontSize: 15,
     fontWeight: FontWeight.w600,
   );
-  static final kHoldingsAmountStyle = TextStyle(
+  static final amountStyle = TextStyle(
     color: Colors.green[300],
     fontSize: 20,
   );
+  static final percentStyle = amountStyle.copyWith(fontSize: 13);
 
   static final kAppBarGradientTop = kPrimaryColor;
   static final kAppBarGradientBottom = Color(0xFF0D47A1);
