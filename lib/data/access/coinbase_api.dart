@@ -153,7 +153,7 @@ class CoinbaseApi {
     return accountListRaw.map((raw) => CoinbaseAccount(raw));
   }
 
-  Future<Dollars> deposits() async {
+  Future<Dollars> totalDeposits() async {
     print('getting deposits');
     final String transfersResponse =
         await get(path: 'transfers', private: true);

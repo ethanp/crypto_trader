@@ -6,18 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
 
 abstract class Trader extends ChangeNotifier {
-  // TODO(low priority): Cache expiration.
   Holdings? _holdingsCache;
 
   final _synchronizer = new Lock(reentrant: true);
 
   Future<Dollars> getMyEarnings() async {
     final Holdings holdings = await getMyHoldings();
-    final Dollars deposits = await getMyDeposits();
+    final Dollars deposits = await getTotalDeposits();
     return holdings.totalValue - deposits;
   }
 
-  Future<Dollars> getMyDeposits();
+  Future<Dollars> getTotalDeposits();
 
   Future<Holdings> getMyHoldings() async {
     await _synchronizer.synchronized(() async {
@@ -63,10 +62,6 @@ abstract class Trader extends ChangeNotifier {
         return depositInternal(dollars);
       });
 
-  // TODO for some reason this isn't working at all.
-  //  • Maybe the debugger would help?
-  //  • Maybe registering for UI refreshes on the widgets whose data actually
-  //    changes would fix it, instead of only registering the top-level Widget.
   Future<void> invalidateHoldings() async =>
       await _synchronizer.synchronized(() => _holdingsCache = null);
 
@@ -106,7 +101,7 @@ class FakeTrader extends Trader {
   }
 
   @override
-  Future<Dollars> getMyDeposits() => Future.value(spending);
+  Future<Dollars> getTotalDeposits() => Future.value(spending);
 }
 
 class CoinbaseProTrader extends Trader {
@@ -139,5 +134,6 @@ class CoinbaseProTrader extends Trader {
   }
 
   @override
-  Future<Dollars> getMyDeposits() async => await CoinbaseApi().deposits();
+  Future<Dollars> getTotalDeposits() async =>
+      await CoinbaseApi().totalDeposits();
 }
