@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:crypto_trader/data/access/coinbase_api.dart';
+import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
 
 abstract class Trader extends ChangeNotifier {
-  Holdings? _holdingsCache;
+  final HoldingsCache _holdingsCache = new HoldingsCache();
 
   final _synchronizer = new Lock(reentrant: true);
 
@@ -18,26 +18,8 @@ abstract class Trader extends ChangeNotifier {
 
   Future<Dollars> getTotalDeposits();
 
-  Future<Holdings> getMyHoldings() async {
-    await _synchronizer.synchronized(() async {
-      var shouldRefreshCache = _holdingsCache == null;
-      if (!shouldRefreshCache)
-        print('Not refreshing holdings cache');
-      else {
-        var debugStr = 'REFRESHING holdings cache! ';
-        if (_holdingsCache == null) {
-          debugStr += 'cache was null';
-        }
-        print(debugStr);
-        _holdingsCache = await holdingsInternal();
-        print('Refilled holdings cache $_holdingsCache');
-      }
-    });
-    return Future.value(_holdingsCache);
-  }
-
-  @protected
-  Future<Holdings> holdingsInternal();
+  Future<Holdings> getMyHoldings() =>
+      _synchronizer.synchronized(() => _holdingsCache.get());
 
   @protected
   Future<String> spendInternal(Holding holding);
@@ -62,20 +44,17 @@ abstract class Trader extends ChangeNotifier {
         return depositInternal(dollars);
       });
 
-  Future<void> invalidateHoldings() async =>
-      await _synchronizer.synchronized(() => _holdingsCache = null);
+  Future<void> invalidateHoldings() =>
+      _synchronizer.synchronized(() => _holdingsCache.invalidate());
 
   Future<void> forceRefreshHoldings() async {
-    if (_holdingsCache != null) await invalidateHoldings();
+    await invalidateHoldings();
     await getMyHoldings();
   }
 }
 
 class FakeTrader extends Trader {
   Dollars spending = Dollars(10);
-
-  @override
-  Future<Holdings> holdingsInternal() => Future.value(Holdings.random());
 
   @override
   Future<String> spendInternal(Holding holding) async {
@@ -105,15 +84,6 @@ class FakeTrader extends Trader {
 }
 
 class CoinbaseProTrader extends Trader {
-  /// Calls https://docs.pro.coinbase.com/?ruby#list-accounts
-  @override
-  Future<Holdings> holdingsInternal() async {
-    final accounts = await CoinbaseApi().getAccounts();
-    return Holdings(await Future.wait(accounts
-        .where((acct) => acct.isSupported)
-        .map((acct) => acct.asHolding)));
-  }
-
   /// https://docs.pro.coinbase.com/?ruby#place-a-new-order
   @override
   Future<String> spendInternal(Holding order) async {

@@ -174,7 +174,9 @@ class CoinbaseAccount {
     final Dollars priceInDollars =
         await Environment.prices.currentPrice(of: currency);
     return Holding(
-        currency: currency, dollarValue: priceInDollars * _balanceInCurrency);
+      currency: currency,
+      dollarValue: priceInDollars * _balanceInCurrency,
+    );
   }
 
   String get _callLetters => acct['currency'];
