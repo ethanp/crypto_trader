@@ -5,8 +5,11 @@ class Holdings {
 
   final List<Holding> holdings;
 
-  Dollars get totalCryptoValue => cryptoHoldings.fold<Dollars>(
-      Dollars(0), (acc, e) => acc + e.dollarValue.amt);
+  Dollars get totalValue =>
+      holdings.fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue);
+
+  Dollars get totalCryptoValue =>
+      cryptoHoldings.fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue);
 
   List<Holding> get cryptoHoldings =>
       holdings.where((h) => h.currency != Currencies.dollars).toList()

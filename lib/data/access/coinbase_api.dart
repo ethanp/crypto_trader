@@ -84,11 +84,12 @@ class CoinbaseApi {
     required String path,
     bool private = false,
   }) async {
-    print('Getting $path private:$private');
+    print('Getting path:$path private:$private');
     final url = Uri.https(_endpoint, path);
     final headers =
         private ? await _privateHeaders(method: 'GET', path: path) : null;
     final res = await http.get(url, headers: headers);
+    print('Response: ${res.statusCode}');
     // TODO show this to the user too
     if (res.statusCode != 200) {
       throw StateError('\n\nError in GET $url from Coinbase API!\n'
@@ -144,6 +145,24 @@ class CoinbaseApi {
     final double secondsSinceEpoch =
         DateTime.now().millisecondsSinceEpoch / 1000;
     return secondsSinceEpoch.round();
+  }
+
+  Future<String> orders() async {
+    print('getting orders');
+    final accounts = await get(path: 'accounts', private: true);
+    final List<dynamic> parsed = jsonDecode(accounts);
+    for (final p in parsed) {
+      final accountId = p['id'];
+      final ledger =
+          await get(path: 'accounts/$accountId/ledger', private: true);
+      final List<dynamic> parsedLedger = jsonDecode(ledger);
+      for (final entry in parsedLedger) {
+        if (entry['type'] == 'match') {
+          print(entry['details']);
+        }
+      }
+    }
+    return 'done getting orders';
   }
 }
 

@@ -12,6 +12,14 @@ abstract class Trader extends ChangeNotifier {
 
   final _synchronizer = new Lock(reentrant: true);
 
+  Future<Dollars> getMyEarnings() async {
+    final holdings = await getMyHoldings();
+    final spendings = await getMySpending();
+    return holdings.totalValue - spendings;
+  }
+
+  Future<Dollars> getMySpending();
+
   Future<Holdings> getMyHoldings() async {
     await _synchronizer.synchronized(() async {
       var shouldRefreshCache = !_cacheValid || _holdingsCache == null;
@@ -73,6 +81,8 @@ abstract class Trader extends ChangeNotifier {
 }
 
 class FakeTrader extends Trader {
+  Dollars spending = Dollars(10);
+
   @override
   Future<Holdings> holdingsInternal() => Future.value(Holdings.random());
 
@@ -83,8 +93,11 @@ class FakeTrader extends Trader {
     // Seems ok to violate the "dot-dot principle" here since it's a fake :)
     final Dollars to = holdings.dollarsOf(holding.currency);
     final Dollars from = holdings.dollarsOf(Currencies.dollars);
+    // Use .amt because we're actually mutating the `holdings` map here.
     to.amt += holding.dollarValue.amt;
     from.amt -= holding.dollarValue.amt;
+    // Here we're just reassigning the field.
+    spending += holding.dollarValue;
     return 'Succeeded';
   }
 
@@ -95,6 +108,9 @@ class FakeTrader extends Trader {
     holdings.dollarsOf(Currencies.dollars).amt += deposit.amt;
     return 'Succeeded';
   }
+
+  @override
+  Future<Dollars> getMySpending() => Future.value(spending);
 }
 
 class CoinbaseProTrader extends Trader {
@@ -127,5 +143,12 @@ class CoinbaseProTrader extends Trader {
     final Map<String, dynamic> decoded = jsonDecode(depositResponse);
     await invalidateHoldings();
     return decoded['id'];
+  }
+
+  @override
+  Future<Dollars> getMySpending() async {
+    final String ordersResponse = await CoinbaseApi().orders();
+    // TODO: implement getMySpending
+    throw UnimplementedError();
   }
 }

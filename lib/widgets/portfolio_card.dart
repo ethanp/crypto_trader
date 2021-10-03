@@ -11,7 +11,7 @@ class PortfolioCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 10,
-      color: Colors.blue[100],
+      color: cardColor,
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(children: [
@@ -60,22 +60,30 @@ class PortfolioCard extends StatelessWidget {
 
   Widget _difference() {
     final difference = holdings!.difference(currency);
-    final Color color = difference >= 0 ? Colors.red : Colors.green;
-    return Text('${difference.round()}%',
-        style: percentagesTextStyle.copyWith(color: color));
+    final Color color = difference >= 0 ? overheldColor : underheldColor;
+    return Text('${difference.round()}%', style: _differenceStyle(color));
   }
 
+  TextStyle _differenceStyle(Color color) =>
+      percentagesTextStyle.copyWith(color: color);
+  final underheldColor = Colors.green;
+  final overheldColor = Colors.red;
+  final cardColor = Colors.grey[800];
   final callLettersTextStyle = TextStyle(
     fontSize: 17,
-    color: Colors.grey[600],
+    color: Colors.grey[500],
     fontWeight: FontWeight.w700,
   );
-  final currencyNameTextStyle = TextStyle(fontSize: 20);
+  final currencyNameTextStyle = TextStyle(
+    fontSize: 20,
+  );
   final percentagesTextStyle = TextStyle(
     fontWeight: FontWeight.w500,
+    color: Colors.grey[300],
   );
   final holdingValueTextStyle = TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.w500,
+    color: Colors.grey[300],
   );
 }

@@ -1,3 +1,4 @@
+import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,12 @@ class TotalHoldings extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: WithHoldings(
-            builder: (holdings) => _cryptoHoldings(holdings),
+            builder: (holdings) => Column(
+              children: [
+                _cryptoHoldings(holdings),
+                _cryptoEarnings(holdings),
+              ],
+            ),
           ),
         ),
       ),
@@ -40,6 +46,16 @@ class TotalHoldings extends StatelessWidget {
     return _element(
       title: 'Total crypto holdings',
       value: holdings?.totalCryptoValue.toString(),
+    );
+  }
+
+  Widget _cryptoEarnings(Holdings? holdings) {
+    return FutureBuilder(
+      future: Environment.trader.getMyEarnings(),
+      builder: (ctx, earnings) => _element(
+        title: 'Total crypto earnings',
+        value: earnings.data?.toString(),
+      ),
     );
   }
 
