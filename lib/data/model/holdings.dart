@@ -1,7 +1,7 @@
 import '../../import_facade/model.dart';
 
 class Holdings {
-  const Holdings(this.holdings);
+  Holdings(Iterable<Holding> holdings) : this.holdings = holdings.toList();
 
   final List<Holding> holdings;
 

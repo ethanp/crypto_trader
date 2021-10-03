@@ -19,7 +19,7 @@ class SpendButton extends StatelessWidget {
         // Get the NEWEST version of the input text.
         final amount = input.text;
         if (!_inputIsValid(amount)) return _inputSnackbar(context, amount);
-        EasySnackbar.simple(
+        MySnackbar.simple(
           context: context,
           text: 'Transacting $amount',
           duration: Duration(seconds: 2),
@@ -37,21 +37,20 @@ class SpendButton extends StatelessWidget {
   Future<String> _transact(String amount) =>
       action(Dollars(double.parse(amount)));
 
-  void _inputSnackbar(BuildContext context, String amount) =>
-      EasySnackbar.simple(
+  void _inputSnackbar(BuildContext context, String amount) => MySnackbar.simple(
         context: context,
         text: 'Invalid amount \$$amount',
         duration: Duration(seconds: 3),
       );
 
-  void _showError(BuildContext context, Object err) => EasySnackbar.simple(
+  void _showError(BuildContext context, Object err) => MySnackbar.simple(
         context: context,
         text: err.toString(),
         duration: Duration(minutes: 1),
       );
 
   Future<void> _eventuallyRefresh(BuildContext context) {
-    EasySnackbar.simple(
+    MySnackbar.simple(
       context: context,
       text: 'Waiting for Coinbase',
       duration: Duration(seconds: 6),

@@ -1,7 +1,8 @@
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 
-class EasySnackbar {
+/// Pre-configured snackbar for easy use across the app.
+class MySnackbar {
   static void simple({
     required BuildContext context,
     required String text,

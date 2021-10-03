@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
+import 'package:crypto_trader/import_facade/extensions.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:http/http.dart' as http;
 
@@ -45,7 +46,7 @@ class CoinbaseApi {
 
   /// https://docs.pro.coinbase.com/#payment-methods
   Future<String> _getPaymentMethodId() async {
-    final response = await get(path: '/payment-methods', private: true);
+    final response = await get(path: 'payment-methods', private: true);
     final List<dynamic> decoded = jsonDecode(response);
     return decoded.firstWhere((e) => e['name'].contains("SCHWAB"))['id'];
   }
@@ -84,13 +85,12 @@ class CoinbaseApi {
     required String path,
     bool private = false,
   }) async {
+    path = '/$path';
     print('Getting path:$path private:$private');
     final url = Uri.https(_endpoint, path);
     final headers =
         private ? await _privateHeaders(method: 'GET', path: path) : null;
     final res = await http.get(url, headers: headers);
-    print('Response: ${res.statusCode}');
-    // TODO show this to the user too
     if (res.statusCode != 200) {
       throw StateError('\n\nError in GET $url from Coinbase API!\n'
           'response code: ${res.statusCode}\n'
@@ -147,22 +147,18 @@ class CoinbaseApi {
     return secondsSinceEpoch.round();
   }
 
-  Future<String> orders() async {
-    print('getting orders');
-    final accounts = await get(path: 'accounts', private: true);
-    final List<dynamic> parsed = jsonDecode(accounts);
-    for (final p in parsed) {
-      final accountId = p['id'];
-      final ledger =
-          await get(path: 'accounts/$accountId/ledger', private: true);
-      final List<dynamic> parsedLedger = jsonDecode(ledger);
-      for (final entry in parsedLedger) {
-        if (entry['type'] == 'match') {
-          print(entry['details']);
-        }
-      }
-    }
-    return 'done getting orders';
+  Future<Iterable<CoinbaseAccount>> getAccounts() async {
+    final String holdingsResponse = await get(path: 'accounts', private: true);
+    final List<dynamic> accountListRaw = jsonDecode(holdingsResponse);
+    return accountListRaw.map((raw) => CoinbaseAccount(raw));
+  }
+
+  Future<Dollars> deposits() async {
+    print('getting deposits');
+    final String transfersResponse =
+        await get(path: 'transfers', private: true);
+    final List<dynamic> transfers = jsonDecode(transfersResponse);
+    return Dollars(transfers.map((t) => double.parse(t['amount'])).sum);
   }
 }
 

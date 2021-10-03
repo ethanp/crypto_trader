@@ -36,7 +36,7 @@ class CoinbaseProPrices extends Prices {
     final String from = of.callLetters;
     final String to = units.callLetters;
     if (from == to) return Dollars(1);
-    final String path = '/products/$from-$to/ticker';
+    final String path = 'products/$from-$to/ticker';
     final String apiResponse = await CoinbaseApi().get(path: path);
     final String priceStr = jsonDecode(apiResponse)['price'];
     final double price = double.parse(priceStr);

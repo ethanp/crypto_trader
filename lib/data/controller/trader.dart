@@ -8,33 +8,29 @@ import 'package:synchronized/synchronized.dart';
 abstract class Trader extends ChangeNotifier {
   // TODO(low priority): Cache expiration.
   Holdings? _holdingsCache;
-  bool _cacheValid = false;
 
   final _synchronizer = new Lock(reentrant: true);
 
   Future<Dollars> getMyEarnings() async {
-    final holdings = await getMyHoldings();
-    final spendings = await getMySpending();
-    return holdings.totalValue - spendings;
+    final Holdings holdings = await getMyHoldings();
+    final Dollars deposits = await getMyDeposits();
+    return holdings.totalValue - deposits;
   }
 
-  Future<Dollars> getMySpending();
+  Future<Dollars> getMyDeposits();
 
   Future<Holdings> getMyHoldings() async {
     await _synchronizer.synchronized(() async {
-      var shouldRefreshCache = !_cacheValid || _holdingsCache == null;
+      var shouldRefreshCache = _holdingsCache == null;
       if (!shouldRefreshCache)
         print('Not refreshing holdings cache');
       else {
         var debugStr = 'REFRESHING holdings cache! ';
-        if (!_cacheValid) debugStr += 'cache was invalidated';
         if (_holdingsCache == null) {
-          if (!_cacheValid) debugStr += ' AND ';
           debugStr += 'cache was null';
         }
         print(debugStr);
         _holdingsCache = await holdingsInternal();
-        _cacheValid = true;
         print('Refilled holdings cache $_holdingsCache');
       }
     });
@@ -72,10 +68,10 @@ abstract class Trader extends ChangeNotifier {
   //  • Maybe registering for UI refreshes on the widgets whose data actually
   //    changes would fix it, instead of only registering the top-level Widget.
   Future<void> invalidateHoldings() async =>
-      await _synchronizer.synchronized(() => _cacheValid = false);
+      await _synchronizer.synchronized(() => _holdingsCache = null);
 
   Future<void> forceRefreshHoldings() async {
-    if (_cacheValid) await invalidateHoldings();
+    if (_holdingsCache != null) await invalidateHoldings();
     await getMyHoldings();
   }
 }
@@ -110,18 +106,15 @@ class FakeTrader extends Trader {
   }
 
   @override
-  Future<Dollars> getMySpending() => Future.value(spending);
+  Future<Dollars> getMyDeposits() => Future.value(spending);
 }
 
 class CoinbaseProTrader extends Trader {
   /// Calls https://docs.pro.coinbase.com/?ruby#list-accounts
   @override
   Future<Holdings> holdingsInternal() async {
-    final String holdingsResponse =
-        await CoinbaseApi().get(path: '/accounts', private: true);
-    final List<dynamic> accountListRaw = jsonDecode(holdingsResponse);
-    return Holdings(await Future.wait(accountListRaw
-        .map((raw) => CoinbaseAccount(raw))
+    final accounts = await CoinbaseApi().getAccounts();
+    return Holdings(await Future.wait(accounts
         .where((acct) => acct.isSupported)
         .map((acct) => acct.asHolding)));
   }
@@ -146,9 +139,5 @@ class CoinbaseProTrader extends Trader {
   }
 
   @override
-  Future<Dollars> getMySpending() async {
-    final String ordersResponse = await CoinbaseApi().orders();
-    // TODO: implement getMySpending
-    throw UnimplementedError();
-  }
+  Future<Dollars> getMyDeposits() async => await CoinbaseApi().deposits();
 }
