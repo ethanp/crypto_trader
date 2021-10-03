@@ -15,6 +15,7 @@ class OutermostWidget extends StatelessWidget {
       providers: [ChangeNotifierProvider(create: (_) => UiRefresher())],
       child: _enableKeyboardHiding(
         child: MaterialApp(
+          theme: ThemeData.dark(),
           title: 'Crypto Trader',
           home: Body(),
         ),
