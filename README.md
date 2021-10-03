@@ -21,3 +21,7 @@ to resemble that portfolio (aka passive rebalancing).
 ## Future work
 
 * Portfolio performance analysis?
+
+## Screenshot
+
+![Screenshot](screenshot.png)

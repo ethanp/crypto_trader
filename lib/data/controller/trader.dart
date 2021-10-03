@@ -19,7 +19,7 @@ abstract class Trader extends ChangeNotifier {
   Future<Dollars> getTotalDeposits();
 
   Future<Holdings> getMyHoldings() =>
-      _synchronizer.synchronized(() => _holdingsCache.get());
+      _synchronizer.synchronized(_holdingsCache.get);
 
   @protected
   Future<String> spendInternal(Holding holding);
@@ -45,7 +45,7 @@ abstract class Trader extends ChangeNotifier {
       });
 
   Future<void> invalidateHoldings() =>
-      _synchronizer.synchronized(() => _holdingsCache.invalidate());
+      _synchronizer.synchronized(_holdingsCache.invalidate);
 
   Future<void> forceRefreshHoldings() async {
     await invalidateHoldings();
