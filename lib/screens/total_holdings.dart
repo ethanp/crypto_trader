@@ -1,4 +1,3 @@
-import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
@@ -50,11 +49,10 @@ class TotalHoldings extends StatelessWidget {
   }
 
   Widget _cryptoEarnings(Holdings? holdings) {
-    return FutureBuilder(
-      future: Environment.trader.getMyEarnings(),
-      builder: (ctx, earnings) => _element(
+    return WithEarnings(
+      builder: (Dollars? earnings) => _element(
         title: 'Total crypto earnings',
-        value: earnings.data?.toString(),
+        value: earnings?.toString(),
       ),
     );
   }
