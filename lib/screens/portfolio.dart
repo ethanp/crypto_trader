@@ -36,7 +36,8 @@ class Portfolio extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 40, top: 20),
         child: Row(
           children: Currencies.allCryptoCurrencies
-              .map((c) => WithHoldings(builder: (h) => PortfolioCard(h, c)))
+              .map((currency) => WithHoldings(
+                  builder: (holdings) => PortfolioCard(holdings, currency)))
               .toList(),
         ),
       ),

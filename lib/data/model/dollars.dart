@@ -1,9 +1,6 @@
 import 'dart:math';
 
-import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:intl/intl.dart';
-
-import '../../import_facade/model.dart';
 
 class Dollars {
   Dollars(this.amt);
@@ -23,10 +20,6 @@ class Dollars {
   Dollars operator *(double o) => Dollars(amt * o);
 
   Dollars operator /(Dollars o) => Dollars(amt / o.amt);
-
-  // TODO: I never thought through whether this one is correct.
-  Future<double> translateTo(Currency currency) async =>
-      (await Environment.prices.currentPrice(of: currency) / this).amt;
 
   double get rounded => double.parse(this.amt.toStringAsFixed(2));
 }
