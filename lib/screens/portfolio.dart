@@ -16,42 +16,37 @@ class _PortfolioState extends State<Portfolio> {
   int _selectedIndex = 0;
 
   @override
-  Widget build(BuildContext context) {
-    return Flexible(child: Column(children: [_chart(), _cards()]));
-  }
+  Widget build(BuildContext context) =>
+      Flexible(child: Column(children: [_chart(), _currencyCards()]));
 
-  Widget _chart() {
-    return Expanded(
-      child: Stack(children: [
-        Center(
-          child: Text('Chart will go here', style: _chartPlaceholderStyle),
-        ),
-        Placeholder(color: Colors.black26),
-      ]),
-    );
-  }
+  Widget _chart() => Expanded(
+        child: Stack(children: [
+          Center(
+            child: Text(
+              'Chart will go here',
+              style: _chartPlaceholderStyle,
+            ),
+          ),
+          Placeholder(color: Colors.black26)
+        ]),
+      );
 
-  Widget _cards() {
-    return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Padding(
-            padding: const EdgeInsets.only(bottom: 40, top: 20),
-            child: SizedBox(
-                height: 91,
-                child: ListView(
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    children: Currencies.allCryptoCurrencies
-                        .mapWithIndex(
-                          (currency, idx) => WithHoldings(
-                            builder: (holdings) => GestureDetector(
-                              onTap: () => setState(() => _selectedIndex = idx),
-                              child: PortfolioCard(
-                                  holdings, currency, idx == _selectedIndex),
-                            ),
-                          ),
-                        )
-                        .toList()))));
-  }
+  Widget _currencyCards() => SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Padding(
+          padding: const EdgeInsets.only(bottom: 40, top: 20),
+          child: SizedBox(
+              height: 91,
+              child: ListView(
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  children: Currencies.allCryptoCurrencies
+                      .mapWithIndex(_asPortfolioCard)
+                      .toList()))));
+
+  Widget _asPortfolioCard(Currency currency, int idx) => WithHoldings(
+      builder: (holdings) => GestureDetector(
+          onTap: () => setState(() => _selectedIndex = idx),
+          child: PortfolioCard(holdings, currency, idx == _selectedIndex)));
 }
