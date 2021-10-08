@@ -6,11 +6,18 @@ Tested on iOS and MacOS. Should also work on Linux, Windows, and Android.
 
 ## Motivation
 
-Coinbase Pro app is super janky on mobile. They don't allow automatic dollar cost averaging (DCA).
+Coinbase Pro is insufficient
 
-I couldn't find any good DeFi startups or bots on github that work like I want. I want a similar
-model to M1 finance. I assemble an idealized portfolio, and the app takes my money and does its best
-to resemble that portfolio (aka passive rebalancing).
+* Super janky on iPhone
+    * Not very user-friendly on desktop either
+* Doesn't offer automatic dollar cost averaging (DCA) as a service
+
+### I couldn't find any sufficient DeFi startups (in 2021)
+
+* I want a similar to M1 finance
+    * I assemble an idealized portfolio
+    * The app periodically adds money to resemble that portfolio
+        * Aka "passive rebalancing"
 
 ## Features
 

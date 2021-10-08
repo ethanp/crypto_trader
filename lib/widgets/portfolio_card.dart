@@ -2,16 +2,17 @@ import 'package:crypto_trader/import_facade/model.dart';
 import 'package:flutter/material.dart';
 
 class PortfolioCard extends StatelessWidget {
-  PortfolioCard(this.holdings, this.currency);
+  PortfolioCard(this.holdings, this.currency, this.isSelected);
 
   final Holdings? holdings;
   final Currency currency;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 10,
-      color: cardColor,
+      elevation: isSelected ? 0 : 10,
+      color: isSelected ? selectedCardColor : unselectedCardColor,
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(children: [
@@ -68,7 +69,8 @@ class PortfolioCard extends StatelessWidget {
       percentagesTextStyle.copyWith(color: color);
   final underheldColor = Colors.green;
   final overheldColor = Colors.red;
-  final cardColor = Colors.grey[800];
+  final unselectedCardColor = Colors.grey[800];
+  final selectedCardColor = Colors.grey[700];
   final callLettersTextStyle = TextStyle(
     fontSize: 17,
     color: Colors.grey[500],

@@ -7,11 +7,10 @@ class TotalHoldings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.zero,
-      color: kPrimaryColor,
       elevation: 15,
       child: _addGradient(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          padding: const EdgeInsets.only(bottom: 20, left: 25),
           child: WithHoldings(
             builder: (holdings) => Column(
               children: [
@@ -29,12 +28,9 @@ class TotalHoldings extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            kAppBarGradientTop,
-            kAppBarGradientBottom,
-          ],
+          begin: Alignment.topRight,
+          end: Alignment.bottomRight,
+          colors: [_Style.appBarGradientTop, _Style.appBarGradientBottom],
         ),
       ),
       child: child,
@@ -43,7 +39,7 @@ class TotalHoldings extends StatelessWidget {
 
   Widget _cryptoHoldings(Holdings? holdings) {
     return _element(
-      title: 'Total crypto holdings',
+      title: 'Crypto holdings',
       value: holdings?.totalCryptoValue.toString(),
     );
   }
@@ -51,7 +47,7 @@ class TotalHoldings extends StatelessWidget {
   Widget _cryptoEarnings(Holdings? holdings) {
     return WithEarnings(
       builder: (Dollars? earnings) => _element(
-        title: 'Total crypto earnings',
+        title: 'Crypto earnings',
         value: earnings?.toString(),
         percent: _percent(holdings, earnings),
       ),
@@ -73,17 +69,19 @@ class TotalHoldings extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Row(children: [
-        Text('$title: ', style: labelStyle),
-        Text('${value ?? 'Loading...'}', style: amountStyle),
+        Text('$title: ', style: _Style.labelStyle),
+        Text('${value ?? 'Loading...'}', style: _Style.amountStyle),
         if (percent != null)
           Padding(
             padding: const EdgeInsets.only(left: 14),
-            child: Text('+${percent.toInt()}%', style: percentStyle),
+            child: Text('+${percent.toInt()}%', style: _Style.percentStyle),
           ),
       ]),
     );
   }
+}
 
+class _Style {
   static final labelStyle = TextStyle(
     color: Colors.grey[100],
     fontSize: 15,
@@ -95,6 +93,6 @@ class TotalHoldings extends StatelessWidget {
   );
   static final percentStyle = amountStyle.copyWith(fontSize: 13);
 
-  static final kAppBarGradientTop = kPrimaryColor;
-  static final kAppBarGradientBottom = Color(0xFF0D47A1);
+  static final appBarGradientTop = Colors.grey[800]!;
+  static final appBarGradientBottom = Colors.grey[900]!;
 }
