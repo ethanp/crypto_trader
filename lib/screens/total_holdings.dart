@@ -9,12 +9,11 @@ class TotalHoldings extends StatelessWidget {
       elevation: 15,
       child: Container(
           decoration: _gradient,
-          child: Padding(
-              padding: const EdgeInsets.only(bottom: 20, left: 25),
-              child: Column(children: [
-                _cryptoHoldings(),
-                _cryptoEarnings(),
-              ]))));
+          padding: const EdgeInsets.only(left: 25),
+          child: Column(children: [
+            _cryptoHoldings(),
+            _cryptoEarnings(),
+          ])));
 
   BoxDecoration get _gradient => BoxDecoration(
       gradient: LinearGradient(

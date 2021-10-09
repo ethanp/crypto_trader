@@ -25,14 +25,17 @@ class PortfolioCard extends StatelessWidget {
   }
 
   Widget _name() {
-    return Row(children: [
-      Text(currency.callLetters, style: callLettersTextStyle),
-      const SizedBox(width: 10),
-      Text(
-        currency.name,
-        style: currencyNameTextStyle,
-      ),
-    ]);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(currency.callLetters, style: callLettersTextStyle),
+        const SizedBox(width: 10),
+        Text(
+          currency.name,
+          style: currencyNameTextStyle,
+        ),
+      ],
+    );
   }
 
   Widget _holding() {
@@ -44,11 +47,14 @@ class PortfolioCard extends StatelessWidget {
 
   Widget _percentageOfPortfolio() {
     if (holdings == null) return Text('Loading');
-    return Row(children: [
-      _percentages(),
-      const SizedBox(width: 10),
-      _difference(),
-    ]);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _percentages(),
+        const SizedBox(width: 10),
+        _difference(),
+      ],
+    );
   }
 
   Widget _percentages() {
@@ -77,7 +83,7 @@ class PortfolioCard extends StatelessWidget {
     fontWeight: FontWeight.w700,
   );
   final currencyNameTextStyle = TextStyle(
-    fontSize: 20,
+    fontSize: 17,
   );
   final percentagesTextStyle = TextStyle(
     fontWeight: FontWeight.w500,

@@ -7,7 +7,7 @@ class SpendButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 20, bottom: 60),
+      padding: const EdgeInsets.only(top: 10, bottom: 10),
       child: Column(children: [
         _cashAvailable(),
         _deposit(),

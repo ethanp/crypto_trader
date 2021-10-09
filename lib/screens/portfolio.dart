@@ -31,22 +31,18 @@ class _PortfolioState extends State<Portfolio> {
         ]),
       );
 
-  Widget _currencyCards() => SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-          padding: const EdgeInsets.only(bottom: 40, top: 20),
-          child: SizedBox(
-              height: 91,
-              child: ListView(
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  children: Currencies.allCryptoCurrencies
-                      .mapWithIndex(_asPortfolioCard)
-                      .toList()))));
+  Widget _currencyCards() => Wrap(
+      children: Currencies.allCryptoCurrencies
+          .mapWithIndex(_asPortfolioCard)
+          .toList());
 
-  Widget _asPortfolioCard(Currency currency, int idx) => WithHoldings(
-      builder: (holdings) => GestureDetector(
-          onTap: () => setState(() => _selectedIndex = idx),
-          child: PortfolioCard(holdings, currency, idx == _selectedIndex)));
+  Widget _asPortfolioCard(Currency currency, int idx) => SizedBox(
+        width: 180,
+        height: 87,
+        child: WithHoldings(
+          builder: (holdings) => GestureDetector(
+              onTap: () => setState(() => _selectedIndex = idx),
+              child: PortfolioCard(holdings, currency, idx == _selectedIndex)),
+        ),
+      );
 }

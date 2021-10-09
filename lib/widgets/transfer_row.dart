@@ -36,7 +36,7 @@ class _TransferRowState extends State<TransferRow> {
       builder: (snapshot) {
         _initFieldText(snapshot);
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

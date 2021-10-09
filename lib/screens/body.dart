@@ -18,11 +18,13 @@ class Body extends StatelessWidget {
           icon: Icon(Icons.refresh),
         ),
       ),
-      body: Column(children: [
-        TotalHoldings(),
-        SpendButtons(),
-        if (!_keyboardIsShowing(context)) Portfolio(),
-      ]),
+      body: SafeArea(
+        child: Column(children: [
+          TotalHoldings(),
+          SpendButtons(),
+          if (!_keyboardIsShowing(context)) Portfolio(),
+        ]),
+      ),
     );
   }
 
