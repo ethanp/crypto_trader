@@ -16,6 +16,7 @@ class CoinbaseApi {
   // https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles
   Future<String> candles(Currency currency) async => await get(
         path: "products/${currency.callLetters}-USD/candles",
+        params: {'granularity': '21600'},
         endpoint: exchangeEndpoint,
       );
 
@@ -82,9 +83,12 @@ class CoinbaseApi {
   Future<String> get({
     required String path,
     bool private = false,
+    Map<String, String> params = const {},
     String endpoint = oldEndpoint,
   }) async {
-    path = '/$path';
+    path = '/' + path;
+    if (params.isNotEmpty)
+      path += '?' + params.entries.map((e) => '${e.key}=${e.value}').join('&');
     print('Getting path:$path private:$private');
     final url = Uri.https(endpoint, path);
     final headers =
