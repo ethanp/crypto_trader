@@ -83,14 +83,12 @@ class CoinbaseApi {
   Future<String> get({
     required String path,
     bool private = false,
-    Map<String, String> params = const {},
+    Map<String, String>? params,
     String endpoint = oldEndpoint,
   }) async {
     path = '/' + path;
-    if (params.isNotEmpty)
-      path += '?' + params.entries.map((e) => '${e.key}=${e.value}').join('&');
     print('Getting path:$path private:$private');
-    final url = Uri.https(endpoint, path);
+    final url = Uri.https(endpoint, path, params);
     final headers =
         private ? await _privateHeaders(method: 'GET', path: path) : null;
     final res = await http.get(url, headers: headers);

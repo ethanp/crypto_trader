@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class PriceChart extends StatelessWidget {
   final List<Color> _gradientColors = [
     Colors.blue[300]!,
-    Colors.greenAccent[200]!
+    Colors.greenAccent[200]!,
   ];
 
   final _gridLine = FlLine(

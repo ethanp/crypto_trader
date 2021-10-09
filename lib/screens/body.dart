@@ -1,3 +1,5 @@
+import 'package:crypto_trader/import_facade/controller.dart';
+import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/ui_refresher.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +27,10 @@ class Body extends StatelessWidget {
   }
 
   Widget _refreshButton(BuildContext context) => IconButton(
-        onPressed: () => UiRefresher.refresh(context),
+        onPressed: () async {
+          print(await Environment.prices.candles(Currencies.bitcoin));
+          UiRefresher.refresh(context);
+        },
         tooltip: 'Refresh data',
         icon: Icon(Icons.refresh),
       );

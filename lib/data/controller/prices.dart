@@ -65,11 +65,14 @@ class Candle {
 
   factory Candle.fromCoinbase(dynamic input) => Candle(
         timestamp: input[0],
-        priceLow: input[1],
-        priceHigh: input[2],
-        priceOpen: input[3],
-        priceClose: input[4],
+        priceLow: dbl(input[1]),
+        priceHigh: dbl(input[2]),
+        priceOpen: dbl(input[3]),
+        priceClose: dbl(input[4]),
       );
+
+  static double dbl(dynamic num) =>
+      num.runtimeType == int ? (num as int).toDouble() : num;
 
   const Candle({
     required this.timestamp,
@@ -78,4 +81,13 @@ class Candle {
     required this.priceOpen,
     required this.priceClose,
   });
+
+  @override
+  String toString() => 'Candle{'
+      'timestamp: $timestamp, '
+      'priceLow: $priceLow, '
+      'priceHigh: $priceHigh, '
+      'priceOpen: $priceOpen, '
+      'priceClose: $priceClose'
+      '}';
 }
