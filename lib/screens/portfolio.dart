@@ -19,17 +19,7 @@ class _PortfolioState extends State<Portfolio> {
   Widget build(BuildContext context) =>
       Flexible(child: Column(children: [_chart(), _currencyCards()]));
 
-  Widget _chart() => Expanded(
-        child: Stack(children: [
-          Center(
-            child: Text(
-              'Chart will go here',
-              style: _chartPlaceholderStyle,
-            ),
-          ),
-          Placeholder(color: Colors.black26)
-        ]),
-      );
+  Widget _chart() => Expanded(child: PriceChart());
 
   Widget _currencyCards() => Wrap(
       children: Currencies.allCryptoCurrencies.mapWithIndex(_asPortfolioCard));
