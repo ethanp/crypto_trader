@@ -1,4 +1,6 @@
+import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
+import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -45,15 +47,20 @@ class PriceChart extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) => LineChart(LineChartData(
-      minX: 0,
-      maxX: 11,
-      minY: 0,
-      maxY: 6,
-      titlesData: _xyAxisLabels,
-      lineBarsData: [_priceData],
-      gridData: _greyVertAndHorizGrid,
-      borderData: _greyBorder));
+  Widget build(BuildContext context) => EasyFutureBuilder<List<Candle>>(
+        future: Environment.prices.candles(currency),
+        builder: (List<Candle>? candles) => candles == null
+            ? Text('Loading...')
+            : LineChart(LineChartData(
+                minX: 0,
+                maxX: 11,
+                minY: 0,
+                maxY: 6,
+                titlesData: _xyAxisLabels,
+                lineBarsData: [_priceData(candles)],
+                gridData: _greyVertAndHorizGrid,
+                borderData: _greyBorder)),
+      );
 
   FlTitlesData get _xyAxisLabels => FlTitlesData(
       show: true,
@@ -92,7 +99,8 @@ class PriceChart extends StatelessWidget {
         return v % 2 == 0 ? '\$$v' : '';
       });
 
-  LineChartBarData get _priceData => LineChartBarData(
+  // TODO use the candle data.
+  LineChartBarData _priceData(List<Candle> candles) => LineChartBarData(
       spots: data,
       isCurved: true,
       colors: _gradientColors,
