@@ -55,11 +55,11 @@ class PriceChart extends StatelessWidget {
         getTitles: (value) {
           switch (value.toInt()) {
             case 2:
-              return 'MAR';
+              return '3wk';
             case 5:
-              return 'JUN';
+              return '2wk';
             case 8:
-              return 'SEP';
+              return '1wk';
           }
           return '';
         },
@@ -75,15 +75,8 @@ class PriceChart extends StatelessWidget {
           fontSize: 15,
         ),
         getTitles: (value) {
-          switch (value.toInt()) {
-            case 1:
-              return '10k';
-            case 3:
-              return '30k';
-            case 5:
-              return '50k';
-          }
-          return '';
+          final v = value.toInt();
+          return v % 2 == 0 ? '\$$v' : '';
         },
         reservedSize: 32,
         margin: 12,
