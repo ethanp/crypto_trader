@@ -11,15 +11,17 @@ class Portfolio extends StatefulWidget {
 }
 
 class _PortfolioState extends State<Portfolio> {
-  static final _chartPlaceholderStyle = TextStyle(fontSize: 20);
-
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) =>
       Flexible(child: Column(children: [_chart(), _currencyCards()]));
 
-  Widget _chart() => Expanded(child: PriceChart());
+  Widget _chart() => Expanded(
+        child: PriceChart(
+          currency: Currencies.allCryptoCurrencies[_selectedIndex],
+        ),
+      );
 
   Widget _currencyCards() => Wrap(
       children: Currencies.allCryptoCurrencies.mapWithIndex(_asPortfolioCard));

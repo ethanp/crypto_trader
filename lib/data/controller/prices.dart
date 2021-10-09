@@ -65,14 +65,11 @@ class Candle {
 
   factory Candle.fromCoinbase(dynamic input) => Candle(
         timestamp: input[0],
-        priceLow: dbl(input[1]),
-        priceHigh: dbl(input[2]),
-        priceOpen: dbl(input[3]),
-        priceClose: dbl(input[4]),
+        priceLow: input[1].toDouble(),
+        priceHigh: input[2].toDouble(),
+        priceOpen: input[3].toDouble(),
+        priceClose: input[4].toDouble(),
       );
-
-  static double dbl(dynamic num) =>
-      num.runtimeType == int ? (num as int).toDouble() : num;
 
   const Candle({
     required this.timestamp,

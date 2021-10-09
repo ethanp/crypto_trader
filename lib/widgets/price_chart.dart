@@ -1,7 +1,12 @@
+import 'package:crypto_trader/import_facade/model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class PriceChart extends StatelessWidget {
+  final Currency currency;
+
+  PriceChart({required this.currency});
+
   final List<Color> _gradientColors = [
     Colors.blue[300]!,
     Colors.greenAccent[200]!,
