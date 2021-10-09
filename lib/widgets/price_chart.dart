@@ -6,10 +6,14 @@ class PriceChart extends StatelessWidget {
     const Color(0xff23b6e6),
     const Color(0xff02d39a),
   ];
-  static const Color _horizontalGridLineColor = Color(0xff37434d);
-  static const Color _verticalGridLineColor = Color(0xff37434d);
-  static const Color _leftAxisLabelsColor = Color(0xff67727d);
-  static const Color _bottomAxisLabelsColor = Color(0xff68737d);
+  static final Color _horizontalGridLineColor = const Color(0xff37434d);
+  static final Color _verticalGridLineColor = const Color(0xff37434d);
+
+  static final _axisLabelStyle = TextStyle(
+    color: Colors.grey[400],
+    fontWeight: FontWeight.w500,
+    fontSize: 15,
+  );
 
   final List<FlSpot> data = [
     FlSpot(0, 3),
@@ -45,13 +49,11 @@ class PriceChart extends StatelessWidget {
 
   SideTitles get _bottomAxisLabels => SideTitles(
         showTitles: true,
+        // Height available to label
         reservedSize: 22,
+        margin: 8,
         interval: 1,
-        getTextStyles: (context, value) => const TextStyle(
-          color: _bottomAxisLabelsColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-        ),
+        getTextStyles: (context, value) => _axisLabelStyle,
         getTitles: (value) {
           switch (value.toInt()) {
             case 2:
@@ -63,23 +65,18 @@ class PriceChart extends StatelessWidget {
           }
           return '';
         },
-        margin: 8,
       );
 
   SideTitles get _leftAxisLabels => SideTitles(
         showTitles: true,
         interval: 1,
-        getTextStyles: (context, value) => const TextStyle(
-          color: _leftAxisLabelsColor,
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
-        ),
+        reservedSize: 32,
+        margin: 12,
+        getTextStyles: (context, value) => _axisLabelStyle,
         getTitles: (value) {
           final v = value.toInt();
           return v % 2 == 0 ? '\$$v' : '';
         },
-        reservedSize: 32,
-        margin: 12,
       );
 
   List<LineChartBarData> get _bars => [
