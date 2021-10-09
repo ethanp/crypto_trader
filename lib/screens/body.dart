@@ -12,11 +12,7 @@ class Body extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: Text('Crypto: auto-balancing DCA'),
-        leading: IconButton(
-          onPressed: () => UiRefresher.refresh(context),
-          tooltip: 'Refresh data',
-          icon: Icon(Icons.refresh),
-        ),
+        leading: _refreshButton(context),
       ),
       body: SafeArea(
         child: Column(children: [
@@ -27,6 +23,12 @@ class Body extends StatelessWidget {
       ),
     );
   }
+
+  Widget _refreshButton(BuildContext context) => IconButton(
+        onPressed: () => UiRefresher.refresh(context),
+        tooltip: 'Refresh data',
+        icon: Icon(Icons.refresh),
+      );
 
   bool _keyboardIsShowing(BuildContext context) =>
       MediaQuery.of(context).viewInsets.bottom != 0;

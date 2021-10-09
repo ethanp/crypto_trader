@@ -32,9 +32,7 @@ class _PortfolioState extends State<Portfolio> {
       );
 
   Widget _currencyCards() => Wrap(
-      children: Currencies.allCryptoCurrencies
-          .mapWithIndex(_asPortfolioCard)
-          .toList());
+      children: Currencies.allCryptoCurrencies.mapWithIndex(_asPortfolioCard));
 
   Widget _asPortfolioCard(Currency currency, int idx) => SizedBox(
         width: 180,

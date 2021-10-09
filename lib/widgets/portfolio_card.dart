@@ -12,7 +12,7 @@ class PortfolioCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: isSelected ? 0 : 10,
-      color: isSelected ? selectedCardColor : unselectedCardColor,
+      color: isSelected ? _Style.selectedCardColor : _Style.unselectedCardColor,
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(children: [
@@ -28,22 +28,17 @@ class PortfolioCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(currency.callLetters, style: callLettersTextStyle),
+        Text(currency.callLetters, style: _Style.callLettersTextStyle),
         const SizedBox(width: 10),
-        Text(
-          currency.name,
-          style: currencyNameTextStyle,
-        ),
+        Text(currency.name, style: _Style.currencyNameTextStyle),
       ],
     );
   }
 
-  Widget _holding() {
-    return Text(
-      holdings?.dollarsOf(currency).toString() ?? 'Loading',
-      style: holdingValueTextStyle,
-    );
-  }
+  Widget _holding() => Text(
+        holdings?.dollarsOf(currency).toString() ?? 'Loading',
+        style: _Style.holdingValueTextStyle,
+      );
 
   Widget _percentageOfPortfolio() {
     if (holdings == null) return Text('Loading');
@@ -61,35 +56,39 @@ class PortfolioCard extends StatelessWidget {
     final actualPercentage = holdings!.percentageContaining(currency).round();
     return Text(
       '$actualPercentage% / ${currency.percentAllocation}%',
-      style: percentagesTextStyle,
+      style: _Style.percentagesTextStyle,
     );
   }
 
   Widget _difference() {
     final difference = holdings!.difference(currency);
-    final Color color = difference >= 0 ? overheldColor : underheldColor;
-    return Text('${difference.round()}%', style: _differenceStyle(color));
+    final Color color =
+        difference >= 0 ? _Style.overheldColor : _Style.underheldColor;
+    return Text('${difference.round()}%', style: _Style.differenceStyle(color));
   }
+}
 
-  TextStyle _differenceStyle(Color color) =>
+class _Style {
+  static TextStyle differenceStyle(Color color) =>
       percentagesTextStyle.copyWith(color: color);
-  final underheldColor = Colors.green;
-  final overheldColor = Colors.red;
-  final unselectedCardColor = Colors.grey[800];
-  final selectedCardColor = Colors.grey[700];
-  final callLettersTextStyle = TextStyle(
+
+  static final underheldColor = Colors.green;
+  static final overheldColor = Colors.red;
+  static final unselectedCardColor = Colors.grey[800];
+  static final selectedCardColor = Colors.grey[700];
+  static final callLettersTextStyle = TextStyle(
     fontSize: 17,
     color: Colors.grey[500],
     fontWeight: FontWeight.w700,
   );
-  final currencyNameTextStyle = TextStyle(
+  static final currencyNameTextStyle = TextStyle(
     fontSize: 17,
   );
-  final percentagesTextStyle = TextStyle(
+  static final percentagesTextStyle = TextStyle(
     fontWeight: FontWeight.w500,
     color: Colors.grey[300],
   );
-  final holdingValueTextStyle = TextStyle(
+  static final holdingValueTextStyle = TextStyle(
     fontSize: 22,
     fontWeight: FontWeight.w500,
     color: Colors.grey[300],

@@ -10,16 +10,14 @@ import 'package:http/http.dart' as http;
 import 'config.dart';
 
 class CoinbaseApi {
-  static final coinbaseProAddress = 'pro.coinbase.com';
-  static final productionEndpoint = 'api.$coinbaseProAddress';
-  static final sandboxEndpoint = 'api-public.sandbox.$coinbaseProAddress';
+  static const oldEndpoint = 'api.pro.coinbase.com';
+  static const exchangeEndpoint = 'api.exchange.coinbase.com';
 
-  CoinbaseApi({this.useSandbox = false});
-
-  final bool useSandbox;
-
-  late final String _endpoint =
-      useSandbox ? sandboxEndpoint : productionEndpoint;
+  // https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles
+  Future<String> candles(Currency currency) async => await get(
+        path: "products/${currency.callLetters}-USD/candles",
+        endpoint: exchangeEndpoint,
+      );
 
   /// https://docs.pro.coinbase.com/#payment-method
   Future<String> deposit(Dollars dollars) async => await _post(
@@ -55,7 +53,7 @@ class CoinbaseApi {
     required String path,
     required Map<String, String> body,
   }) async {
-    final url = Uri.https(_endpoint, path);
+    final url = Uri.https(oldEndpoint, path);
     final headers = await _privateHeaders(
       method: 'POST',
       path: path,
@@ -84,10 +82,11 @@ class CoinbaseApi {
   Future<String> get({
     required String path,
     bool private = false,
+    String endpoint = oldEndpoint,
   }) async {
     path = '/$path';
     print('Getting path:$path private:$private');
-    final url = Uri.https(_endpoint, path);
+    final url = Uri.https(endpoint, path);
     final headers =
         private ? await _privateHeaders(method: 'GET', path: path) : null;
     final res = await http.get(url, headers: headers);
@@ -154,7 +153,8 @@ class CoinbaseApi {
   }
 
   Future<Dollars> totalDeposits() async {
-    print('getting deposits');
+    // TODO(cleanup): Cache this.
+    print('retrieving deposits');
     final String transfersResponse =
         await get(path: 'transfers', private: true);
     final List<dynamic> transfers = jsonDecode(transfersResponse);
