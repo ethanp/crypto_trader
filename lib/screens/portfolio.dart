@@ -1,3 +1,4 @@
+import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/extensions.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
@@ -17,11 +18,15 @@ class _PortfolioState extends State<Portfolio> {
   Widget build(BuildContext context) =>
       Flexible(child: Column(children: [_chart(), _currencyCards()]));
 
-  Widget _chart() => Expanded(
-        child: PriceChart(
-          currency: Currencies.allCryptoCurrencies[_selectedIndex],
-        ),
-      );
+  Widget _chart() {
+    final currency = Currencies.allCryptoCurrencies[_selectedIndex];
+    return Expanded(
+        child: EasyFutureBuilder<List<Candle>>(
+            future: Environment.prices.candles(currency),
+            builder: (List<Candle>? candles) => candles == null
+                ? Text('Loading...')
+                : PriceChart(currency: currency, candles: candles)));
+  }
 
   Widget _currencyCards() => Wrap(
       children: Currencies.allCryptoCurrencies.mapWithIndex(_asPortfolioCard));

@@ -14,11 +14,15 @@ class CoinbaseApi {
   static const exchangeEndpoint = 'api.exchange.coinbase.com';
 
   // https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles
-  Future<String> candles(Currency currency) async => await get(
-        path: "products/${currency.callLetters}-USD/candles",
-        params: {'granularity': '21600'},
-        endpoint: exchangeEndpoint,
-      );
+  Future<String> candles(Currency currency) async {
+    final start = DateTime.now().subtract(Duration(days: 4)).toIso8601String();
+    final end = DateTime.now().toIso8601String();
+    return await get(
+      path: "products/${currency.callLetters}-USD/candles",
+      params: {'granularity': '21600', 'start': start, 'end': end},
+      endpoint: exchangeEndpoint,
+    );
+  }
 
   /// https://docs.pro.coinbase.com/#payment-method
   Future<String> deposit(Dollars dollars) async => await _post(

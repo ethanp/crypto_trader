@@ -9,4 +9,8 @@ extension SumInt on Iterable<int> {
 
 extension SumDouble on Iterable<double> {
   double get sum => reduce((c, i) => c + i);
+
+  double get max => reduce((c, i) => i > c ? i : c);
+
+  double get min => reduce((c, i) => i < c ? i : c);
 }
