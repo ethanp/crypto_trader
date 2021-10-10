@@ -5,7 +5,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class PriceChart extends StatelessWidget {
-  // TODO show which currency it is above the chart.
   final Currency currency;
   final List<Candle> candles;
 
@@ -18,17 +17,34 @@ class PriceChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Iterable<double> timestamps =
+        candles.map((c) => c.timestamp.millisecondsSinceEpoch.toDouble());
+    final Iterable<double> closingPrices = candles.map((c) => c.priceClose);
+
+    print(timestamps.length);
+    final minX = timestamps.min;
+    final maxX = timestamps.max;
+    final minY = closingPrices.min;
+    final maxY = closingPrices.max;
+    print('minX=$minX maxX=$maxX minY=$minY maxY=$maxY');
+
     final greyBorder = FlBorderData(
       show: true,
-      border: Border.all(color: Colors.grey[700]!, width: 1),
+      border: Border.all(color: Colors.grey[700]!, width: 2),
     );
 
     final gridLine = FlLine(color: Colors.grey[800], strokeWidth: 1);
     final greyVertAndHorizGrid = FlGridData(
         show: true,
         drawVerticalLine: true,
-        getDrawingHorizontalLine: (value) => gridLine,
-        getDrawingVerticalLine: (value) => gridLine);
+        getDrawingHorizontalLine: (value) {
+          print('Horizontal line: $value');
+          return gridLine;
+        },
+        getDrawingVerticalLine: (value) {
+          print('Vertical line: $value');
+          return gridLine;
+        });
 
     final axisLabelStyle = TextStyle(
       color: Colors.grey[400],
@@ -71,26 +87,23 @@ class PriceChart extends StatelessWidget {
         bottomTitles: xAxisLabels,
         leftTitles: yAxisLabels);
 
-    final Iterable<double> timestamps =
-        candles.map((c) => c.timestamp.millisecondsSinceEpoch.toDouble());
-    final Iterable<double> closingPrices = candles.map((c) => c.priceClose);
-
-    print(timestamps.length);
-    var minX = timestamps.min;
-    var maxX = timestamps.max;
-    var minY = closingPrices.min;
-    var maxY = closingPrices.max;
-    print('minX=$minX maxX=$maxX minY=$minY maxY=$maxY');
     var priceData = _priceData();
-    return LineChart(LineChartData(
-        minX: minX,
-        maxX: maxX,
-        minY: minY,
-        maxY: maxY,
-        titlesData: xyAxisLabels,
-        lineBarsData: [priceData],
-        gridData: greyVertAndHorizGrid,
-        borderData: greyBorder));
+    return Column(
+      children: [
+        SizedBox(height: 20, child: Text(currency.name)),
+        Flexible(
+          child: LineChart(LineChartData(
+              minX: minX,
+              maxX: maxX,
+              minY: minY,
+              maxY: maxY,
+              titlesData: xyAxisLabels,
+              lineBarsData: [priceData],
+              gridData: greyVertAndHorizGrid,
+              borderData: greyBorder)),
+        ),
+      ],
+    );
   }
 
   LineChartBarData _priceData() {
