@@ -30,8 +30,15 @@ class _TextWithCountdownState extends State<TextWithCountdown> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Container(child: Text('${widget.text}: ${count + 1}'));
+  Widget build(BuildContext context) => Container(
+        child: Text(
+          '${widget.text}: ${count + 1}',
+          style: TextStyle(
+            color: Colors.grey[100]!,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
 
   void _timerHandle(Timer timer) {
     setState(() => count -= 1);

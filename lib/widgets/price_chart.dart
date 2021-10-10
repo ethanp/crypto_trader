@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class PriceChart extends StatelessWidget {
+  // TODO show which currency it is above the chart.
   final Currency currency;
   final List<Candle> candles;
 
@@ -71,7 +72,7 @@ class PriceChart extends StatelessWidget {
         leftTitles: yAxisLabels);
 
     final Iterable<double> timestamps =
-        candles.map((c) => c.timestamp.toDouble());
+        candles.map((c) => c.timestamp.millisecondsSinceEpoch.toDouble());
     final Iterable<double> closingPrices = candles.map((c) => c.priceClose);
 
     print(timestamps.length);
@@ -95,7 +96,8 @@ class PriceChart extends StatelessWidget {
   LineChartBarData _priceData() {
     return LineChartBarData(
         spots: candles
-            .map((c) => FlSpot(c.timestamp.toDouble(), c.priceClose))
+            .map((c) => FlSpot(
+                c.timestamp.millisecondsSinceEpoch.toDouble(), c.priceClose))
             .toList(),
         isCurved: true,
         colors: _gradientColors,

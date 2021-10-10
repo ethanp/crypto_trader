@@ -1,8 +1,8 @@
 # crypto_trader
 
-Multiplatform application for crypto-trading.
+Flutter application for crypto-trading.
 
-Tested on iOS and MacOS. Should also work on Linux, Windows, and Android.
+Tested only on iOS, but supporting other platforms ought to be relatively easy.
 
 ## Motivation
 

@@ -9,10 +9,11 @@ class MySnackbar {
     required Duration duration,
   }) =>
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.grey[900]!,
           content: TextWithCountdown(text, initialCount: duration.inSeconds),
           duration: duration,
           action: SnackBarAction(
               label: 'Dismiss',
               onPressed: ScaffoldMessenger.of(context).hideCurrentSnackBar,
-              textColor: Colors.blueGrey[200])));
+              textColor: Colors.blueGrey[100])));
 }

@@ -52,8 +52,8 @@ class SpendButton extends StatelessWidget {
   Future<void> _eventuallyRefresh(BuildContext context) {
     MySnackbar.simple(
       context: context,
-      text: 'Waiting for Coinbase',
-      duration: Duration(seconds: 6),
+      text: 'Waiting for Coinbase to update',
+      duration: Duration(seconds: 3),
     );
     print('Scheduling refresh');
     // We need this delay because the transfer from Schwab takes a
