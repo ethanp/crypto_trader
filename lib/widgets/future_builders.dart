@@ -3,10 +3,16 @@ import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/util.dart';
 import 'package:flutter/material.dart';
 
+/// Simpler API than the built-in `FutureBuilder` for what I'm doing.
 class EasyFutureBuilder<T> extends StatelessWidget {
+  /// A [Widget] that may be different before and after a [future] completes.
   const EasyFutureBuilder({required this.future, required this.builder});
 
+  /// Future that will contain data that widgets below depend on.
   final Future<T> future;
+
+  /// A [Function] that can return different [Widget]s before and after the
+  /// [future] completes (and may return data).
   final Widget Function(T?) builder;
 
   @override
@@ -27,12 +33,16 @@ class EasyFutureBuilder<T> extends StatelessWidget {
   }
 }
 
+/// Specify [Widget]s to be built before and after [Holdings] were retrieved.
 class WithHoldings extends EasyFutureBuilder<Holdings> {
+  /// A [Widget] that can look different before and after [Holdings] were retrieved.
   WithHoldings({required Widget Function(Holdings?) builder})
       : super(future: Environment.trader.getMyHoldings(), builder: builder);
 }
 
+/// Specify [Widget]s to be built before and after [Earnings] were retrieved.
 class WithEarnings extends EasyFutureBuilder<Dollars> {
+  /// A [Widget] that can look different before and after [Earnings] were retrieved.
   WithEarnings({required Widget Function(Dollars?) builder})
       : super(future: Environment.trader.getMyEarnings(), builder: builder);
 }

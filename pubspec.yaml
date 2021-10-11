@@ -11,8 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.3
   crypto: ^3.0.1
+  http: ^0.13.3
   provider: ^6.0.0
   intl: ^0.17.0
   path_provider: ^2.0.3
@@ -22,6 +22,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  lint: ^1.7.2
 
 flutter:
   uses-material-design: true

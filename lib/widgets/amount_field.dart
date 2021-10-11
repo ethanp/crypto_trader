@@ -1,10 +1,24 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// Custom [TextField] for this project that pairs with a [SpendButton]
+/// and [TransferRow] to allow the user to select an amount and then conduct
+/// a financial transaction.
+///
+/// It is given a [TextEditingController] that it shares with the [SpendButton].
 class AmountField extends StatelessWidget {
-  final TextEditingController fieldController;
-
+  /// Custom [TextField] for this project that pairs with a [SpendButton]
+  /// and [TransferRow] to allow the user to select an amount and then conduct
+  /// a financial transaction.
+  ///
+  /// It is given a [TextEditingController] that it shares with the [SpendButton].
   const AmountField(this.fieldController);
+
+  /// Shared with the [SpendButton] and [TransferRow].
+  /// In this class, it captures the user's input into the field.
+  final TextEditingController fieldController;
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +30,12 @@ class AmountField extends StatelessWidget {
           border: OutlineInputBorder(),
           labelText: '\$ Amount',
           isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: 10),
+          contentPadding: EdgeInsets.symmetric(vertical: 10),
         ),
         textAlign: TextAlign.center,
-        validator: validateInput,
+        validator: validateAmount,
         autovalidateMode: AutovalidateMode.always,
-        keyboardType: TextInputType.numberWithOptions(decimal: true),
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
         // These are called before `onChanged:`
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'[\.0-9]')),
@@ -31,7 +45,9 @@ class AmountField extends StatelessWidget {
     );
   }
 
-  static String? validateInput(String? input) {
+  /// Runs a few sanity checks on the input.
+  /// Returns an error string if the input is invalid.
+  static String? validateAmount(String? input) {
     if (input == null || input.isEmpty)
       return 'Empty';
     else if (double.tryParse(input) == null)

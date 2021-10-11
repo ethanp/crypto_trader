@@ -3,17 +3,28 @@ import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+/// A [Row] that holds a [TextField] and a [Button]
+///
 /// Allows you to dismiss the keyboard, but leaves the value in the field the
 /// same.
 class TransferRow extends StatefulWidget {
+  /// A [Row] that holds a [TextField] and a [Button]
+  ///
+  /// Allows you to dismiss the keyboard, but leaves the value in the field the
+  /// same.
   const TransferRow({
     required this.initialInput,
     required this.action,
     required this.buttonText,
   });
 
+  /// Returns the default [Dollars] to input in the [TextField].
   final Dollars Function(Holdings) initialInput;
+
+  /// What the [Button] does.
   final Future<String> Function(Dollars) action;
+
+  /// Returns the label for the [Button].
   final String Function(Holdings) buttonText;
 
   @override
@@ -33,37 +44,32 @@ class _TransferRowState extends State<TransferRow> {
   @override
   Widget build(BuildContext context) {
     return WithHoldings(
-      builder: (snapshot) {
-        _initFieldText(snapshot);
+      builder: (holdings) {
+        _fillFieldWithInitialValue(holdings);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 70,
-                child: AmountField(fieldController),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SizedBox(height: 70, child: AmountField(fieldController)),
+            const SizedBox(width: 30),
+            SizedBox(
+              height: 40,
+              child: SpendButton(
+                widget.action,
+                widget.buttonText,
+                fieldController,
+                holdings,
               ),
-              const SizedBox(width: 30),
-              SizedBox(
-                height: 40,
-                child: SpendButton(
-                  widget.action,
-                  widget.buttonText,
-                  fieldController,
-                  snapshot,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ]),
         );
       },
     );
   }
 
-  void _initFieldText(Holdings? holdings) {
-    if (holdings != null && fieldController.text.isEmpty)
+  void _fillFieldWithInitialValue(Holdings? holdings) {
+    if (holdings != null) {
       fieldController.text =
           NumberFormat('##0.##').format(widget.initialInput(holdings).rounded);
+    }
   }
 }

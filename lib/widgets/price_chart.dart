@@ -4,16 +4,16 @@ import 'package:crypto_trader/import_facade/model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+/// Line chart of price history of a [Currency].
 class PriceChart extends StatelessWidget {
+  /// Line chart of price history of a [Currency].
+  const PriceChart({required this.currency, required this.candles});
+
+  /// The [Currency] to plot.
   final Currency currency;
+
+  /// Raw data for the plot.
   final List<Candle> candles;
-
-  PriceChart({required this.currency, required this.candles});
-
-  final List<Color> _gradientColors = [
-    Colors.blue[300]!,
-    Colors.greenAccent[200]!,
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +37,11 @@ class PriceChart extends StatelessWidget {
     final greyVertAndHorizGrid = FlGridData(
         show: true,
         drawVerticalLine: true,
+        checkToShowVerticalLine: (value) {
+          print('Check vertical $value');
+          return true;
+          // return DateTime.fromMillisecondsSinceEpoch(value);
+        },
         getDrawingHorizontalLine: (value) {
           print('Horizontal line: $value');
           return gridLine;
@@ -70,15 +75,24 @@ class PriceChart extends StatelessWidget {
               return '';
           }
         });
+
+    final len = maxY - minY;
+    var a = minY + len / 7;
+    final b = <int>[];
+    for (int i = 1; i < 7; i++) {
+      b.add(a.toInt());
+      a += len;
+    }
     final yAxisLabels = SideTitles(
         showTitles: true,
-        interval: 1,
+        interval: 1000,
         reservedSize: 62,
         margin: 12,
         getTextStyles: (context, value) => axisLabelStyle,
         getTitles: (value) {
           final v = value.toInt();
-          return v % 1000 == 0 ? '\$$v' : '';
+          print('Finding $v in $b');
+          return b.contains(v) ? '\$$v' : '';
         });
     final xyAxisLabels = FlTitlesData(
         show: true,
@@ -87,26 +101,33 @@ class PriceChart extends StatelessWidget {
         bottomTitles: xAxisLabels,
         leftTitles: yAxisLabels);
 
-    var priceData = _priceData();
-    return Column(
-      children: [
-        SizedBox(height: 20, child: Text(currency.name)),
-        Flexible(
-          child: LineChart(LineChartData(
-              minX: minX,
-              maxX: maxX,
-              minY: minY,
-              maxY: maxY,
-              titlesData: xyAxisLabels,
-              lineBarsData: [priceData],
-              gridData: greyVertAndHorizGrid,
-              borderData: greyBorder)),
-        ),
-      ],
+    final lineChart = LineChart(
+      LineChartData(
+        minX: minX,
+        maxX: maxX,
+        minY: minY,
+        maxY: maxY,
+        titlesData: xyAxisLabels,
+        lineBarsData: [_priceData()],
+        gridData: greyVertAndHorizGrid,
+        borderData: greyBorder,
+      ),
     );
+
+    return Column(children: [
+      SizedBox(height: 20, child: Text(currency.name)),
+      Flexible(
+        child: Padding(
+          padding: const EdgeInsets.only(right: 13),
+          child: lineChart,
+        ),
+      ),
+    ]);
   }
 
   LineChartBarData _priceData() {
+    const List<Color> _gradientColors = [Color(0xFF64B5F6), Color(0xFF69F0AE)];
+
     return LineChartBarData(
         spots: candles
             .map((c) => FlSpot(
