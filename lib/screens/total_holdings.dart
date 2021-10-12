@@ -2,6 +2,7 @@ import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 
+/// Display total holdings and earnings.
 class TotalHoldings extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
@@ -23,13 +24,12 @@ class TotalHoldings extends StatelessWidget {
 
   Widget _cryptoHoldings() => WithHoldings(
       builder: (holdings) => _element(
-          title: 'Crypto holdings',
-          value: holdings?.totalCryptoValue.toString()));
+          title: 'Holdings', value: holdings?.totalCryptoValue.toString()));
 
   Widget _cryptoEarnings() => WithHoldings(
       builder: (holdings) => WithEarnings(
           builder: (Dollars? earnings) => _element(
-              title: 'Crypto earnings',
+              title: 'Earnings',
               value: earnings?.toString(),
               percent: _percent(holdings, earnings))));
 
@@ -49,7 +49,7 @@ class TotalHoldings extends StatelessWidget {
           padding: const EdgeInsets.all(5),
           child: Row(children: [
             Text('$title: ', style: _Style.labelStyle),
-            Text('${value ?? 'Loading...'}', style: _Style.amountStyle),
+            Text(value ?? 'Loading...', style: _Style.amountStyle),
             if (percent != null)
               Padding(
                   padding: const EdgeInsets.only(left: 14),

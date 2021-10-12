@@ -89,21 +89,20 @@ class CoinbaseProTrader extends Trader {
   Future<String> spendInternal(Holding order) async {
     final String orderResponse = await CoinbaseApi().marketOrder(order);
     print('Order: $orderResponse');
-    final Map<String, dynamic> decoded = jsonDecode(orderResponse);
+    final dynamic decoded = jsonDecode(orderResponse);
     await invalidateHoldings();
-    return decoded['id'];
+    return decoded['id'] as String;
   }
 
   @override
   Future<String> depositInternal(Dollars dollars) async {
     final String depositResponse = await CoinbaseApi().deposit(dollars);
     print('Deposit: $depositResponse');
-    final Map<String, dynamic> decoded = jsonDecode(depositResponse);
+    final dynamic decoded = jsonDecode(depositResponse);
     await invalidateHoldings();
-    return decoded['id'];
+    return decoded['id'] as String;
   }
 
   @override
-  Future<Dollars> getTotalDeposits() async =>
-      await CoinbaseApi().totalDeposits();
+  Future<Dollars> getTotalDeposits() => CoinbaseApi().totalDeposits();
 }

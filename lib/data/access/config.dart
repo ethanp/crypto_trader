@@ -7,11 +7,11 @@ class Config {
 
   final dynamic loaded;
 
-  String get key => loaded['key'];
+  String get key => loaded['key'] as String;
 
-  String get secret => loaded['secret'];
+  String get secret => loaded['secret'] as String;
 
-  String get passphrase => loaded['passphrase'];
+  String get passphrase => loaded['passphrase'] as String;
 
   static Future<Config> loadFromDisk() async {
     final configOnDisk = await rootBundle.loadString('config/config.json');

@@ -50,8 +50,9 @@ class CoinbaseApi {
   /// https://docs.pro.coinbase.com/#payment-methods
   Future<String> _getPaymentMethodId() async {
     final response = await get(path: 'payment-methods', private: true);
-    final List<dynamic> decoded = jsonDecode(response);
-    return decoded.firstWhere((e) => e['name'].contains("SCHWAB"))['id'];
+    final decoded = jsonDecode(response) as List<dynamic>;
+    return decoded.firstWhere(
+        (e) => (e['name'] as String).contains('SCHWAB'))['id'] as String;
   }
 
   Future<String> _post({
@@ -154,7 +155,7 @@ class CoinbaseApi {
 
   Future<Iterable<CoinbaseAccount>> getAccounts() async {
     final String holdingsResponse = await get(path: 'accounts', private: true);
-    final List<dynamic> accountListRaw = jsonDecode(holdingsResponse);
+    final accountListRaw = jsonDecode(holdingsResponse) as List<dynamic>;
     return accountListRaw.map((raw) => CoinbaseAccount(raw));
   }
 
@@ -163,8 +164,9 @@ class CoinbaseApi {
     print('retrieving deposits');
     final String transfersResponse =
         await get(path: 'transfers', private: true);
-    final List<dynamic> transfers = jsonDecode(transfersResponse);
-    return Dollars(transfers.map((t) => double.parse(t['amount'])).sum);
+    final transfers = jsonDecode(transfersResponse) as List<dynamic>;
+    return Dollars(
+        transfers.map((xfr) => double.parse(xfr['amount'] as String)).sum);
   }
 }
 
@@ -185,7 +187,7 @@ class CoinbaseAccount {
     );
   }
 
-  String get _callLetters => acct['currency'];
+  String get _callLetters => acct['currency'] as String;
 
-  double get _balanceInCurrency => double.parse(acct['balance']);
+  double get _balanceInCurrency => double.parse(acct['balance'] as String);
 }

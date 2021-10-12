@@ -19,7 +19,7 @@ class PriceChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final Iterable<double> timestamps =
         candles.map((c) => c.timestamp.millisecondsSinceEpoch.toDouble());
-    final Iterable<double> closingPrices = candles.map((c) => c.priceClose);
+    final Iterable<double> closingPrices = candles.map((c) => c.closingPrice);
 
     print(timestamps.length);
     final minX = timestamps.min;
@@ -131,7 +131,7 @@ class PriceChart extends StatelessWidget {
     return LineChartBarData(
         spots: candles
             .map((c) => FlSpot(
-                c.timestamp.millisecondsSinceEpoch.toDouble(), c.priceClose))
+                c.timestamp.millisecondsSinceEpoch.toDouble(), c.closingPrice))
             .toList(),
         isCurved: true,
         colors: _gradientColors,
