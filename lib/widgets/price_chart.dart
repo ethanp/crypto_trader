@@ -9,10 +9,10 @@ class PriceChart extends StatelessWidget {
   /// Line chart of price history of a [Currency].
   const PriceChart({required this.currency, required this.candles});
 
-  /// The [Currency] to plot.
+  /// The [Currency] to chart.
   final Currency currency;
 
-  /// Raw data for the plot.
+  /// Price data for the chart.
   final List<Candle> candles;
 
   @override
@@ -76,6 +76,7 @@ class PriceChart extends StatelessWidget {
           }
         });
 
+    // TODO(UI): this doesn't work like I want it to at all.
     final len = maxY - minY;
     var a = minY + len / 7;
     final b = <int>[];

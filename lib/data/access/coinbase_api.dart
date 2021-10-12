@@ -172,13 +172,18 @@ class CoinbaseApi {
   }
 }
 
+/// Converter between the external Coinbase API data model,
+/// and the internal [Holdings] data model.
 class _CoinbaseAccount {
   const _CoinbaseAccount(this.acct);
 
+  /// Raw coinbase data about a single [Holding].
   final dynamic acct;
 
+  /// True iff this account holds a currency that is part of our portfolio.
   bool get isSupported => Currencies.allCurrenciesMap.containsKey(_callLetters);
 
+  /// Materialize a [Holding] out of this [_CoinbaseAccount].
   Future<Holding> get asHolding async {
     final Currency currency = Currency.byLetters(_callLetters);
     final Dollars priceInDollars =
