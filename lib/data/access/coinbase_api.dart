@@ -9,18 +9,20 @@ import 'package:http/http.dart' as http;
 
 import 'config.dart';
 
+/// Handles actual interaction with the Coinbase Pro API for the app.
 class CoinbaseApi {
-  static const oldEndpoint = 'api.pro.coinbase.com';
-  static const exchangeEndpoint = 'api.exchange.coinbase.com';
+  static const _oldEndpoint = 'api.pro.coinbase.com';
+  static const _exchangeEndpoint = 'api.exchange.coinbase.com';
 
   // https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles
-  Future<String> candles(Currency currency) async {
-    final start = DateTime.now().subtract(Duration(days: 4)).toIso8601String();
+  Future<String> candles(Currency currency) {
+    final start =
+        DateTime.now().subtract(const Duration(days: 4)).toIso8601String();
     final end = DateTime.now().toIso8601String();
-    return await get(
-      path: "products/${currency.callLetters}-USD/candles",
+    return get(
+      path: 'products/${currency.callLetters}-USD/candles',
       params: {'granularity': '21600', 'start': start, 'end': end},
-      endpoint: exchangeEndpoint,
+      endpoint: _exchangeEndpoint,
     );
   }
 
@@ -38,12 +40,12 @@ class CoinbaseApi {
   Future<String> marketOrder(Holding order) async => await _post(
         path: '/orders',
         body: {
-          "type": "market",
-          "side": "buy",
+          'type': 'market',
+          'side': 'buy',
           // Buy `currency` using USD.
-          "product_id": "${order.currency.callLetters}-USD",
+          'product_id': '${order.currency.callLetters}-USD',
           // In "quote currency", which is USD in this case, eg. "$0.01".
-          "funds": "${order.dollarValue.amt}",
+          'funds': '${order.dollarValue.amt}',
         },
       );
 
@@ -59,39 +61,39 @@ class CoinbaseApi {
     required String path,
     required Map<String, String> body,
   }) async {
-    final url = Uri.https(oldEndpoint, path);
+    final url = Uri.https(_oldEndpoint, path);
     final headers = await _privateHeaders(
       method: 'POST',
       path: path,
       body: jsonEncode(body),
     );
     print('posting meow');
-    final res = await http.post(
+    final postResponse = await http.post(
       url,
       headers: headers,
       body: jsonEncode(body),
     );
-    if (res.statusCode != 200) {
-      if (res.body.toLowerCase().contains('insufficient funds')) {
+    if (postResponse.statusCode != 200) {
+      if (postResponse.body.toLowerCase().contains('insufficient funds')) {
         throw StateError('Insufficient Funds');
       } else {
         throw StateError('\n\nError in POST $url from Coinbase API!\n'
-            'response code: ${res.statusCode}\n'
-            'response body: ${res.body}\n'
+            'response code: ${postResponse.statusCode}\n'
+            'response body: ${postResponse.body}\n'
             'sent headers: $headers\n'
             'sent body: $body\n\n');
       }
     }
-    return res.body;
+    return postResponse.body;
   }
 
   Future<String> get({
     required String path,
-    bool private = false,
-    Map<String, String>? params,
-    String endpoint = oldEndpoint,
+    final bool private = false,
+    final Map<String, String>? params,
+    final String endpoint = _oldEndpoint,
   }) async {
-    path = '/' + path;
+    path = '/$path';
     print('Getting path:$path private:$private');
     final url = Uri.https(endpoint, path, params);
     final headers =
@@ -117,9 +119,9 @@ class CoinbaseApi {
     final int timestamp = _timestamp();
 
     return <String, String>{
-      "accept": "application/json",
-      "content-type": "application/json",
-      "User-Agent": "Unofficial Flutter coinbase pro api library",
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'User-Agent': 'Unofficial Flutter coinbase pro api library',
       'CB-ACCESS-KEY': config.key,
       'CB-ACCESS-SIGN': _signature(timestamp, method, path, body, config),
       'CB-ACCESS-TIMESTAMP': timestamp.toString(),
@@ -153,10 +155,10 @@ class CoinbaseApi {
     return secondsSinceEpoch.round();
   }
 
-  Future<Iterable<CoinbaseAccount>> getAccounts() async {
+  Future<Iterable<_CoinbaseAccount>> getAccounts() async {
     final String holdingsResponse = await get(path: 'accounts', private: true);
     final accountListRaw = jsonDecode(holdingsResponse) as List<dynamic>;
-    return accountListRaw.map((raw) => CoinbaseAccount(raw));
+    return accountListRaw.map((raw) => _CoinbaseAccount(raw));
   }
 
   Future<Dollars> totalDeposits() async {
@@ -170,8 +172,8 @@ class CoinbaseApi {
   }
 }
 
-class CoinbaseAccount {
-  CoinbaseAccount(this.acct);
+class _CoinbaseAccount {
+  const _CoinbaseAccount(this.acct);
 
   final dynamic acct;
 
