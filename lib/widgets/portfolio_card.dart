@@ -1,4 +1,5 @@
 import 'package:crypto_trader/import_facade/model.dart';
+import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,13 +15,13 @@ class PortfolioCard extends StatelessWidget {
     return Card(
       elevation: isSelected ? 0 : 10,
       color: isSelected ? _Style.selectedCardColor : _Style.unselectedCardColor,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(children: [
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
           _name(),
           _holding(),
           _percentageOfPortfolio(),
-        ]),
+        ],
       ),
     );
   }
@@ -29,14 +30,14 @@ class PortfolioCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(currency.callLetters, style: _Style.callLettersTextStyle),
+        MyText(currency.callLetters, style: _Style.callLettersTextStyle),
         const SizedBox(width: 10),
-        Text(currency.name, style: _Style.currencyNameTextStyle),
+        MyText(currency.name, style: _Style.currencyNameTextStyle),
       ],
     );
   }
 
-  Widget _holding() => Text(
+  Widget _holding() => MyText(
         holdings?.dollarsOf(currency).toString() ?? 'Loading',
         style: _Style.holdingValueTextStyle,
       );
@@ -55,7 +56,7 @@ class PortfolioCard extends StatelessWidget {
 
   Widget _percentages() {
     final actualPercentage = holdings!.percentageContaining(currency).round();
-    return Text(
+    return MyText(
       '$actualPercentage% / ${currency.percentAllocation}%',
       style: _Style.percentagesTextStyle,
     );
@@ -65,7 +66,8 @@ class PortfolioCard extends StatelessWidget {
     final difference = holdings!.difference(currency);
     final Color color =
         difference >= 0 ? _Style.overheldColor : _Style.underheldColor;
-    return Text('${difference.round()}%', style: _Style.differenceStyle(color));
+    return MyText('${difference.round()}%',
+        style: _Style.differenceStyle(color));
   }
 }
 
@@ -77,21 +79,17 @@ class _Style {
   static final overheldColor = Colors.red;
   static final unselectedCardColor = Colors.grey[800];
   static final selectedCardColor = Colors.grey[700];
-  static final callLettersTextStyle = TextStyle(
-    fontSize: 17,
-    color: Colors.grey[500],
-    fontWeight: FontWeight.w700,
-  );
-  static final currencyNameTextStyle = TextStyle(
-    fontSize: 17,
-  );
-  static final percentagesTextStyle = TextStyle(
-    fontWeight: FontWeight.w500,
-    color: Colors.grey[300],
-  );
-  static final holdingValueTextStyle = TextStyle(
-    fontSize: 22,
-    fontWeight: FontWeight.w500,
-    color: Colors.grey[300],
-  );
+  static final darkerText = TextStyle(color: Colors.grey[500]);
+  static final lighterText = TextStyle(color: Colors.grey[300]);
+  static const heavyWeight = TextStyle(fontWeight: FontWeight.w700);
+  static const mediumWeight = TextStyle(fontWeight: FontWeight.w500);
+  static const smallText = TextStyle(fontSize: 17);
+  static const largeText = TextStyle(fontSize: 20);
+
+  static final callLettersTextStyle =
+      smallText.merge(heavyWeight).merge(darkerText);
+  static const currencyNameTextStyle = smallText;
+  static final percentagesTextStyle = lighterText.merge(mediumWeight);
+  static final holdingValueTextStyle =
+      largeText.merge(mediumWeight).merge(lighterText);
 }

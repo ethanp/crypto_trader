@@ -1,6 +1,7 @@
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/extensions.dart';
 import 'package:crypto_trader/import_facade/model.dart';
+import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -116,7 +117,7 @@ class PriceChart extends StatelessWidget {
     );
 
     return Column(children: [
-      SizedBox(height: 20, child: Text(currency.name)),
+      SizedBox(height: 20, child: MyText(currency.name)),
       Flexible(
         child: Padding(
           padding: const EdgeInsets.only(right: 13),

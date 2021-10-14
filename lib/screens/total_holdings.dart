@@ -48,12 +48,12 @@ class TotalHoldings extends StatelessWidget {
       Padding(
           padding: const EdgeInsets.all(5),
           child: Row(children: [
-            Text('$title: ', style: _Style.labelStyle),
-            Text(value ?? 'Loading...', style: _Style.amountStyle),
+            MyText('$title: ', style: _Style.labelStyle),
+            MyText(value ?? 'Loading...', style: _Style.amountStyle),
             if (percent != null)
               Padding(
                   padding: const EdgeInsets.only(left: 14),
-                  child: Text(
+                  child: MyText(
                     '+${percent.toInt()}%',
                     style: _Style.percentStyle,
                   ))

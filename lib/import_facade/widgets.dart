@@ -3,6 +3,7 @@ export 'package:crypto_trader/screens/spend_buttons.dart';
 export 'package:crypto_trader/screens/total_holdings.dart';
 export 'package:crypto_trader/widgets/amount_field.dart';
 export 'package:crypto_trader/widgets/future_builders.dart';
+export 'package:crypto_trader/widgets/my_text.dart';
 export 'package:crypto_trader/widgets/portfolio_card.dart';
 export 'package:crypto_trader/widgets/price_chart.dart';
 export 'package:crypto_trader/widgets/spend_button.dart';

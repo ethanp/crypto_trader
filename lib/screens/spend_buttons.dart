@@ -22,7 +22,7 @@ class SpendButtons extends StatelessWidget {
       padding: const EdgeInsets.all(15),
       child: WithHoldings(builder: (holdings) {
         final dollars = holdings?.dollarsOf(Currencies.dollars).toString();
-        return Text(
+        return MyText(
           'Cash available: ${dollars ?? 'Loading'}',
           style: const TextStyle(fontSize: 20),
         );

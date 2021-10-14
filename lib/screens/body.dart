@@ -1,5 +1,3 @@
-import 'package:crypto_trader/import_facade/controller.dart';
-import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/ui_refresher.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +11,7 @@ class Body extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text('Crypto: auto-balancing DCA'),
+        title: const MyText('Crypto: auto-balancing DCA'),
         leading: _refreshButton(context),
       ),
       body: SafeArea(
@@ -27,12 +25,9 @@ class Body extends StatelessWidget {
   }
 
   Widget _refreshButton(BuildContext context) => IconButton(
-        onPressed: () async {
-          print(await Environment.prices.candles(Currencies.bitcoin));
-          UiRefresher.refresh(context);
-        },
+        onPressed: () => UiRefresher.refresh(context),
         tooltip: 'Refresh data',
-        icon: Icon(Icons.refresh),
+        icon: const Icon(Icons.refresh),
       );
 
   bool _keyboardIsShowing(BuildContext context) =>

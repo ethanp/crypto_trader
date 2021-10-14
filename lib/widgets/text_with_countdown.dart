@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 
 /// Source: https://stackoverflow.com/a/68124708/1959155.
@@ -35,7 +36,7 @@ class _TextWithCountdownState extends State<TextWithCountdown> {
   }
 
   @override
-  Widget build(BuildContext context) => Text(
+  Widget build(BuildContext context) => MyText(
         '${widget.text}: ${count + 1}',
         style: TextStyle(color: Colors.grey[100], fontWeight: FontWeight.w500),
       );
