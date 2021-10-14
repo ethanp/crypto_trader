@@ -3,6 +3,7 @@ import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 
+/// Area of the screen with the cash available, deposit, and spend Widgets.
 class SpendButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -22,8 +23,8 @@ class SpendButtons extends StatelessWidget {
       child: WithHoldings(builder: (holdings) {
         final dollars = holdings?.dollarsOf(Currencies.dollars).toString();
         return Text(
-          'Cash available: ' + (dollars ?? 'Loading'),
-          style: kCashAvailableStyle,
+          'Cash available: ${dollars ?? 'Loading'}',
+          style: const TextStyle(fontSize: 20),
         );
       }),
     );
@@ -44,6 +45,4 @@ class SpendButtons extends StatelessWidget {
       initialInput: (holdings) => holdings.dollarsOf(Currencies.dollars),
     );
   }
-
-  static final kCashAvailableStyle = TextStyle(fontSize: 20);
 }

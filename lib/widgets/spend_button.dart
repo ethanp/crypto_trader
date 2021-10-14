@@ -2,6 +2,7 @@ import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/ui_refresher.dart';
 import 'package:crypto_trader/import_facade/util.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// UI [Button] that triggers a financial transaction.
@@ -9,17 +10,28 @@ class SpendButton extends StatelessWidget {
   /// UI [Button] that triggers a financial transaction.
   const SpendButton(this.action, this.buttonText, this.input, this.holdings);
 
+  /// What happens when you click the button.
   final Future<String> Function(Dollars) action;
+
+  /// What the button says on it.
   final String Function(Holdings) buttonText;
+
+  /// Reference to the controller for the relevant field.
   final TextEditingController input;
+
+  /// Reference to global [Holdings] that will be null while loading, and then
+  /// filled with a valid reference once the Holdings have been retrieved from
+  /// the CoinbasePro API.
   final Holdings? holdings;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () => _transact(context),
-      child: Text(holdings == null ? 'Loading' : buttonText(holdings!),
-          style: const TextStyle(color: Colors.white, fontSize: 20)),
+      child: holdings == null
+          ? const CupertinoActivityIndicator()
+          : Text(buttonText(holdings!),
+              style: const TextStyle(color: Colors.white, fontSize: 20)),
     );
   }
 

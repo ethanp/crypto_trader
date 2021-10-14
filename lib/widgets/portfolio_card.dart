@@ -1,4 +1,5 @@
 import 'package:crypto_trader/import_facade/model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PortfolioCard extends StatelessWidget {
@@ -41,7 +42,7 @@ class PortfolioCard extends StatelessWidget {
       );
 
   Widget _percentageOfPortfolio() {
-    if (holdings == null) return Text('Loading');
+    if (holdings == null) return const CupertinoActivityIndicator();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

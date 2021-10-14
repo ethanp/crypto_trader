@@ -24,7 +24,7 @@ class _PortfolioState extends State<Portfolio> {
         child: EasyFutureBuilder<List<Candle>>(
             future: Environment.prices.candles(currency),
             builder: (List<Candle>? candles) => candles == null
-                ? Text('Loading...')
+                ? const CupertinoActivityIndicator()
                 : PriceChart(currency: currency, candles: candles)));
   }
 

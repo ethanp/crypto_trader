@@ -116,7 +116,7 @@ class CoinbaseApi {
     String body = '',
   }) async {
     final Config config = await Config.loadFromDisk();
-    final int timestamp = _timestamp();
+    final int timestamp = _currentTime();
 
     return <String, String>{
       'accept': 'application/json',
@@ -129,6 +129,9 @@ class CoinbaseApi {
     };
   }
 
+  /// Special magic that I'm quite proud of penning that implements
+  /// Coinbase Pro API's special signature algorithm. There's no official
+  /// library for the API in Dart, so I had to write it out.
   String _signature(
     int timestamp,
     String method,
@@ -149,11 +152,10 @@ class CoinbaseApi {
     return signature;
   }
 
-  int _timestamp() {
-    final double secondsSinceEpoch =
-        DateTime.now().millisecondsSinceEpoch / 1000;
-    return secondsSinceEpoch.round();
-  }
+  /// Seconds since "epoch".
+  ///
+  /// Eg. `1634079032` would be Oct 12 '21 6:50pm
+  int _currentTime() => (DateTime.now().millisecondsSinceEpoch / 1000).round();
 
   Future<Iterable<_CoinbaseAccount>> getAccounts() async {
     final String holdingsResponse = await get(path: 'accounts', private: true);
