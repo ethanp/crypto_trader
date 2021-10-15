@@ -34,23 +34,17 @@ class PriceChart extends StatelessWidget {
       border: Border.all(color: Colors.grey[700]!, width: 2),
     );
 
+    final horizontalInterval = (maxX - minX) / 3 - 2;
+    final verticalInterval = (maxY - minY) / 3 - 2;
+
     final gridLine = FlLine(color: Colors.grey[800], strokeWidth: 1);
     final greyVertAndHorizGrid = FlGridData(
         show: true,
         drawVerticalLine: true,
-        checkToShowVerticalLine: (value) {
-          print('Check vertical $value');
-          return true;
-          // return DateTime.fromMillisecondsSinceEpoch(value);
-        },
-        getDrawingHorizontalLine: (value) {
-          print('Horizontal line: $value');
-          return gridLine;
-        },
-        getDrawingVerticalLine: (value) {
-          print('Vertical line: $value');
-          return gridLine;
-        });
+        horizontalInterval: verticalInterval,
+        verticalInterval: horizontalInterval,
+        getDrawingHorizontalLine: (value) => gridLine,
+        getDrawingVerticalLine: (value) => gridLine);
 
     final axisLabelStyle = TextStyle(
       color: Colors.grey[400],
@@ -62,29 +56,29 @@ class PriceChart extends StatelessWidget {
         // Height available to label
         reservedSize: 22,
         margin: 8,
-        interval: (maxX - minX) / 3 - 2,
+        interval: horizontalInterval,
         getTextStyles: (context, value) => axisLabelStyle,
         getTitles: (value) {
-          print('$value, $minX, $maxX');
           final millisSinceEpoch = value.toInt() * 1000000;
           final dateTime =
               DateTime.fromMillisecondsSinceEpoch(millisSinceEpoch);
-          print(dateTime);
+          // TODO instead of using this map, format it like 'Mon 4pm'.
+          //  I'm quite sure there's a very easy way to do that.
           final weekdayMap = {
-            DateTime.monday: 'Monday',
-            DateTime.tuesday: 'Tuesday',
-            DateTime.wednesday: 'Wednesday',
-            DateTime.thursday: 'Thursday',
-            DateTime.friday: 'Friday',
-            DateTime.saturday: 'Saturday',
-            DateTime.sunday: 'Sunday',
+            DateTime.monday: 'Mon',
+            DateTime.tuesday: 'Tue',
+            DateTime.wednesday: 'Wed',
+            DateTime.thursday: 'Thu',
+            DateTime.friday: 'Fri',
+            DateTime.saturday: 'Sat',
+            DateTime.sunday: 'Sun',
           };
           return '${weekdayMap[dateTime.weekday]}';
         });
 
     final yAxisLabels = SideTitles(
         showTitles: true,
-        interval: (maxY - minY) / 3 - 2,
+        interval: verticalInterval,
         reservedSize: 62,
         margin: 12,
         getTextStyles: (context, value) => axisLabelStyle,
