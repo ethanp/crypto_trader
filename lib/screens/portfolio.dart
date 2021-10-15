@@ -31,17 +31,13 @@ class _PortfolioState extends State<Portfolio> {
   Widget _currencyCards() => Wrap(
       children: Currencies.allCryptoCurrencies.mapWithIndex(_asPortfolioCard));
 
-  Widget _asPortfolioCard(Currency currency, int idx) => SizedBox(
-        width: 180,
-        height: 87,
-        child: WithHoldings(
-          builder: (holdings) => GestureDetector(
-            onTap: () => setState(() => _selectedIndex = idx),
-            child: PortfolioCard(
-              holdings: holdings,
-              currency: currency,
-              isSelected: idx == _selectedIndex,
-            ),
+  Widget _asPortfolioCard(Currency currency, int idx) => WithHoldings(
+        builder: (holdings) => GestureDetector(
+          onTap: () => setState(() => _selectedIndex = idx),
+          child: PortfolioCard(
+            holdings: holdings,
+            currency: currency,
+            isSelected: idx == _selectedIndex,
           ),
         ),
       );

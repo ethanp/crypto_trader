@@ -50,6 +50,7 @@ class PriceChart extends StatelessWidget {
       color: Colors.grey[400],
       fontWeight: FontWeight.w500,
       fontSize: 15,
+      letterSpacing: -1.5,
     );
     final xAxisLabels = SideTitles(
         showTitles: true,
@@ -82,6 +83,7 @@ class PriceChart extends StatelessWidget {
         reservedSize: 62,
         margin: 12,
         getTextStyles: (context, value) => axisLabelStyle,
+        // TODO add commas for $1K+
         getTitles: (value) => '\$${value.toInt()}');
     final xyAxisLabels = FlTitlesData(
         show: true,

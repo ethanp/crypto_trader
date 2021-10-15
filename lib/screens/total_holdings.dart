@@ -10,10 +10,13 @@ class TotalHoldings extends StatelessWidget {
       elevation: 15,
       child: Container(
           decoration: _gradient,
-          padding: const EdgeInsets.only(left: 25),
+          padding: const EdgeInsets.only(left: 15, right: 10),
           child: Column(children: [
-            _cryptoHoldings(),
-            _cryptoEarnings(),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              _cryptoHoldings(),
+              _cashAvailable(),
+            ]),
+            _cryptoEarnings()
           ])));
 
   BoxDecoration get _gradient => BoxDecoration(
@@ -25,6 +28,11 @@ class TotalHoldings extends StatelessWidget {
   Widget _cryptoHoldings() => WithHoldings(
       builder: (holdings) => _element(
           title: 'Holdings', value: holdings?.totalCryptoValue.toString()));
+
+  Widget _cashAvailable() => WithHoldings(
+      builder: (holdings) => _element(
+          title: 'Cash available',
+          value: holdings?.dollarsOf(Currencies.dollars).toString()));
 
   Widget _cryptoEarnings() => WithHoldings(
       builder: (holdings) => WithEarnings(

@@ -32,9 +32,11 @@ class SpendButton extends StatelessWidget {
           ? const CupertinoActivityIndicator()
           : MyText(
               buttonText(holdings!),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
+              style: TextStyle(
+                color: Colors.grey[100],
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+                letterSpacing: -1.5,
               ),
             ),
     );
