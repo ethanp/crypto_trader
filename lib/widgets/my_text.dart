@@ -18,8 +18,6 @@ class MyText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
-        style: GoogleFonts.libreBaskerville()
-            .merge(style)
-            .copyWith(fontSize: fontSize));
+        style: GoogleFonts.prompt().merge(style).copyWith(fontSize: fontSize));
   }
 }

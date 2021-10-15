@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
 
 abstract class Trader extends ChangeNotifier {
-  final HoldingsCache _holdingsCache = new HoldingsCache();
+  final HoldingsCache _holdingsCache = HoldingsCache();
 
-  final _synchronizer = new Lock(reentrant: true);
+  final _synchronizer = Lock(reentrant: true);
 
   Future<Dollars> getMyEarnings() async {
     final Holdings holdings = await getMyHoldings();
@@ -27,19 +27,16 @@ abstract class Trader extends ChangeNotifier {
   @protected
   Future<String> depositInternal(Dollars dollars);
 
-  Future<String> spend(Dollars dollars) async =>
-      await _synchronizer.synchronized(() async {
+  Future<String> spend(Dollars dollars) => _synchronizer.synchronized(() async {
         print('Spending $dollars');
-        return spendInternal(
-          Holding(
-            currency: (await getMyHoldings()).shortest.currency,
-            dollarValue: dollars,
-          ),
-        );
+        return spendInternal(Holding(
+          currency: (await getMyHoldings()).shortest.currency,
+          dollarValue: dollars,
+        ));
       });
 
-  Future<String> deposit(Dollars dollars) async =>
-      await _synchronizer.synchronized(() async {
+  Future<String> deposit(Dollars dollars) =>
+      _synchronizer.synchronized(() async {
         print('Depositing $dollars');
         return depositInternal(dollars);
       });
@@ -47,14 +44,15 @@ abstract class Trader extends ChangeNotifier {
   Future<void> invalidateHoldings() =>
       _synchronizer.synchronized(_holdingsCache.invalidate);
 
-  Future<void> forceRefreshHoldings() async {
+  /// Retrieve [Holdings] from remote source and cache new response.
+  Future<Holdings> forceRefreshHoldings() async {
     await invalidateHoldings();
-    await getMyHoldings();
+    return getMyHoldings();
   }
 }
 
 class FakeTrader extends Trader {
-  Dollars spending = Dollars(10);
+  Dollars _spending = Dollars(10);
 
   @override
   Future<String> spendInternal(Holding holding) async {
@@ -67,7 +65,7 @@ class FakeTrader extends Trader {
     to.amt += holding.dollarValue.amt;
     from.amt -= holding.dollarValue.amt;
     // Here we're just reassigning the field.
-    spending += holding.dollarValue;
+    _spending += holding.dollarValue;
     return 'Succeeded';
   }
 
@@ -80,7 +78,7 @@ class FakeTrader extends Trader {
   }
 
   @override
-  Future<Dollars> getTotalDeposits() => Future.value(spending);
+  Future<Dollars> getTotalDeposits() => Future.value(_spending);
 }
 
 class CoinbaseProTrader extends Trader {

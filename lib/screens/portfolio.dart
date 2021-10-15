@@ -36,8 +36,13 @@ class _PortfolioState extends State<Portfolio> {
         height: 87,
         child: WithHoldings(
           builder: (holdings) => GestureDetector(
-              onTap: () => setState(() => _selectedIndex = idx),
-              child: PortfolioCard(holdings, currency, idx == _selectedIndex)),
+            onTap: () => setState(() => _selectedIndex = idx),
+            child: PortfolioCard(
+              holdings: holdings,
+              currency: currency,
+              isSelected: idx == _selectedIndex,
+            ),
+          ),
         ),
       );
 }

@@ -62,9 +62,9 @@ class TotalHoldings extends StatelessWidget {
 
 class _Style {
   static final labelStyle = TextStyle(
-    color: Colors.grey[100],
+    color: Colors.grey[300],
     fontSize: 15,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w400,
   );
   static final amountStyle = TextStyle(
     color: Colors.green[300],

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'body.dart';
 
+/// The widget created by [main()].
 class OutermostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

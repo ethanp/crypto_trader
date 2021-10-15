@@ -2,9 +2,8 @@ import 'package:crypto_trader/import_facade/ui_refresher.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 
+/// Outermost [Scaffold] for the app.
 class Body extends StatelessWidget {
-  const Body({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     UiRefresher.register(context);

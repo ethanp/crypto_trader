@@ -24,7 +24,7 @@ class SpendButtons extends StatelessWidget {
         final dollars = holdings?.dollarsOf(Currencies.dollars).toString();
         return MyText(
           'Cash available: ${dollars ?? 'Loading'}',
-          style: const TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 20, color: Colors.grey[300]),
         );
       }),
     );
