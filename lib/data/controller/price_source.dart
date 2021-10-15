@@ -5,7 +5,7 @@ import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 
 /// Interface for retrieving price data from external sources.
-abstract class Prices {
+abstract class PriceSource {
   /// The current price of [of] in [Dollars].
   Future<Dollars> currentPrice({required Currency of});
 
@@ -13,8 +13,8 @@ abstract class Prices {
   Future<List<Candle>> candles(Currency currency);
 }
 
-/// A [Prices] getter with fake data.
-class FakePrices extends Prices {
+/// A [PriceSource] getter with fake data.
+class FakePriceSource extends PriceSource {
   @override
   Future<Dollars> currentPrice({required Currency of}) =>
       Future.value(Dollars(100));
@@ -72,8 +72,8 @@ class FakePrices extends Prices {
       ]);
 }
 
-/// A [Prices] getter actually connected to the Coinbase Pro API.
-class CoinbaseProPrices extends Prices {
+/// A [PriceSource] getter actually connected to the Coinbase Pro API.
+class CoinbaseProPriceSource extends PriceSource {
   @override
   Future<Dollars> currentPrice({required Currency of}) async {
     final String from = of.callLetters;

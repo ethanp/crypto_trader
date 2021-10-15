@@ -1,4 +1,4 @@
-import '../../import_facade/model.dart';
+import 'package:crypto_trader/import_facade/model.dart';
 
 class Currency {
   const Currency({
@@ -14,6 +14,7 @@ class Currency {
   static Currency byLetters(String callLetters) =>
       Currencies.allCurrenciesMap[callLetters]!;
 
+  // TODO use equatable mixin from pub get equatable.
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -25,10 +26,5 @@ class Currency {
   int get hashCode => callLetters.hashCode;
 
   @override
-  String toString() {
-    return 'Currency{name: $name, callLetters: $callLetters}';
-  }
-
-  Holding holding({required Dollars dollarValue}) =>
-      Holding(currency: this, dollarValue: dollarValue);
+  String toString() => 'Currency{name: $name, callLetters: $callLetters}';
 }
