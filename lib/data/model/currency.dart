@@ -1,17 +1,26 @@
 import 'package:crypto_trader/import_facade/model.dart';
 
+/// Could be a cryptocurrency, or [Dollars].
 class Currency {
+  /// Could be a cryptocurrency, or [Dollars].
   const Currency({
     required this.name,
     required this.callLetters,
     required this.percentAllocation,
   });
 
+  /// The full name of the currency, eg. "Bitcoin Cash".
   final String name;
+
+  /// Call letters for the currency, eg. "BTC".
   final String callLetters;
+
+  // TODO perhaps this field should live in its own PortfolioCurrency class.
+  /// Percentage of portfolio allocated to this currency.
   final int percentAllocation;
 
-  static Currency byLetters(String callLetters) =>
+  /// Retrieve a [Currency] using its [callLetters].
+  static Currency byCallLetters(String callLetters) =>
       Currencies.allCurrenciesMap[callLetters]!;
 
   // TODO use equatable mixin from pub get equatable.

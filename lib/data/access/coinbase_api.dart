@@ -187,7 +187,7 @@ class _CoinbaseAccount {
 
   /// Materialize a [Holding] out of this [_CoinbaseAccount].
   Future<Holding> get asHolding async {
-    final Currency currency = Currency.byLetters(_callLetters);
+    final Currency currency = Currency.byCallLetters(_callLetters);
     final Dollars priceInDollars =
         await Environment.prices.currentPrice(of: currency);
     return Holding(
