@@ -62,40 +62,33 @@ class PriceChart extends StatelessWidget {
         // Height available to label
         reservedSize: 22,
         margin: 8,
-        interval: 1,
+        interval: (maxX - minX) / 3 - 2,
         getTextStyles: (context, value) => axisLabelStyle,
         getTitles: (value) {
-          switch (value.toInt()) {
-            case 2:
-              return '3wk';
-            case 5:
-              return '2wk';
-            case 8:
-              return '1wk';
-            default:
-              return '';
-          }
+          print('$value, $minX, $maxX');
+          final millisSinceEpoch = value.toInt() * 1000000;
+          final dateTime =
+              DateTime.fromMillisecondsSinceEpoch(millisSinceEpoch);
+          print(dateTime);
+          final weekdayMap = {
+            DateTime.monday: 'Monday',
+            DateTime.tuesday: 'Tuesday',
+            DateTime.wednesday: 'Wednesday',
+            DateTime.thursday: 'Thursday',
+            DateTime.friday: 'Friday',
+            DateTime.saturday: 'Saturday',
+            DateTime.sunday: 'Sunday',
+          };
+          return '${weekdayMap[dateTime.weekday]}';
         });
 
-    // TODO(UI): this doesn't work like I want it to at all.
-    final len = maxY - minY;
-    var a = minY + len / 7;
-    final b = <int>[];
-    for (int i = 1; i < 7; i++) {
-      b.add(a.toInt());
-      a += len;
-    }
     final yAxisLabels = SideTitles(
         showTitles: true,
-        interval: 1000,
+        interval: (maxY - minY) / 3 - 2,
         reservedSize: 62,
         margin: 12,
         getTextStyles: (context, value) => axisLabelStyle,
-        getTitles: (value) {
-          final v = value.toInt();
-          print('Finding $v in $b');
-          return b.contains(v) ? '\$$v' : '';
-        });
+        getTitles: (value) => '\$${value.toInt()}');
     final xyAxisLabels = FlTitlesData(
         show: true,
         rightTitles: SideTitles(showTitles: false),

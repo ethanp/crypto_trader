@@ -82,6 +82,5 @@ class Candle {
       'priceLow: $lowestPrice, '
       'priceHigh: $highestPrice, '
       'priceOpen: $openingPrice, '
-      'priceClose: $closingPrice'
-      ')';
+      'priceClose: $closingPrice)';
 }
