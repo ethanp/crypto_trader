@@ -1,5 +1,4 @@
 import 'package:crypto_trader/import_facade/controller.dart';
-import 'package:crypto_trader/import_facade/extensions.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:crypto_trader/widgets/portfolio_card.dart';
@@ -12,32 +11,34 @@ class Portfolio extends StatefulWidget {
 }
 
 class _PortfolioState extends State<Portfolio> {
-  int _selectedIndex = 0;
+  Currency _selectedCurrency = Currencies.bitcoin;
 
   @override
   Widget build(BuildContext context) =>
       Flexible(child: Column(children: [_chart(), _currencyCards()]));
 
   Widget _chart() {
-    final currency = Currencies.allCryptoCurrencies[_selectedIndex];
     return Expanded(
         child: EasyFutureBuilder<List<Candle>>(
-            future: Environment.prices.candles(currency),
+            future: Environment.prices.candles(_selectedCurrency),
             builder: (List<Candle>? candles) => candles == null
                 ? const CupertinoActivityIndicator()
-                : PriceChart(currency: currency, candles: candles)));
+                : PriceChart(currency: _selectedCurrency, candles: candles)));
   }
 
   Widget _currencyCards() => Wrap(
-      children: Currencies.allCryptoCurrencies.mapWithIndex(_asPortfolioCard));
+      children: Currencies.allCryptoCurrencies.map(_asPortfolioCard).toList());
 
-  Widget _asPortfolioCard(Currency currency, int idx) => WithHoldings(
+  Widget _asPortfolioCard(Currency currency) => WithHoldings(
         builder: (holdings) => GestureDetector(
-          onTap: () => setState(() => _selectedIndex = idx),
+          onTap: () {
+            print('Tapped card ${currency.name}');
+            setState(() => _selectedCurrency = currency);
+          },
           child: PortfolioCard(
             holdings: holdings,
             currency: currency,
-            isSelected: idx == _selectedIndex,
+            isSelected: currency == _selectedCurrency,
           ),
         ),
       );

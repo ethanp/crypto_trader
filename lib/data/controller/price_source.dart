@@ -52,14 +52,16 @@ class Candle {
   });
 
   /// Parse Coinbase response into a [Candle].
-  factory Candle.fromCoinbase(dynamic input) => Candle(
-        timestamp:
-            DateTime.fromMicrosecondsSinceEpoch((input[0] as num).toInt()),
-        lowestPrice: (input[1] as num).toDouble(),
-        highestPrice: (input[2] as num).toDouble(),
-        openingPrice: (input[3] as num).toDouble(),
-        closingPrice: (input[4] as num).toDouble(),
-      );
+  factory Candle.fromCoinbase(dynamic input) {
+    final seconds = (input[0] as num).toInt();
+    return Candle(
+      timestamp: DateTime.fromMillisecondsSinceEpoch(seconds * 1000),
+      lowestPrice: (input[1] as num).toDouble(),
+      highestPrice: (input[2] as num).toDouble(),
+      openingPrice: (input[3] as num).toDouble(),
+      closingPrice: (input[4] as num).toDouble(),
+    );
+  }
 
   /// Start time of the period.
   final DateTime timestamp;

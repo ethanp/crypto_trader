@@ -70,51 +70,52 @@ class CandlesCache extends CachedValue<List<Candle>> {
   }
 }
 
+DateTime _sec(int sec) => DateTime.fromMillisecondsSinceEpoch(sec * 1000);
 final _fakeCandles = [
   Candle(
-      timestamp: DateTime.fromMicrosecondsSinceEpoch(1633802400),
+      timestamp: _sec(1633802400),
       lowestPrice: 54345.08,
       highestPrice: 55167.15,
       openingPrice: 54930.76,
       closingPrice: 54932.06),
   Candle(
-      timestamp: DateTime.fromMicrosecondsSinceEpoch(1633780800),
+      timestamp: _sec(1633780800),
       lowestPrice: 54700.0,
       highestPrice: 55500.0,
       openingPrice: 54810.33,
       closingPrice: 54930.76),
   Candle(
-      timestamp: DateTime.fromMicrosecondsSinceEpoch(1633759200),
+      timestamp: _sec(1633759200),
       lowestPrice: 54504.94,
       highestPrice: 55348.27,
       openingPrice: 54608.3,
       closingPrice: 54806.4),
   Candle(
-      timestamp: DateTime.fromMicrosecondsSinceEpoch(1633737600),
+      timestamp: _sec(1633737600),
       lowestPrice: 53675.0,
       highestPrice: 54761.01,
       openingPrice: 53965.18,
       closingPrice: 54600.63),
   Candle(
-      timestamp: DateTime.fromMicrosecondsSinceEpoch(1633716000),
+      timestamp: _sec(1633716000),
       lowestPrice: 53786.29,
       highestPrice: 54782.71,
       openingPrice: 54311.37,
       closingPrice: 53963.82),
   Candle(
-      timestamp: DateTime.fromMicrosecondsSinceEpoch(1633694400),
+      timestamp: _sec(1633694400),
       lowestPrice: 54023.49,
       highestPrice: 55336.3,
       openingPrice: 55264.97,
       closingPrice: 54311.82),
   Candle(
-      timestamp: DateTime.fromMicrosecondsSinceEpoch(1633672800),
+      timestamp: _sec(1633672800),
       lowestPrice: 54015.97,
       highestPrice: 56113.0,
       openingPrice: 54190.65,
       closingPrice: 55264.03),
   Candle(
-      timestamp: DateTime.fromMicrosecondsSinceEpoch(1633651200),
+      timestamp: _sec(1633651200),
       lowestPrice: 53634.41,
       highestPrice: 54438.35,
       openingPrice: 53805.46,

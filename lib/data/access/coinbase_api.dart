@@ -14,7 +14,7 @@ class CoinbaseApi {
   static const _oldEndpoint = 'api.pro.coinbase.com';
   static const _exchangeEndpoint = 'api.exchange.coinbase.com';
 
-  // https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles
+  /// https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles
   Future<String> candles(Currency currency) {
     final start =
         DateTime.now().subtract(const Duration(days: 4)).toIso8601String();

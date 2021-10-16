@@ -1,5 +1,6 @@
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Display total holdings and earnings.
@@ -10,7 +11,7 @@ class TotalHoldings extends StatelessWidget {
       elevation: 15,
       child: Container(
           decoration: _gradient,
-          padding: const EdgeInsets.only(left: 15, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 5),
           child: Column(children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               _cryptoHoldings(),
@@ -57,7 +58,10 @@ class TotalHoldings extends StatelessWidget {
           padding: const EdgeInsets.all(5),
           child: Row(children: [
             MyText('$title: ', style: _Style.labelStyle),
-            MyText(value ?? 'Loading...', style: _Style.amountStyle),
+            if (value != null)
+              MyText(value, style: _Style.amountStyle)
+            else
+              const CupertinoActivityIndicator(),
             if (percent != null)
               Padding(
                   padding: const EdgeInsets.only(left: 14),

@@ -4,18 +4,12 @@ include: package:lint/analysis_options.yaml
 # Here are some examples:
 linter:
   rules:
-    # Make constructors the first thing in every class
+    # Given
     sort_constructors_first: true
-
-    # The new tabs vs. spaces. Choose wisely
     prefer_single_quotes: true
-
-    # Good packages document everything
-    public_member_api_docs: true
-
-    # Util classes are awesome!
     avoid_classes_with_only_static_members: false
 
+    # Mine
     only_throw_errors: true
     require_trailing_commas: false
     avoid_print: false

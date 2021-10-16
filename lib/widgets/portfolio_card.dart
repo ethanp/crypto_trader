@@ -3,25 +3,22 @@ import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-/// One of those little chips at the bottom displaying info about [holdings]
-/// of a particular [currency], and showing whether or not it [isSelected].
+/// Chip at the bottom displaying info about [holdings] of a particular
+/// [currency]. When it [isSelected], it is used as the graph currency.
 class PortfolioCard extends StatelessWidget {
-  /// One of those little chips at the bottom displaying info about [holdings]
-  /// of a particular [currency], and showing whether or not it [isSelected].
+  /// Create a chip at the bottom displaying info about [holdings] of a
+  /// particular [currency].
   const PortfolioCard({
     required this.holdings,
     required this.currency,
     required this.isSelected,
   });
 
-  /// Once loaded, contains full info about current user's holdings.
-  /// Before loading, just null.
+  /// Null until it loads.
   final Holdings? holdings;
 
-  /// Which [Currency] is reflected in this [PortfolioCard].
   final Currency currency;
 
-  /// Whether the user ha selected this [PortfolioCard] (by tapping on it).
   final bool isSelected;
 
   @override

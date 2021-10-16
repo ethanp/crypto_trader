@@ -47,4 +47,4 @@ app.*.map.json
 
 
 #### Ethan added these
-config/config*
+config/*.json

@@ -14,7 +14,7 @@ class Config {
   String get passphrase => loaded['passphrase'] as String;
 
   static Future<Config> loadFromDisk() async {
-    final configOnDisk = await rootBundle.loadString('config/config.json');
+    final configOnDisk = await rootBundle.loadString('config/all.json');
     return Config(jsonDecode(configOnDisk));
   }
 

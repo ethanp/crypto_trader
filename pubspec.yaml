@@ -29,4 +29,5 @@ flutter:
   uses-material-design: true
 
   assets:
-    - config/config.json
+    - config/evgb.json
+    - config/all.json

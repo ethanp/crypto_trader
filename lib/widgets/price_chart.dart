@@ -34,8 +34,8 @@ class PriceChart extends StatelessWidget {
       border: Border.all(color: Colors.grey[700]!, width: 2),
     );
 
-    final horizontalInterval = (maxX - minX) / 3 - 2;
-    final verticalInterval = (maxY - minY) / 3 - 2;
+    final horizontalInterval = (maxX - minX) / 3.2;
+    final verticalInterval = (maxY - minY) / 3.2;
 
     final gridLine = FlLine(color: Colors.grey[800], strokeWidth: 1);
     final greyVertAndHorizGrid = FlGridData(
@@ -60,7 +60,7 @@ class PriceChart extends StatelessWidget {
         interval: horizontalInterval,
         getTextStyles: (context, value) => axisLabelStyle,
         getTitles: (value) {
-          final millisSinceEpoch = value.toInt() * 1000000;
+          final millisSinceEpoch = value.toInt() * 1000;
           final dateTime =
               DateTime.fromMillisecondsSinceEpoch(millisSinceEpoch);
           // TODO instead of using this map, format it like 'Mon 4pm'.
