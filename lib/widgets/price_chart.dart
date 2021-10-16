@@ -4,6 +4,7 @@ import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 /// Line chart of price history of a [Currency].
 class PriceChart extends StatelessWidget {
@@ -34,7 +35,7 @@ class PriceChart extends StatelessWidget {
       border: Border.all(color: Colors.grey[700]!, width: 2),
     );
 
-    final horizontalInterval = (maxX - minX) / 3.2;
+    final horizontalInterval = (maxX - minX) / 4.2;
     final verticalInterval = (maxY - minY) / 3.2;
 
     final gridLine = FlLine(color: Colors.grey[800], strokeWidth: 1);
@@ -49,32 +50,21 @@ class PriceChart extends StatelessWidget {
     final axisLabelStyle = TextStyle(
       color: Colors.grey[400],
       fontWeight: FontWeight.w500,
-      fontSize: 15,
+      fontSize: 12,
       letterSpacing: -1.5,
     );
     final xAxisLabels = SideTitles(
         showTitles: true,
         // Height available to label
-        reservedSize: 22,
-        margin: 8,
+        reservedSize: 28,
+        margin: 5,
         interval: horizontalInterval,
         getTextStyles: (context, value) => axisLabelStyle,
         getTitles: (value) {
-          final millisSinceEpoch = value.toInt() * 1000;
-          final dateTime =
-              DateTime.fromMillisecondsSinceEpoch(millisSinceEpoch);
-          // TODO instead of using this map, format it like 'Mon 4pm'.
-          //  I'm quite sure there's a very easy way to do that.
-          final weekdayMap = {
-            DateTime.monday: 'Mon',
-            DateTime.tuesday: 'Tue',
-            DateTime.wednesday: 'Wed',
-            DateTime.thursday: 'Thu',
-            DateTime.friday: 'Fri',
-            DateTime.saturday: 'Sat',
-            DateTime.sunday: 'Sun',
-          };
-          return '${weekdayMap[dateTime.weekday]}';
+          final dateTime = DateTime.fromMillisecondsSinceEpoch(value.toInt());
+          final day = DateFormat.EEEE().format(dateTime);
+          final date = DateFormat.MMMd().format(dateTime);
+          return '$day\n$date';
         });
 
     final yAxisLabels = SideTitles(
@@ -82,7 +72,8 @@ class PriceChart extends StatelessWidget {
         interval: verticalInterval,
         reservedSize: 62,
         margin: 12,
-        getTextStyles: (context, value) => axisLabelStyle,
+        getTextStyles: (context, value) =>
+            axisLabelStyle.copyWith(fontSize: 15),
         // TODO add commas for $1K+
         getTitles: (value) => '\$${value.toInt()}');
     final xyAxisLabels = FlTitlesData(
