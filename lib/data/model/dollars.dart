@@ -5,13 +5,13 @@ import 'package:intl/intl.dart';
 class Dollars {
   Dollars(this.amt);
 
-  double amt;
-
   factory Dollars.random({required int max}) =>
       Dollars((Random().nextDouble() * max * 100).round() / 100.0);
 
+  double amt;
+
   @override
-  String toString() => NumberFormat.simpleCurrency().format(amt);
+  String toString() => NumberFormat.compactSimpleCurrency().format(amt);
 
   Dollars operator +(Dollars o) => Dollars(amt + o.amt);
 
@@ -21,5 +21,5 @@ class Dollars {
 
   Dollars operator /(Dollars o) => Dollars(amt / o.amt);
 
-  double get rounded => double.parse(this.amt.toStringAsFixed(2));
+  double get rounded => double.parse(amt.toStringAsFixed(2));
 }

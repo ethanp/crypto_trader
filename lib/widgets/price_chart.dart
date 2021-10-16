@@ -47,7 +47,7 @@ class PriceChart extends StatelessWidget {
         getDrawingHorizontalLine: (value) => gridLine,
         getDrawingVerticalLine: (value) => gridLine);
 
-    final axisLabelStyle = TextStyle(
+    final xAxisLabelStyle = TextStyle(
       color: Colors.grey[400],
       fontWeight: FontWeight.w500,
       fontSize: 12,
@@ -57,9 +57,9 @@ class PriceChart extends StatelessWidget {
         showTitles: true,
         // Height available to label
         reservedSize: 28,
-        margin: 5,
+        margin: 7,
         interval: horizontalInterval,
-        getTextStyles: (context, value) => axisLabelStyle,
+        getTextStyles: (context, value) => xAxisLabelStyle,
         getTitles: (value) {
           final dateTime = DateTime.fromMillisecondsSinceEpoch(value.toInt());
           final day = DateFormat.EEEE().format(dateTime);
@@ -67,15 +67,15 @@ class PriceChart extends StatelessWidget {
           return '$day\n$date';
         });
 
+    final yAxisLabelStyle = xAxisLabelStyle.copyWith(fontSize: 15);
     final yAxisLabels = SideTitles(
         showTitles: true,
         interval: verticalInterval,
-        reservedSize: 62,
-        margin: 12,
-        getTextStyles: (context, value) =>
-            axisLabelStyle.copyWith(fontSize: 15),
+        reservedSize: 55,
+        margin: 7,
+        getTextStyles: (context, value) => yAxisLabelStyle,
         // TODO add commas for $1K+
-        getTitles: (value) => '\$${value.toInt()}');
+        getTitles: (value) => Dollars(value).toString());
     final xyAxisLabels = FlTitlesData(
         show: true,
         rightTitles: SideTitles(showTitles: false),
