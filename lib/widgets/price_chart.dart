@@ -106,13 +106,23 @@ class PriceChart extends StatelessWidget {
     ]);
   }
 
-  // TODO(feature): Add granularity dropdown
-  SizedBox _chartTitle() => SizedBox(
-      height: 30,
-      child: MyText(
-        currency.name,
-        style: TextStyle(fontSize: 18, color: Colors.grey[300]),
-      ));
+  Widget _chartTitle() => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          SizedBox(
+            height: 30,
+            child: MyText(
+              currency.name,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey[300],
+              ),
+            ),
+          ),
+          // TODO(feature): Add granularity dropdown
+          const MyText('Dropdown goes here'),
+        ],
+      );
 
   LineChartBarData _priceData() {
     const List<Color> _gradientColors = [Color(0xFF64B5F6), Color(0xFF69F0AE)];
