@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/extensions.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:http/http.dart' as http;
 
+import 'coinbase_account.dart';
 import 'granularity.dart';
 import 'private_headers.dart';
 
@@ -111,10 +111,10 @@ class CoinbaseApi {
     return res.body;
   }
 
-  Future<Iterable<_CoinbaseAccount>> getAccounts() async {
+  Future<Iterable<CoinbaseAccount>> getAccounts() async {
     final String holdingsResponse = await get(path: 'accounts', private: true);
     final accountListRaw = jsonDecode(holdingsResponse) as List<dynamic>;
-    return accountListRaw.map((raw) => _CoinbaseAccount(raw));
+    return accountListRaw.map((raw) => CoinbaseAccount(raw));
   }
 
   Future<Dollars> totalDeposits() async {
@@ -126,31 +126,4 @@ class CoinbaseApi {
     return Dollars(
         transfers.map((xfr) => double.parse(xfr['amount'] as String)).sum);
   }
-}
-
-/// Converter between the external Coinbase API data model,
-/// and the internal [Holdings] data model.
-class _CoinbaseAccount {
-  const _CoinbaseAccount(this.acct);
-
-  /// Raw coinbase data about a single [Holding].
-  final dynamic acct;
-
-  /// True iff this account holds a currency that is part of our portfolio.
-  bool get isSupported => Currencies.allCurrenciesMap.containsKey(_callLetters);
-
-  /// Materialize a [Holding] out of this [_CoinbaseAccount].
-  Future<Holding> get asHolding async {
-    final Currency currency = Currency.byCallLetters(_callLetters);
-    final Dollars priceInDollars =
-        await Environment.prices.currentPrice(of: currency);
-    return Holding(
-      currency: currency,
-      dollarValue: priceInDollars * _balanceInCurrency,
-    );
-  }
-
-  String get _callLetters => acct['currency'] as String;
-
-  double get _balanceInCurrency => double.parse(acct['balance'] as String);
 }
