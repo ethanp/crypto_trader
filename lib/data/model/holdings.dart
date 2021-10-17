@@ -1,7 +1,11 @@
-import '../../import_facade/model.dart';
+import 'package:crypto_trader/import_facade/model.dart';
 
 class Holdings {
-  Holdings(Iterable<Holding> holdings) : this.holdings = holdings.toList();
+  Holdings(Iterable<Holding> holdings) : holdings = holdings.toList();
+
+  factory Holdings.random() => Holdings(Currencies.allSupported
+      .map((c) => Holding(currency: c, dollarValue: Dollars.random(max: 20)))
+      .toList());
 
   final List<Holding> holdings;
 
@@ -14,10 +18,6 @@ class Holdings {
   List<Holding> get cryptoHoldings =>
       holdings.where((h) => h.currency != Currencies.dollars).toList()
         ..sort((a, b) => Currencies.alphabeticalByName(a.currency, b.currency));
-
-  static Holdings random() => Holdings(Currencies.allSupported
-      .map((c) => Holding(currency: c, dollarValue: Dollars.random(max: 20)))
-      .toList());
 
   /// The [Holding] with the largest shortfall in percentage of portfolio
   /// compared to what was allocated.

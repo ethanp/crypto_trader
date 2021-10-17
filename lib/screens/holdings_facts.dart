@@ -4,20 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Display total holdings and earnings.
-class TotalHoldings extends StatelessWidget {
+class HoldingsFacts extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
       margin: EdgeInsets.zero,
       elevation: 15,
       child: Container(
           decoration: _gradient,
-          padding: const EdgeInsets.only(left: 10, right: 5),
+          padding: const EdgeInsets.only(left: 7, right: 3),
           child: Column(children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              _cryptoHoldings(),
-              _cashAvailable(),
-            ]),
-            _cryptoEarnings()
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [_cryptoHoldings(), _cashAvailable()],
+            ),
+            _cryptoEarnings(),
           ])));
 
   BoxDecoration get _gradient => BoxDecoration(

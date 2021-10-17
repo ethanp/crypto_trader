@@ -62,7 +62,7 @@ class FakeBrokerage extends Brokerage {
 
   @override
   Future<String> _spendInternal(Holding holding) async {
-    print('Fake-buying ${holding.asPurchaseStr}');
+    print('Fake-buying ${holding.dollarValue} of ${holding.currency.name}');
     final holdings = await getMyHoldings();
     // Seems ok to violate the "dot-dot principle" here since it's a fake :)
     final Dollars to = holdings.dollarsOf(holding.currency);

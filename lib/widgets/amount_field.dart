@@ -27,11 +27,14 @@ class AmountField extends StatelessWidget {
       width: 80,
       child: TextFormField(
         controller: fieldController,
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          fillColor: Colors.grey[800],
+          filled: true,
           labelText: '\$ Amount',
+          labelStyle: TextStyle(color: Colors.green[200]),
           isDense: true,
-          contentPadding: EdgeInsets.symmetric(vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(vertical: 10),
         ),
         textAlign: TextAlign.center,
         validator: validateAmount,

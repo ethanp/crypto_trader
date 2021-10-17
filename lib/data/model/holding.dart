@@ -1,4 +1,4 @@
-import '../../import_facade/model.dart';
+import 'package:crypto_trader/import_facade/model.dart';
 
 class Holding {
   const Holding({
@@ -12,6 +12,4 @@ class Holding {
   @override
   String toString() =>
       'Holding{currency: $currency, dollarValue: $dollarValue}';
-
-  String get asPurchaseStr => '$dollarValue of ${currency.name}';
 }

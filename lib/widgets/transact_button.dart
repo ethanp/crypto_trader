@@ -6,23 +6,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// UI [Button] that triggers a financial transaction.
-class SpendButton extends StatelessWidget {
+class TransactButton extends StatelessWidget {
   /// UI [Button] that triggers a financial transaction.
-  const SpendButton(this.action, this.buttonText, this.input, this.holdings);
+  const TransactButton(this.action, this.buttonText, this.amount);
 
   /// What happens when you click the button.
   final Future<String> Function(Dollars) action;
 
   /// What the button says on it.
-  final String Function(Holdings) buttonText;
+  final String buttonText;
 
-  /// Reference to the controller for the relevant field.
-  final TextEditingController input;
-
-  /// Reference to global [Holdings] that will be null while loading, and then
-  /// filled with a valid reference once the Holdings have been retrieved from
-  /// the CoinbasePro API.
-  final Holdings? holdings;
+  final String amount;
 
   @override
   Widget build(BuildContext context) {
@@ -32,24 +26,21 @@ class SpendButton extends StatelessWidget {
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(backgroundColor: Colors.grey[700]),
         onPressed: () => _transact(context),
-        child: holdings == null
-            ? const CupertinoActivityIndicator()
-            : MyText(
-                buttonText(holdings!),
-                style: TextStyle(
-                  color: Colors.grey[100],
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: -1.5,
-                ),
-              ),
+        child: MyText(
+          buttonText,
+          style: TextStyle(
+            color: Colors.grey[100],
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+            letterSpacing: -1.5,
+          ),
+        ),
       ),
     );
   }
 
   void _transact(BuildContext context) {
     // Get the NEWEST version of the input text.
-    final amount = input.text;
     if (!_inputIsValid(amount)) return _inputSnackbar(context, amount);
     MySnackbar.simple(
       text: 'Transacting $amount',
