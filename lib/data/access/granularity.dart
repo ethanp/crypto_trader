@@ -7,6 +7,9 @@ class Granularity {
   final Duration duration;
   final String name;
 
+  @override
+  String toString() => name;
+
   static const Granularity oneMinute = Granularity(
     duration: Duration(seconds: 60),
     name: '1 Minute',

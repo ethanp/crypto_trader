@@ -33,5 +33,5 @@ class Currency {
   int get hashCode => callLetters.hashCode;
 
   @override
-  String toString() => 'Currency{name: $name, callLetters: $callLetters}';
+  String toString() => name;
 }

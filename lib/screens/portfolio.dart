@@ -13,7 +13,7 @@ class Portfolio extends StatefulWidget {
 
 class _PortfolioState extends State<Portfolio> {
   Currency _selectedCurrency = Currencies.bitcoin;
-  Granularity _selectedGranularity = Granularity.sixHours;
+  Granularity _selectedGranularity = Granularity.days;
 
   @override
   Widget build(BuildContext context) =>

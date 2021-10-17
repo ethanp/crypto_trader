@@ -24,11 +24,12 @@ class PriceChart extends StatelessWidget {
     final Iterable<double> closingPrices = candles.map((c) => c.closingPrice);
 
     print(timestamps.length);
+
     final minX = timestamps.min;
     final maxX = timestamps.max;
     final minY = closingPrices.min;
     final maxY = closingPrices.max;
-    print('minX=$minX maxX=$maxX minY=$minY maxY=$maxY');
+    _debugPrintBounds(minX, maxX, minY, maxY);
 
     final greyBorder = FlBorderData(
       show: true,
@@ -82,28 +83,36 @@ class PriceChart extends StatelessWidget {
         bottomTitles: xAxisLabels,
         leftTitles: yAxisLabels);
 
-    final lineChart = Flexible(
+    final lineChart = LineChart(
+      LineChartData(
+        minX: minX,
+        maxX: maxX,
+        minY: minY,
+        maxY: maxY,
+        titlesData: xyAxisLabels,
+        lineBarsData: [_priceData()],
+        gridData: greyVertAndHorizGrid,
+        borderData: greyBorder,
+      ),
+    );
+
+    final chartWidget = Flexible(
       child: Padding(
         padding: const EdgeInsets.only(right: 13),
-        child: LineChart(
-          LineChartData(
-            minX: minX,
-            maxX: maxX,
-            minY: minY,
-            maxY: maxY,
-            titlesData: xyAxisLabels,
-            lineBarsData: [_priceData()],
-            gridData: greyVertAndHorizGrid,
-            borderData: greyBorder,
-          ),
-        ),
+        child: lineChart,
       ),
     );
 
     return Column(children: [
       _chartTitle(),
-      lineChart,
+      chartWidget,
     ]);
+  }
+
+  void _debugPrintBounds(double minX, double maxX, double minY, double maxY) {
+    final minXPrint = DateTime.fromMillisecondsSinceEpoch(minX.toInt());
+    final maxXPrint = DateTime.fromMillisecondsSinceEpoch(maxX.toInt());
+    print('minX=$minXPrint maxX=$maxXPrint minY=$minY maxY=$maxY');
   }
 
   Widget _chartTitle() => Row(

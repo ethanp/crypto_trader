@@ -15,7 +15,7 @@ abstract class CachedValue<T> {
   Future<T> get() async {
     await _synchronizer.synchronized(() async {
       if (_cachedValue != null) {
-        print('Not refreshing $runtimeType');
+        print('Not refreshing $this');
       } else {
         print('Refreshing $runtimeType');
         _cachedValue = await _retrieve();
@@ -48,6 +48,9 @@ class HoldingsCache extends CachedValue<Holdings> {
         .where((acct) => acct.isSupported)
         .map((acct) => acct.asHolding)));
   }
+
+  @override
+  String toString() => 'HoldingsCache';
 }
 
 /// Stored cached list of [Candle]s for a [currency].
@@ -57,6 +60,10 @@ class CandlesCache extends CachedValue<List<Candle>> {
 
   final Currency currency;
   final Granularity granularity;
+
+  @override
+  String toString() =>
+      'CandlesCache{currency: $currency, granularity: $granularity}';
 
   @override
   Future<List<Candle>> _retrieve() =>
