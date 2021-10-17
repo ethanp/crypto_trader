@@ -82,30 +82,31 @@ class PriceChart extends StatelessWidget {
         bottomTitles: xAxisLabels,
         leftTitles: yAxisLabels);
 
-    final lineChart = LineChart(
-      LineChartData(
-        minX: minX,
-        maxX: maxX,
-        minY: minY,
-        maxY: maxY,
-        titlesData: xyAxisLabels,
-        lineBarsData: [_priceData()],
-        gridData: greyVertAndHorizGrid,
-        borderData: greyBorder,
+    final lineChart = Flexible(
+      child: Padding(
+        padding: const EdgeInsets.only(right: 13),
+        child: LineChart(
+          LineChartData(
+            minX: minX,
+            maxX: maxX,
+            minY: minY,
+            maxY: maxY,
+            titlesData: xyAxisLabels,
+            lineBarsData: [_priceData()],
+            gridData: greyVertAndHorizGrid,
+            borderData: greyBorder,
+          ),
+        ),
       ),
     );
 
     return Column(children: [
       _chartTitle(),
-      Flexible(
-        child: Padding(
-          padding: const EdgeInsets.only(right: 13),
-          child: lineChart,
-        ),
-      ),
+      lineChart,
     ]);
   }
 
+  // TODO(feature): Add granularity dropdown
   SizedBox _chartTitle() => SizedBox(
       height: 30,
       child: MyText(

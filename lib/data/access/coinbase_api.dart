@@ -7,7 +7,7 @@ import 'package:crypto_trader/import_facade/extensions.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:http/http.dart' as http;
 
-import 'config.dart';
+import 'coinbase_api_config.dart';
 
 /// Handles actual interaction with the Coinbase Pro API for the app.
 class CoinbaseApi {
@@ -15,13 +15,17 @@ class CoinbaseApi {
   static const _exchangeEndpoint = 'api.exchange.coinbase.com';
 
   /// https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles
-  Future<String> candles(Currency currency) {
-    final start =
-        DateTime.now().subtract(const Duration(days: 4)).toIso8601String();
-    final end = DateTime.now().toIso8601String();
+  Future<String> candles(Currency currency,
+      [Granularity granularity = Granularity.sixHours]) {
     return get(
       path: 'products/${currency.callLetters}-USD/candles',
-      params: {'granularity': '21600', 'start': start, 'end': end},
+      params: {
+        'granularity': granularity.duration.toString(),
+        'start': DateTime.now()
+            .subtract(granularity.duration * 16)
+            .toIso8601String(),
+        'end': DateTime.now().toIso8601String(),
+      },
       endpoint: _exchangeEndpoint,
     );
   }
@@ -199,4 +203,47 @@ class _CoinbaseAccount {
   String get _callLetters => acct['currency'] as String;
 
   double get _balanceInCurrency => double.parse(acct['balance'] as String);
+}
+
+class Granularity {
+  const Granularity({
+    required this.duration,
+    required this.name,
+  });
+
+  final Duration duration;
+  final String name;
+
+  static const Granularity oneMinute = Granularity(
+    duration: Duration(seconds: 60),
+    name: '1 Minute',
+  );
+  static const Granularity fiveMinutes = Granularity(
+    duration: Duration(seconds: 300),
+    name: '5 Minutes',
+  );
+  static const Granularity fifteenMinutes = Granularity(
+    duration: Duration(seconds: 900),
+    name: '15 Minutes',
+  );
+  static const Granularity oneHour = Granularity(
+    duration: Duration(seconds: 3600),
+    name: '1 Hour',
+  );
+  static const Granularity sixHours = Granularity(
+    duration: Duration(seconds: 21600),
+    name: '6 Hours',
+  );
+  static const Granularity days = Granularity(
+    duration: Duration(seconds: 86400),
+    name: '1 Day',
+  );
+  static List<Granularity> granularities = [
+    oneMinute,
+    fiveMinutes,
+    fifteenMinutes,
+    oneHour,
+    sixHours,
+    days,
+  ];
 }
