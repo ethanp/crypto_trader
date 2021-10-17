@@ -1,20 +1,19 @@
 import 'package:crypto_trader/data/access/coinbase_api.dart';
+import 'package:crypto_trader/data/access/granularity.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 
 /// Interface for retrieving price data from external sources.
 abstract class PriceSource {
   // TODO cache individually at each Granularity.
-  final List<CandlesCache> _candlesCaches = Currencies.allCryptoCurrencies
-      .map((c) => CandlesCache(currency: c))
-      .toList();
+  final CandleCaches _candlesCaches = CandleCaches.build();
 
   /// The current price of [Currency] [of] in [Dollars].
   Future<Dollars> currentPrice({required Currency of});
 
   /// Historical price data for [currency].
-  Future<List<Candle>> candles(Currency currency) =>
-      _candlesCaches.firstWhere((cache) => cache.currency == currency).get();
+  Future<List<Candle>> candles(Currency currency, Granularity granularity) =>
+      _candlesCaches.get(currency, granularity);
 }
 
 /// A [PriceSource] getter with fake data.
@@ -29,4 +28,22 @@ class CoinbaseProPriceSource extends PriceSource {
   @override
   Future<Dollars> currentPrice({required Currency of}) =>
       CoinbaseApi().currentPrice(of: of);
+}
+
+class CandleCaches {
+  const CandleCaches._(this.caches);
+
+  factory CandleCaches.build() => CandleCaches._(
+        Currencies.allCryptoCurrencies.asMap().map((_, currency) => MapEntry(
+            currency,
+            Granularity.granularities.asMap().map((__, granularity) => MapEntry(
+                  granularity,
+                  CandlesCache(currency, granularity),
+                )))),
+      );
+
+  final Map<Currency, Map<Granularity, CandlesCache>> caches;
+
+  Future<List<Candle>> get(Currency currency, Granularity granularity) =>
+      caches[currency]![granularity]!.get();
 }

@@ -1,3 +1,4 @@
+import 'package:crypto_trader/data/access/granularity.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
@@ -12,6 +13,7 @@ class Portfolio extends StatefulWidget {
 
 class _PortfolioState extends State<Portfolio> {
   Currency _selectedCurrency = Currencies.bitcoin;
+  Granularity _selectedGranularity = Granularity.sixHours;
 
   @override
   Widget build(BuildContext context) =>
@@ -20,7 +22,8 @@ class _PortfolioState extends State<Portfolio> {
   Widget _chart() {
     return Expanded(
         child: EasyFutureBuilder<List<Candle>>(
-            future: Environment.prices.candles(_selectedCurrency),
+            future: Environment.prices
+                .candles(_selectedCurrency, _selectedGranularity),
             builder: (List<Candle>? candles) => candles == null
                 ? const CupertinoActivityIndicator()
                 : PriceChart(currency: _selectedCurrency, candles: candles)));

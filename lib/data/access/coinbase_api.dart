@@ -26,12 +26,10 @@ class CoinbaseApi {
   }
 
   /// https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles
-  Future<String> candles(Currency currency,
-          [Granularity granularity = Granularity.sixHours]) =>
-      _get(
+  Future<String> candles(Currency currency, Granularity granularity) => _get(
         path: 'products/${currency.callLetters}-USD/candles',
         params: {
-          'granularity': granularity.duration.toString(),
+          'granularity': granularity.duration.inSeconds.toString(),
           'start': DateTime.now()
               .subtract(granularity.duration * 16)
               .toIso8601String(),

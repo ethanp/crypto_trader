@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:crypto_trader/data/access/granularity.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:synchronized/synchronized.dart';
@@ -51,11 +52,11 @@ class HoldingsCache extends CachedValue<Holdings> {
 
 /// Stored cached list of [Candle]s for a [currency].
 class CandlesCache extends CachedValue<List<Candle>> {
-  /// Stored cached list of [Candle]s for a [currency].
-  CandlesCache({required this.currency});
+  /// Stored cached list of [Candle]s for a [currency] and [granularity].
+  CandlesCache(this.currency, this.granularity);
 
-  /// Currency whose price history is cached herein.
   final Currency currency;
+  final Granularity granularity;
 
   @override
   Future<List<Candle>> _retrieve() =>
@@ -64,7 +65,8 @@ class CandlesCache extends CachedValue<List<Candle>> {
   Future<List<Candle>> _fakeInternal() => Future.value(_fakeCandles);
 
   Future<List<Candle>> _coinbaseInternal() async {
-    final String rawResponse = await CoinbaseApi().candles(currency);
+    final String rawResponse =
+        await CoinbaseApi().candles(currency, granularity);
     final parsed = jsonDecode(rawResponse) as List<dynamic>;
     return parsed.map((e) => Candle.fromCoinbase(e)).toList();
   }
