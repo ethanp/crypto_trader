@@ -16,10 +16,8 @@ Coinbase Pro is insufficient
 
 ### I couldn't find any app meeting the following requirements (in 2021)
 
-* I want a similar to M1 finance
-    * I assemble an idealized portfolio
-    * The app periodically adds money to resemble that portfolio
-        * Aka "passive rebalancing"
+Similar to M1 finance, in that one assembles an idealized portfolio, and he app periodically
+adds money to resemble that portfolio (aka "passive rebalancing").
 
 ## Features
 
