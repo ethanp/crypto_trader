@@ -15,7 +15,6 @@ class Currency {
   /// Call letters for the currency, eg. "BTC".
   final String callLetters;
 
-  // TODO perhaps this field should live in its own PortfolioCurrency class.
   /// Percentage of portfolio allocated to this currency.
   final int percentAllocation;
 
@@ -23,7 +22,6 @@ class Currency {
   static Currency byCallLetters(String callLetters) =>
       Currencies.allCurrenciesMap[callLetters]!;
 
-  // TODO use equatable mixin from pub get equatable.
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

@@ -26,19 +26,24 @@ class SpendButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () => _transact(context),
-      child: holdings == null
-          ? const CupertinoActivityIndicator()
-          : MyText(
-              buttonText(holdings!),
-              style: TextStyle(
-                color: Colors.grey[100],
-                fontSize: 20,
-                fontWeight: FontWeight.w400,
-                letterSpacing: -1.5,
+    return SizedBox(
+      height: 39,
+      width: 160,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(backgroundColor: Colors.grey[700]),
+        onPressed: () => _transact(context),
+        child: holdings == null
+            ? const CupertinoActivityIndicator()
+            : MyText(
+                buttonText(holdings!),
+                style: TextStyle(
+                  color: Colors.grey[100],
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: -1.5,
+                ),
               ),
-            ),
+      ),
     );
   }
 

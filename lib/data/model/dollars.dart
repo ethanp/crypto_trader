@@ -11,7 +11,7 @@ class Dollars {
   double amt;
 
   @override
-  String toString() => NumberFormat.compactSimpleCurrency().format(amt);
+  String toString() => NumberFormat.simpleCurrency().format(amt);
 
   Dollars operator +(Dollars o) => Dollars(amt + o.amt);
 

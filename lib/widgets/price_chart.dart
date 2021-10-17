@@ -48,11 +48,10 @@ class PriceChart extends StatelessWidget {
         getDrawingVerticalLine: (value) => gridLine);
 
     final xAxisLabelStyle = TextStyle(
-      color: Colors.grey[400],
-      fontWeight: FontWeight.w500,
-      fontSize: 12,
-      letterSpacing: -1.5,
-    );
+        color: Colors.grey[400],
+        fontWeight: FontWeight.w500,
+        fontSize: 12,
+        letterSpacing: -1.5);
     final xAxisLabels = SideTitles(
         showTitles: true,
         // Height available to label
@@ -74,8 +73,8 @@ class PriceChart extends StatelessWidget {
         reservedSize: 55,
         margin: 7,
         getTextStyles: (context, value) => yAxisLabelStyle,
-        // TODO add commas for $1K+
-        getTitles: (value) => Dollars(value).toString());
+        getTitles: (value) =>
+            NumberFormat.compactSimpleCurrency().format(value));
     final xyAxisLabels = FlTitlesData(
         show: true,
         rightTitles: SideTitles(showTitles: false),
@@ -97,7 +96,7 @@ class PriceChart extends StatelessWidget {
     );
 
     return Column(children: [
-      SizedBox(height: 20, child: MyText(currency.name)),
+      _chartTitle(),
       Flexible(
         child: Padding(
           padding: const EdgeInsets.only(right: 13),
@@ -106,6 +105,13 @@ class PriceChart extends StatelessWidget {
       ),
     ]);
   }
+
+  SizedBox _chartTitle() => SizedBox(
+      height: 30,
+      child: MyText(
+        currency.name,
+        style: TextStyle(fontSize: 18, color: Colors.grey[300]),
+      ));
 
   LineChartBarData _priceData() {
     const List<Color> _gradientColors = [Color(0xFF64B5F6), Color(0xFF69F0AE)];

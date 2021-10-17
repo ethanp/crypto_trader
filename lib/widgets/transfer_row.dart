@@ -47,20 +47,21 @@ class _TransferRowState extends State<TransferRow> {
       builder: (holdings) {
         _fillFieldWithInitialValue(holdings);
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            SizedBox(height: 70, child: AmountField(fieldController)),
-            const SizedBox(width: 30),
-            SizedBox(
-              height: 40,
-              child: SpendButton(
+          padding: const EdgeInsets.only(top: 15),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AmountField(fieldController),
+              const SizedBox(width: 20),
+              SpendButton(
                 widget.action,
                 widget.buttonText,
                 fieldController,
                 holdings,
               ),
-            ),
-          ]),
+            ],
+          ),
         );
       },
     );
