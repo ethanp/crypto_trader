@@ -134,12 +134,14 @@ class PriceChart extends StatelessWidget {
       );
 
   LineChartBarData _priceData() {
-    const List<Color> _gradientColors = [Color(0xFF64B5F6), Color(0xFF69F0AE)];
+    const _gradientColors = [Color(0xFF64B5F6), Color(0xFF69F0AE)];
 
     return LineChartBarData(
         spots: candles
             .map((c) => FlSpot(
-                c.timestamp.millisecondsSinceEpoch.toDouble(), c.closingPrice))
+                  c.timestamp.millisecondsSinceEpoch.toDouble(),
+                  c.closingPrice,
+                ))
             .toList(),
         isCurved: true,
         colors: _gradientColors,
@@ -148,8 +150,7 @@ class PriceChart extends StatelessWidget {
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(
           show: true,
-          colors:
-              _gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+          colors: _gradientColors.map((c) => c.withOpacity(0.3)).toList(),
         ));
   }
 }

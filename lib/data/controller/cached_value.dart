@@ -14,15 +14,13 @@ abstract class CachedValue<T> {
   /// and cache it.
   Future<T> get() async {
     await _synchronizer.synchronized(() async {
-      if (_cachedValue != null) {
-        print('Not refreshing $this');
-      } else {
-        print('Refreshing $runtimeType');
+      if (_cachedValue == null) {
+        print('Refreshing $this');
         _cachedValue = await _retrieve();
-        print('Refilled cache $_cachedValue');
+        print('Refilled cache $this');
       }
     });
-    return Future.value(_cachedValue);
+    return _cachedValue!;
   }
 
   /// Clear the cache, so that the value is re-downloaded next time it is used.
