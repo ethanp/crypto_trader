@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:crypto_trader/data/access/coinbase_api.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 
 /// Interface for retrieving price data from external sources.
 abstract class PriceSource {
+  // TODO cache individually at each Granularity.
   final List<CandlesCache> _candlesCaches = Currencies.allCryptoCurrencies
       .map((c) => CandlesCache(currency: c))
       .toList();
@@ -28,14 +27,6 @@ class FakePriceSource extends PriceSource {
 /// A [PriceSource] getter actually connected to the Coinbase Pro API.
 class CoinbaseProPriceSource extends PriceSource {
   @override
-  Future<Dollars> currentPrice({required Currency of}) async {
-    final String from = of.callLetters;
-    final String to = Currencies.dollars.callLetters;
-    if (from == to) return Dollars(1);
-    final String path = 'products/$from-$to/ticker';
-    final String apiResponse = await CoinbaseApi().get(path: path);
-    final priceStr = jsonDecode(apiResponse)['price'] as String;
-    final double price = double.parse(priceStr);
-    return Dollars(price);
-  }
+  Future<Dollars> currentPrice({required Currency of}) =>
+      CoinbaseApi().currentPrice(of: of);
 }

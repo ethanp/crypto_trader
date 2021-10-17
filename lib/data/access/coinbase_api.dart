@@ -13,24 +13,35 @@ class CoinbaseApi {
   static const _oldEndpoint = 'api.pro.coinbase.com';
   static const _exchangeEndpoint = 'api.exchange.coinbase.com';
 
-  /// https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles
-  Future<String> candles(Currency currency,
-      [Granularity granularity = Granularity.sixHours]) {
-    return get(
-      path: 'products/${currency.callLetters}-USD/candles',
-      params: {
-        'granularity': granularity.duration.toString(),
-        'start': DateTime.now()
-            .subtract(granularity.duration * 16)
-            .toIso8601String(),
-        'end': DateTime.now().toIso8601String(),
-      },
-      endpoint: _exchangeEndpoint,
-    );
+  Future<Dollars> currentPrice({required Currency of}) async {
+    if (of == Currencies.dollars) return Dollars(1);
+    final String from = of.callLetters;
+    final String to = Currencies.dollars.callLetters;
+    assert(from != to);
+    final String path = 'products/$from-$to/ticker';
+    final apiResponse = await _get(path: path);
+    final priceStr = jsonDecode(apiResponse)['price'] as String;
+    final double price = double.parse(priceStr);
+    return Dollars(price);
   }
 
+  /// https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles
+  Future<String> candles(Currency currency,
+          [Granularity granularity = Granularity.sixHours]) =>
+      _get(
+        path: 'products/${currency.callLetters}-USD/candles',
+        params: {
+          'granularity': granularity.duration.toString(),
+          'start': DateTime.now()
+              .subtract(granularity.duration * 16)
+              .toIso8601String(),
+          'end': DateTime.now().toIso8601String(),
+        },
+        endpoint: _exchangeEndpoint,
+      );
+
   /// https://docs.pro.coinbase.com/#payment-method
-  Future<String> deposit(Dollars dollars) async => await _post(
+  Future<String> deposit(Dollars dollars) async => _post(
         path: '/deposits/payment-method',
         body: {
           'amount': '${dollars.amt}',
@@ -40,7 +51,7 @@ class CoinbaseApi {
       );
 
   /// https://docs.pro.coinbase.com/?php#place-a-new-order
-  Future<String> marketOrder(Holding order) async => await _post(
+  Future<String> marketOrder(Holding order) => _post(
         path: '/orders',
         body: {
           'type': 'market',
@@ -54,7 +65,7 @@ class CoinbaseApi {
 
   /// https://docs.pro.coinbase.com/#payment-methods
   Future<String> _getPaymentMethodId() async {
-    final response = await get(path: 'payment-methods', private: true);
+    final response = await _get(path: 'payment-methods', private: true);
     final decoded = jsonDecode(response) as List<dynamic>;
     return decoded.firstWhere(
         (e) => (e['name'] as String).contains('SCHWAB'))['id'] as String;
@@ -90,7 +101,7 @@ class CoinbaseApi {
     return postResponse.body;
   }
 
-  Future<String> get({
+  Future<String> _get({
     required String path,
     final bool private = false,
     final Map<String, String>? params,
@@ -112,7 +123,7 @@ class CoinbaseApi {
   }
 
   Future<Iterable<CoinbaseAccount>> getAccounts() async {
-    final String holdingsResponse = await get(path: 'accounts', private: true);
+    final String holdingsResponse = await _get(path: 'accounts', private: true);
     final accountListRaw = jsonDecode(holdingsResponse) as List<dynamic>;
     return accountListRaw.map((raw) => CoinbaseAccount(raw));
   }
@@ -121,7 +132,7 @@ class CoinbaseApi {
     // TODO(cleanup): Cache this.
     print('retrieving deposits');
     final String transfersResponse =
-        await get(path: 'transfers', private: true);
+        await _get(path: 'transfers', private: true);
     final transfers = jsonDecode(transfersResponse) as List<dynamic>;
     return Dollars(
         transfers.map((xfr) => double.parse(xfr['amount'] as String)).sum);
