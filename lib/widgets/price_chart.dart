@@ -68,11 +68,9 @@ class PriceChart extends StatelessWidget {
           for (final dropdownValue in Granularity.granularities)
             DropdownMenuItem(
               value: dropdownValue,
-              child: Center(
-                child: Text(
-                  dropdownValue.toString(),
-                  style: const TextStyle(fontSize: 14),
-                ),
+              child: Text(
+                dropdownValue.toString(),
+                style: const TextStyle(fontSize: 14),
               ),
             )
         ],
