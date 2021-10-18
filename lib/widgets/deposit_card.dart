@@ -25,7 +25,7 @@ class _DepositCardState extends State<DepositCard> {
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.green[900]!),
                 borderRadius: BorderRadius.circular(20),
-                color: Colors.grey[400]!.withOpacity(.3),
+                color: Colors.red[200]!.withOpacity(.3),
               ),
               height: MediaQuery.of(context).size.height / 6,
               width: MediaQuery.of(context).size.width / 2.2,
@@ -43,7 +43,7 @@ class _DepositCardState extends State<DepositCard> {
                       DepositDropdown(state.dropdownValue),
                       TransactButton(
                         Environment.trader.deposit,
-                        Colors.yellow,
+                        Colors.yellow.withOpacity(.7),
                         state.dropdownValue.toString(),
                       ),
                     ],

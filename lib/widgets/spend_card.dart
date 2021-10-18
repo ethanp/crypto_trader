@@ -33,7 +33,7 @@ class _SpendCardState extends State<SpendCard> {
             decoration: BoxDecoration(
               border: Border.all(color: Colors.green[900]!),
               borderRadius: BorderRadius.circular(20),
-              color: Colors.grey[400]!.withOpacity(.3),
+              color: Colors.blue[400]!.withOpacity(.3),
             ),
             height: MediaQuery.of(context).size.height / 6,
             width: MediaQuery.of(context).size.width / 2.2,
@@ -54,7 +54,7 @@ class _SpendCardState extends State<SpendCard> {
                       AmountField(fieldController),
                       TransactButton(
                         Environment.trader.spend,
-                        Colors.lightBlueAccent,
+                        Colors.yellow.withOpacity(.75),
                         fieldController.text,
                       ),
                     ],

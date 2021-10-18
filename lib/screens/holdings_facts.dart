@@ -32,12 +32,15 @@ class HoldingsFacts extends StatelessWidget {
 
   Widget _cashAvailable() => WithHoldings(
       builder: (holdings) => _element(
-          title: 'Cash available',
+          // TODO move this to above the cards
+          title: 'Cash available Move this to above the cards',
           value: holdings?.dollarsOf(Currencies.dollars).toString()));
 
   Widget _cryptoEarnings() => WithHoldings(
       builder: (holdings) => WithEarnings(
           builder: (Dollars? earnings) => _element(
+              // TODO move this to be in a Row after Holdings,
+              //  instead of a column as it is now.
               title: 'Earnings',
               value: earnings?.toString(),
               percent: _percent(holdings, earnings))));
