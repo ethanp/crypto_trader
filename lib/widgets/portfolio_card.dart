@@ -24,22 +24,24 @@ class PortfolioCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 170,
-      height: 80,
+      width: MediaQuery.of(context).size.width / 2.2,
       child: Card(
         elevation: isSelected ? 0 : 10,
         color:
             isSelected ? _Style.selectedCardColor : _Style.unselectedCardColor,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [_name(), _holding(), _percentageOfPortfolio()]
-              .map(
-                (elem) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: elem,
-                ),
-              )
-              .toList(),
+        child: Padding(
+          padding: const EdgeInsets.all(3),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [_name(), _holding(), _percentageOfPortfolio()]
+                .map(
+                  (elem) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: elem,
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ),
     );
