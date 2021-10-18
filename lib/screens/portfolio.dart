@@ -12,20 +12,22 @@ class Portfolio extends StatelessWidget {
   Widget build(BuildContext context) => MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => PortfolioState())],
       builder: (context, _) => Flexible(
-          child: Column(children: [_chart(context), _currencyCards()])));
+            child: Column(children: [
+              _chart(context.watch<PortfolioState>()),
+              const SizedBox(height: 5),
+              _currencyCards(),
+            ]),
+          ));
 
-  Widget _chart(BuildContext context) {
-    final state = context.watch<PortfolioState>();
-    return Expanded(
-        child: EasyFutureBuilder<List<Candle>>(
-            future:
-                Environment.prices.candles(state.currency, state.granularity),
-            builder: (List<Candle>? candles) => candles == null
-                ? const CupertinoActivityIndicator()
-                : PriceChart(candles: candles)));
-  }
+  Widget _chart(PortfolioState state) => Expanded(
+      child: EasyFutureBuilder<List<Candle>>(
+          future: Environment.prices.candles(state.currency, state.granularity),
+          builder: (List<Candle>? candles) => candles == null
+              ? const CupertinoActivityIndicator()
+              : PriceChart(candles: candles)));
 
   Widget _currencyCards() => Wrap(
+      spacing: 6,
       children: Currencies.allCryptoCurrencies.map(_asPortfolioCard).toList());
 
   Widget _asPortfolioCard(Currency currency) => WithHoldings(

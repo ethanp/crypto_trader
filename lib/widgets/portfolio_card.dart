@@ -24,19 +24,22 @@ class PortfolioCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 180,
-      height: 85,
+      width: 170,
+      height: 80,
       child: Card(
         elevation: isSelected ? 0 : 10,
         color:
             isSelected ? _Style.selectedCardColor : _Style.unselectedCardColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _name(),
-            _holding(),
-            _percentageOfPortfolio(),
-          ],
+          children: [_name(), _holding(), _percentageOfPortfolio()]
+              .map(
+                (elem) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: elem,
+                ),
+              )
+              .toList(),
         ),
       ),
     );
@@ -100,13 +103,13 @@ class _Style {
   static const heavyWeight = TextStyle(fontWeight: FontWeight.w700);
   static const mediumWeight = TextStyle(fontWeight: FontWeight.w500);
   static const smallText = TextStyle(fontSize: 17);
-  static const largeText = TextStyle(fontSize: 20);
+  static const largeText = TextStyle(fontSize: 18);
   static const tight = TextStyle(letterSpacing: -1);
 
   static final callLettersTextStyle =
       smallText.merge(heavyWeight).merge(darkerText);
   static final currencyNameTextStyle = smallText.merge(tight);
-  static final percentagesTextStyle = lighterText.merge(mediumWeight);
+  static final percentagesTextStyle = darkerText.merge(mediumWeight);
   static final holdingValueTextStyle =
       largeText.merge(mediumWeight).merge(lighterText);
 }

@@ -19,7 +19,63 @@ class PriceChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.read<PortfolioState>();
+    return Column(children: [
+      _chartHeader(state),
+      _chartWidget(state),
+    ]);
+  }
 
+  Widget _chartHeader(PortfolioState state) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 20),
+        child: Row(
+          children: [
+            _currencyName(state),
+            const Spacer(),
+            _granularityDropdown(state),
+          ],
+        ),
+      );
+
+  Widget _currencyName(PortfolioState state) {
+    return MyText(
+      state.currency.name,
+      style: TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.w900,
+        color: Colors.lightBlueAccent[100],
+      ),
+    );
+  }
+
+  Widget _granularityDropdown(PortfolioState state) {
+    return SizedBox(
+      width: 140,
+      height: 45,
+      child: DropdownButtonFormField<Granularity>(
+        value: state.granularity,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.grey[800],
+        ),
+        enableFeedback: true,
+        onChanged: (Granularity? newValue) => state.setGranularity(newValue!),
+        items: [
+          for (final dropdownValue in Granularity.granularities)
+            DropdownMenuItem(
+              value: dropdownValue,
+              child: Center(
+                child: Text(
+                  dropdownValue.toString(),
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            )
+        ],
+      ),
+    );
+  }
+
+  Widget _chartWidget(PortfolioState state) {
     // Compute bounds //
     final Iterable<double> timestamps =
         candles.map((c) => c.timestamp.millisecondsSinceEpoch.toDouble());
@@ -102,67 +158,18 @@ class PriceChart extends StatelessWidget {
       ),
     );
 
-    final chartWidget = Flexible(
+    return Flexible(
       child: Padding(
         padding: const EdgeInsets.only(right: 13),
         child: lineChart,
       ),
     );
-
-    return Column(children: [
-      _chartHeader(state),
-      chartWidget,
-    ]);
   }
 
   void _debugPrintBounds(double minX, double maxX, double minY, double maxY) {
     final minXPrint = DateTime.fromMillisecondsSinceEpoch(minX.toInt());
     final maxXPrint = DateTime.fromMillisecondsSinceEpoch(maxX.toInt());
     print('minX=$minXPrint maxX=$maxXPrint minY=$minY maxY=$maxY');
-  }
-
-  Widget _chartHeader(PortfolioState state) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [_currencyName(state), _granularityDropdown(state)],
-      );
-
-  Widget _currencyName(PortfolioState state) {
-    return SizedBox(
-      height: 30,
-      child: MyText(
-        state.currency.name,
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.grey[300],
-        ),
-      ),
-    );
-  }
-
-  Widget _granularityDropdown(PortfolioState state) {
-    return SizedBox(
-      width: 140,
-      height: 55,
-      child: DropdownButtonFormField<Granularity>(
-        value: state.granularity,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.grey[800],
-        ),
-        enableFeedback: true,
-        onChanged: (Granularity? newValue) => state.setGranularity(newValue!),
-        items: [
-          for (final dropdownValue in Granularity.granularities)
-            DropdownMenuItem(
-              value: dropdownValue,
-              child: Text(
-                dropdownValue.toString(),
-                style: const TextStyle(fontSize: 14),
-              ),
-            )
-        ],
-      ),
-    );
   }
 
   LineChartBarData _priceData() {

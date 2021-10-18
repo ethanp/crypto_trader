@@ -18,6 +18,9 @@ class MyText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
-        style: GoogleFonts.prompt().merge(style).copyWith(fontSize: fontSize));
+        style: GoogleFonts.prompt()
+            .copyWith(height: 1)
+            .merge(style)
+            .copyWith(fontSize: fontSize));
   }
 }
