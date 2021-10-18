@@ -17,10 +17,14 @@ class _DepositCardState extends State<DepositCard> {
         builder: (holdings) {
           final state = context.watch<DepositCardState>();
           return Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            elevation: 5,
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.green[900]!),
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                borderRadius: BorderRadius.circular(20),
                 color: Colors.grey[400]!.withOpacity(.3),
               ),
               height: MediaQuery.of(context).size.height / 6,
@@ -39,6 +43,7 @@ class _DepositCardState extends State<DepositCard> {
                       DepositDropdown(state.dropdownValue),
                       TransactButton(
                         Environment.trader.deposit,
+                        Colors.yellow,
                         state.dropdownValue.toString(),
                       ),
                     ],
@@ -55,7 +60,7 @@ class _DepositCardState extends State<DepositCard> {
 
 class DepositCardState extends ChangeNotifier {
   final _dropdownValue = DropdownValue(50);
-  var _state = _DepositState.NOTHING;
+  var _state = _DepositState.nothing;
 
   int get dropdownValue => _dropdownValue.wrappedInt;
 
@@ -65,7 +70,7 @@ class DepositCardState extends ChangeNotifier {
   }
 
   void start() {
-    _state = _DepositState.DEPOSITING;
+    _state = _DepositState.depositing;
   }
 }
 
@@ -81,7 +86,7 @@ class DepositCardState extends ChangeNotifier {
 //  sure if using the AnimatedSwitcher is the right thing to use visually
 //  instead or not (ref: https://www.raywenderlich.com/18724197).
 enum _DepositState {
-  NOTHING,
-  DEPOSITING,
-  WAITING_TO_PROPAGATE,
+  nothing,
+  depositing,
+  waitingToPropagate,
 }

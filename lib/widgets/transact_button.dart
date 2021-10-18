@@ -8,10 +8,12 @@ import 'package:flutter/material.dart';
 /// UI [Button] that triggers a financial transaction.
 class TransactButton extends StatelessWidget {
   /// UI [Button] that triggers a financial transaction.
-  const TransactButton(this.action, this.amount);
+  const TransactButton(this.action, this.color, this.amount);
 
   /// What happens when you click the button.
   final Future<String> Function(Dollars) action;
+
+  final Color color;
 
   final String amount;
 
@@ -20,7 +22,9 @@ class TransactButton extends StatelessWidget {
     return SizedBox(
       height: 35,
       child: FloatingActionButton(
+        elevation: 4,
         onPressed: () => _transact(context),
+        backgroundColor: color,
         child: const Icon(Icons.play_arrow_rounded),
       ),
     );

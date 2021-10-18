@@ -25,10 +25,14 @@ class _SpendCardState extends State<SpendCard> {
       builder: (holdings) {
         _fillFieldWithInitialValue(holdings);
         return Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          elevation: 5,
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.green[900]!),
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
+              borderRadius: BorderRadius.circular(20),
               color: Colors.grey[400]!.withOpacity(.3),
             ),
             height: MediaQuery.of(context).size.height / 6,
@@ -50,6 +54,7 @@ class _SpendCardState extends State<SpendCard> {
                       AmountField(fieldController),
                       TransactButton(
                         Environment.trader.spend,
+                        Colors.lightBlueAccent,
                         fieldController.text,
                       ),
                     ],

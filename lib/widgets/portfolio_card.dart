@@ -96,7 +96,7 @@ class _Style {
   static TextStyle differenceStyle(Color color) =>
       percentagesTextStyle.copyWith(color: color);
 
-  static final underheldColor = Colors.green;
+  static const underheldColor = Colors.green;
   static final overheldColor = Colors.red;
   static final unselectedCardColor = Colors.grey[800];
   static final selectedCardColor = Colors.grey[700];

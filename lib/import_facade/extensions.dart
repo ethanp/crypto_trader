@@ -1,6 +1,6 @@
 extension Zipper<T> on List<T> {
   List<U> mapWithIndex<U>(U Function(T, int) func) =>
-      List.generate(this.length, (idx) => func(this[idx], idx));
+      List.generate(length, (idx) => func(this[idx], idx));
 }
 
 extension SumInt on Iterable<int> {
