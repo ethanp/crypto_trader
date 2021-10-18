@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 /// Text widget pre-themed for use in this app.
 class MyText extends StatelessWidget {
   /// Text widget pre-themed for use in this app.
-  const MyText(this.text, {this.style, this.fontSize});
+  const MyText(this.text, {Key? key, this.style, this.fontSize})
+      : super(key: key);
 
   /// The string to display in the widget.
   final String text;
