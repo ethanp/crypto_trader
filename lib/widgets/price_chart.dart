@@ -18,14 +18,14 @@ class PriceChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.read<PortfolioState>();
+
+    // Compute bounds //
     final Iterable<double> timestamps =
         candles.map((c) => c.timestamp.millisecondsSinceEpoch.toDouble());
-    final Iterable<double> closingPrices = candles.map((c) => c.closingPrice);
-
-    print(timestamps.length);
-
     final minX = timestamps.min;
     final maxX = timestamps.max;
+    final Iterable<double> closingPrices = candles.map((c) => c.closingPrice);
     final minY = closingPrices.min;
     final maxY = closingPrices.max;
     _debugPrintBounds(minX, maxX, minY, maxY);
@@ -35,7 +35,8 @@ class PriceChart extends StatelessWidget {
       border: Border.all(color: Colors.grey[700]!, width: 2),
     );
 
-    final horizontalInterval = (maxX - minX) / 4.2;
+    final horizontalInterval =
+        (maxX - minX) / (state.granularity == Granularity.sixHours ? 3.2 : 5.2);
     final verticalInterval = (maxY - minY) / 3.2;
 
     final gridLine = FlLine(color: Colors.grey[800], strokeWidth: 1);
@@ -60,10 +61,16 @@ class PriceChart extends StatelessWidget {
         interval: horizontalInterval,
         getTextStyles: (context, value) => xAxisLabelStyle,
         getTitles: (value) {
-          final dateTime = DateTime.fromMillisecondsSinceEpoch(value.toInt());
-          final day = DateFormat.EEEE().format(dateTime);
-          final date = DateFormat.MMMd().format(dateTime);
-          return '$day\n$date';
+          final dateTime = DateTime.fromMillisecondsSinceEpoch(
+            value.toInt(),
+            isUtc: true,
+          );
+          if (state.granularity >= Granularity.sixHours) {
+            final day = DateFormat.EEEE().format(dateTime);
+            final date = DateFormat.MMMd().format(dateTime);
+            return '$day\n$date';
+          }
+          return DateFormat.jm().format(dateTime);
         });
 
     final yAxisLabelStyle = xAxisLabelStyle.copyWith(fontSize: 15);
@@ -102,7 +109,6 @@ class PriceChart extends StatelessWidget {
       ),
     );
 
-    final state = context.read<PortfolioState>();
     return Column(children: [
       _chartHeader(state),
       chartWidget,

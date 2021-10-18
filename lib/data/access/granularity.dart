@@ -7,6 +7,10 @@ class Granularity {
   final Duration duration;
   final String name;
 
+  bool operator >=(Granularity other) {
+    return duration >= other.duration;
+  }
+
   @override
   String toString() => name;
 
