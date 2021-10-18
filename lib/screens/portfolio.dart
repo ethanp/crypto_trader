@@ -5,44 +5,62 @@ import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:crypto_trader/widgets/portfolio_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class Portfolio extends StatefulWidget {
+class Portfolio extends StatelessWidget {
   @override
-  State<Portfolio> createState() => _PortfolioState();
-}
+  Widget build(BuildContext context) => MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => PortfolioState())],
+      builder: (context, _) => Flexible(
+          child: Column(children: [_chart(context), _currencyCards()])));
 
-class _PortfolioState extends State<Portfolio> {
-  Currency _selectedCurrency = Currencies.bitcoin;
-  Granularity _selectedGranularity = Granularity.days;
-
-  @override
-  Widget build(BuildContext context) =>
-      Flexible(child: Column(children: [_chart(), _currencyCards()]));
-
-  Widget _chart() {
+  Widget _chart(BuildContext context) {
+    final state = context.watch<PortfolioState>();
     return Expanded(
         child: EasyFutureBuilder<List<Candle>>(
-            future: Environment.prices
-                .candles(_selectedCurrency, _selectedGranularity),
+            future:
+                Environment.prices.candles(state.currency, state.granularity),
             builder: (List<Candle>? candles) => candles == null
                 ? const CupertinoActivityIndicator()
-                : PriceChart(currency: _selectedCurrency, candles: candles)));
+                : PriceChart(candles: candles)));
   }
 
   Widget _currencyCards() => Wrap(
       children: Currencies.allCryptoCurrencies.map(_asPortfolioCard).toList());
 
   Widget _asPortfolioCard(Currency currency) => WithHoldings(
-        builder: (holdings) => GestureDetector(
-          onTap: () {
-            print('Tapped card ${currency.name}');
-            setState(() => _selectedCurrency = currency);
-          },
-          child: PortfolioCard(
-            holdings: holdings,
-            currency: currency,
-            isSelected: currency == _selectedCurrency,
-          ),
-        ),
+        builderC: (ctx, holdings) {
+          final state = ctx.read<PortfolioState>();
+          return GestureDetector(
+            onTap: () {
+              print('Tapped card ${currency.name}');
+              state.setCurrency(currency);
+            },
+            child: PortfolioCard(
+              holdings: holdings,
+              currency: currency,
+              isSelected: currency == state.currency,
+            ),
+          );
+        },
       );
+}
+
+class PortfolioState extends ChangeNotifier {
+  var _currency = Currencies.bitcoin;
+  var _granularity = Granularity.days;
+
+  Currency get currency => _currency;
+
+  Granularity get granularity => _granularity;
+
+  void setCurrency(Currency currency) {
+    _currency = currency;
+    notifyListeners();
+  }
+
+  void setGranularity(Granularity granularity) {
+    _granularity = granularity;
+    notifyListeners();
+  }
 }

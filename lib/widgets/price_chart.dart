@@ -1,3 +1,4 @@
+import 'package:crypto_trader/data/access/granularity.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/extensions.dart';
 import 'package:crypto_trader/import_facade/model.dart';
@@ -5,14 +6,12 @@ import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 /// Line chart of price history of a [Currency].
 class PriceChart extends StatelessWidget {
   /// Line chart of price history of a [Currency].
-  const PriceChart({required this.currency, required this.candles});
-
-  /// The [Currency] to chart.
-  final Currency currency;
+  const PriceChart({required this.candles});
 
   /// Price data for the chart.
   final List<Candle> candles;
@@ -103,8 +102,9 @@ class PriceChart extends StatelessWidget {
       ),
     );
 
+    final state = context.read<PortfolioState>();
     return Column(children: [
-      _chartTitle(),
+      _chartTitle(state),
       chartWidget,
     ]);
   }
@@ -115,21 +115,41 @@ class PriceChart extends StatelessWidget {
     print('minX=$minXPrint maxX=$maxXPrint minY=$minY maxY=$maxY');
   }
 
-  Widget _chartTitle() => Row(
+  Widget _chartTitle(PortfolioState state) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           SizedBox(
             height: 30,
             child: MyText(
-              currency.name,
+              state.currency.name,
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey[300],
               ),
             ),
           ),
-          // TODO(feature): Add granularity dropdown
-          const MyText('Dropdown goes here'),
+          SizedBox(
+            width: 80,
+            height: 55,
+            child: DropdownButtonFormField<Granularity>(
+              value: state.granularity,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[800],
+              ),
+              enableFeedback: true,
+              iconSize: 16,
+              onChanged: (Granularity? newValue) =>
+                  state.setGranularity(newValue!),
+              items: [
+                for (final dropdownValue in Granularity.granularities)
+                  DropdownMenuItem(
+                    value: dropdownValue,
+                    child: Text(dropdownValue.toString()),
+                  )
+              ],
+            ),
+          )
         ],
       );
 
@@ -152,5 +172,16 @@ class PriceChart extends StatelessWidget {
           show: true,
           colors: _gradientColors.map((c) => c.withOpacity(0.3)).toList(),
         ));
+  }
+}
+
+class CurrentGranularity extends ChangeNotifier {
+  var _granularity = Granularity.days;
+
+  Granularity get granularity => _granularity;
+
+  void setGranularity(Granularity granularity) {
+    _granularity = granularity;
+    notifyListeners();
   }
 }

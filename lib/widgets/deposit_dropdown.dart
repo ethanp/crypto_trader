@@ -18,7 +18,6 @@ class DepositDropdown extends StatelessWidget {
           filled: true,
           fillColor: Colors.grey[800],
         ),
-        icon: const Icon(Icons.attach_money),
         enableFeedback: true,
         iconSize: 16,
         onChanged: (int? newValue) {
