@@ -1,10 +1,11 @@
+import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DepositDropdown extends StatelessWidget {
-  const DepositDropdown(this.dropdownValue, {required this.dropdownChanged});
+  const DepositDropdown(this.selectedDropdownValue);
 
-  final DropdownValue dropdownValue;
-  final void Function(int) dropdownChanged;
+  final int selectedDropdownValue;
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,7 @@ class DepositDropdown extends StatelessWidget {
       width: 80,
       height: 55,
       child: DropdownButtonFormField<int>(
-        value: dropdownValue.wrappedInt,
+        value: selectedDropdownValue,
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.grey[800],
@@ -20,7 +21,10 @@ class DepositDropdown extends StatelessWidget {
         icon: const Icon(Icons.attach_money),
         enableFeedback: true,
         iconSize: 16,
-        onChanged: (int? newValue) => dropdownChanged(newValue!),
+        onChanged: (int? newValue) {
+          final state = context.read<DepositRowState>();
+          state.changeDropdownValue(newValue!);
+        },
         items: [
           for (final dropdownValue in [10, 20, 50])
             DropdownMenuItem(

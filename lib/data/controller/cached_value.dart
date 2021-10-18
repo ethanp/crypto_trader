@@ -10,8 +10,8 @@ abstract class CachedValue<T> {
   T? _cachedValue;
   final _synchronizer = Lock(reentrant: true);
 
-  /// Retrieve the item from cache if it exists, otherwise download
-  /// and cache it.
+  /// Retrieve the item from cache if it exists,
+  /// Otherwise download and cache it.
   Future<T> get() async {
     await _synchronizer.synchronized(() async {
       if (_cachedValue == null) {
