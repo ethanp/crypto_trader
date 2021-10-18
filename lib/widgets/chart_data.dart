@@ -101,6 +101,7 @@ class ChartData extends StatelessWidget {
         gridData: greyVertAndHorizGrid,
         borderData: greyBorder,
       ),
+      swapAnimationDuration: Duration.zero,
     );
 
     return Flexible(
