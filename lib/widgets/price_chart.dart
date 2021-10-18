@@ -104,7 +104,7 @@ class PriceChart extends StatelessWidget {
 
     final state = context.read<PortfolioState>();
     return Column(children: [
-      _chartTitle(state),
+      _chartHeader(state),
       chartWidget,
     ]);
   }
@@ -115,43 +115,49 @@ class PriceChart extends StatelessWidget {
     print('minX=$minXPrint maxX=$maxXPrint minY=$minY maxY=$maxY');
   }
 
-  Widget _chartTitle(PortfolioState state) => Row(
+  Widget _chartHeader(PortfolioState state) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          SizedBox(
-            height: 30,
-            child: MyText(
-              state.currency.name,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[300],
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 80,
-            height: 55,
-            child: DropdownButtonFormField<Granularity>(
-              value: state.granularity,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.grey[800],
-              ),
-              enableFeedback: true,
-              iconSize: 16,
-              onChanged: (Granularity? newValue) =>
-                  state.setGranularity(newValue!),
-              items: [
-                for (final dropdownValue in Granularity.granularities)
-                  DropdownMenuItem(
-                    value: dropdownValue,
-                    child: Text(dropdownValue.toString()),
-                  )
-              ],
-            ),
-          )
-        ],
+        children: [_currencyName(state), _granularityDropdown(state)],
       );
+
+  Widget _currencyName(PortfolioState state) {
+    return SizedBox(
+      height: 30,
+      child: MyText(
+        state.currency.name,
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.grey[300],
+        ),
+      ),
+    );
+  }
+
+  Widget _granularityDropdown(PortfolioState state) {
+    return SizedBox(
+      width: 140,
+      height: 55,
+      child: DropdownButtonFormField<Granularity>(
+        value: state.granularity,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.grey[800],
+        ),
+        enableFeedback: true,
+        onChanged: (Granularity? newValue) => state.setGranularity(newValue!),
+        items: [
+          for (final dropdownValue in Granularity.granularities)
+            DropdownMenuItem(
+              value: dropdownValue,
+              child: Text(
+                dropdownValue.toString(),
+                style: const TextStyle(fontSize: 14),
+              ),
+            )
+        ],
+      ),
+    );
+  }
 
   LineChartBarData _priceData() {
     const _gradientColors = [Color(0xFF64B5F6), Color(0xFF69F0AE)];
