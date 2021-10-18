@@ -21,7 +21,7 @@ class DepositDropdown extends StatelessWidget {
         enableFeedback: true,
         iconSize: 16,
         onChanged: (int? newValue) {
-          final state = context.read<DepositRowState>();
+          final state = context.read<DepositCardState>();
           state.changeDropdownValue(newValue!);
         },
         items: [

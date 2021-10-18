@@ -5,12 +5,18 @@ import 'package:flutter/material.dart';
 class TransactButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: Column(children: [
-        DepositRow(),
-        SpendRow(),
-      ]),
+    return Container(
+      color: Colors.grey[800],
+      child: Padding(
+        padding: const EdgeInsets.only(top: 2, bottom: 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            DepositCard(),
+            SpendCard(),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -3,31 +3,49 @@ import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DepositRow extends StatefulWidget {
+class DepositCard extends StatefulWidget {
   @override
-  _DepositRowState createState() => _DepositRowState();
+  _DepositCardState createState() => _DepositCardState();
 }
 
-class _DepositRowState extends State<DepositRow> {
+class _DepositCardState extends State<DepositCard> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => DepositRowState())],
+      providers: [ChangeNotifierProvider(create: (_) => DepositCardState())],
       builder: (context, child) => WithHoldings(
         builder: (holdings) {
-          final state = context.watch<DepositRowState>();
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              DepositDropdown(state.dropdownValue),
-              const SizedBox(width: 20),
-              TransactButton(
-                Environment.trader.deposit,
-                'Deposit Dollars',
-                state.dropdownValue.toString(),
+          final state = context.watch<DepositCardState>();
+          return Card(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.green[900]!),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                color: Colors.grey[400]!.withOpacity(.3),
               ),
-            ],
+              height: MediaQuery.of(context).size.height / 6,
+              width: MediaQuery.of(context).size.width / 2.2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  MyText(
+                    'Deposit Dollars',
+                    fontSize: 18,
+                    color: Colors.grey[300],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      DepositDropdown(state.dropdownValue),
+                      TransactButton(
+                        Environment.trader.deposit,
+                        state.dropdownValue.toString(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),
@@ -35,7 +53,7 @@ class _DepositRowState extends State<DepositRow> {
   }
 }
 
-class DepositRowState extends ChangeNotifier {
+class DepositCardState extends ChangeNotifier {
   final _dropdownValue = DropdownValue(50);
   var _state = _DepositState.NOTHING;
 
