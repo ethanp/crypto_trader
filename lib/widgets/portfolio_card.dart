@@ -33,7 +33,7 @@ class PortfolioCard extends StatelessWidget {
           padding: const EdgeInsets.all(3),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [_name(), _holding(), _percentageOfPortfolio()]
+            children: [_name(), _percentageOfPortfolio()]
                 .map(
                   (elem) => Padding(
                     padding: const EdgeInsets.symmetric(vertical: 2),
@@ -51,35 +51,56 @@ class PortfolioCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        MyText(currency.callLetters, style: _Style.callLettersTextStyle),
-        const SizedBox(width: 10),
+        _holding(),
         MyText(currency.name, style: _Style.currencyNameTextStyle),
+        const SizedBox(width: 4),
+        MyText('(${currency.callLetters})', style: _Style.callLettersTextStyle),
       ],
     );
   }
 
   Widget _holding() => MyText(
-        holdings?.dollarsOf(currency).toString() ?? 'Loading',
+        '${holdings?.dollarsOf(currency).toString() ?? 'Loading'} of ',
         style: _Style.holdingValueTextStyle,
       );
 
   Widget _percentageOfPortfolio() {
     if (holdings == null) return const CupertinoActivityIndicator();
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
+        const MyText('Portfolio', fontSize: 10),
         _percentages(),
-        const SizedBox(width: 10),
-        _difference(),
       ],
     );
   }
 
   Widget _percentages() {
     final actualPercentage = holdings!.percentageContaining(currency).round();
-    return MyText(
-      '$actualPercentage% / ${currency.percentAllocation}%',
-      style: _Style.percentagesTextStyle,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(
+          children: [
+            MyText(
+              '${currency.percentAllocation}%',
+              style: _Style.percentagesTextStyle,
+            ),
+            const MyText('Allocated', style: _Style.caption),
+          ],
+        ),
+        const SizedBox(width: 10),
+        Column(
+          children: [
+            MyText(
+              '$actualPercentage%',
+              style: _Style.percentagesTextStyle,
+            ),
+            const MyText('Actual', style: _Style.caption),
+          ],
+        ),
+        const SizedBox(width: 10),
+        _difference(),
+      ],
     );
   }
 
@@ -87,8 +108,15 @@ class PortfolioCard extends StatelessWidget {
     final difference = holdings!.difference(currency);
     final Color color =
         difference >= 0 ? _Style.overheldColor : _Style.underheldColor;
-    return MyText('${difference.round()}%',
-        style: _Style.differenceStyle(color));
+    return Column(
+      children: [
+        MyText('${difference.round()}%', style: _Style.differenceStyle(color)),
+        MyText(
+          difference >= 0 ? 'overheld' : 'underheld',
+          style: _Style.caption,
+        ),
+      ],
+    );
   }
 }
 
@@ -104,14 +132,14 @@ class _Style {
   static final lighterText = TextStyle(color: Colors.grey[300]);
   static const heavyWeight = TextStyle(fontWeight: FontWeight.w700);
   static const mediumWeight = TextStyle(fontWeight: FontWeight.w500);
-  static const smallText = TextStyle(fontSize: 17);
-  static const largeText = TextStyle(fontSize: 18);
+  static const textSize = TextStyle(fontSize: 11);
   static const tight = TextStyle(letterSpacing: -1);
 
+  static const caption = TextStyle(fontSize: 8);
   static final callLettersTextStyle =
-      smallText.merge(heavyWeight).merge(darkerText);
-  static final currencyNameTextStyle = smallText.merge(tight);
+      textSize.merge(heavyWeight).merge(darkerText);
+  static final currencyNameTextStyle = textSize.merge(tight);
   static final percentagesTextStyle = darkerText.merge(mediumWeight);
   static final holdingValueTextStyle =
-      largeText.merge(mediumWeight).merge(lighterText);
+      textSize.merge(mediumWeight).merge(lighterText);
 }

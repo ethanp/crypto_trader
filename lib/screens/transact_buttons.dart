@@ -1,3 +1,4 @@
+import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -9,11 +10,21 @@ class TransactButtons extends StatelessWidget {
       color: Colors.grey[800],
       child: Padding(
         padding: const EdgeInsets.only(top: 2, bottom: 2),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Column(
           children: [
-            DepositCard(),
-            SpendCard(),
+            WithHoldings(
+              builder: (holdings) => LineItem(
+                title: 'Cash available',
+                value: holdings?.dollarsOf(Currencies.dollars).toString(),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                DepositCard(),
+                SpendCard(),
+              ],
+            ),
           ],
         ),
       ),
