@@ -24,13 +24,13 @@ class PortfolioCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width / 2.2,
+      width: MediaQuery.of(context).size.width / 2.05,
       child: Card(
         elevation: isSelected ? 0 : 10,
         color:
             isSelected ? _Style.selectedCardColor : _Style.unselectedCardColor,
         child: Padding(
-          padding: const EdgeInsets.all(3),
+          padding: const EdgeInsets.symmetric(vertical: 2),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [_name(), _percentageOfPortfolio()]
@@ -52,6 +52,7 @@ class PortfolioCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _holding(),
+        MyText(' of ', style: _Style.ofStyle),
         MyText(currency.name, style: _Style.currencyNameTextStyle),
         const SizedBox(width: 4),
         MyText('(${currency.callLetters})', style: _Style.callLettersTextStyle),
@@ -60,21 +61,12 @@ class PortfolioCard extends StatelessWidget {
   }
 
   Widget _holding() => MyText(
-        '${holdings?.dollarsOf(currency).toString() ?? 'Loading'} of ',
+        holdings?.dollarsOf(currency).toString() ?? 'Loading',
         style: _Style.holdingValueTextStyle,
       );
 
   Widget _percentageOfPortfolio() {
     if (holdings == null) return const CupertinoActivityIndicator();
-    return Column(
-      children: [
-        const MyText('Portfolio', fontSize: 10),
-        _percentages(),
-      ],
-    );
-  }
-
-  Widget _percentages() {
     final actualPercentage = holdings!.percentageContaining(currency).round();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -129,17 +121,21 @@ class _Style {
   static final unselectedCardColor = Colors.grey[800];
   static final selectedCardColor = Colors.grey[700];
   static final darkerText = TextStyle(color: Colors.grey[500]);
-  static final lighterText = TextStyle(color: Colors.grey[300]);
+  static final greenText = TextStyle(color: Colors.green[300]);
   static const heavyWeight = TextStyle(fontWeight: FontWeight.w700);
   static const mediumWeight = TextStyle(fontWeight: FontWeight.w500);
-  static const textSize = TextStyle(fontSize: 11);
+  static const textSize = TextStyle(fontSize: 12);
   static const tight = TextStyle(letterSpacing: -1);
 
-  static const caption = TextStyle(fontSize: 8);
+  static const caption = TextStyle(
+    fontSize: 8,
+    color: Color.fromRGBO(150, 200, 255, 1),
+  );
   static final callLettersTextStyle =
       textSize.merge(heavyWeight).merge(darkerText);
   static final currencyNameTextStyle = textSize.merge(tight);
   static final percentagesTextStyle = darkerText.merge(mediumWeight);
   static final holdingValueTextStyle =
-      textSize.merge(mediumWeight).merge(lighterText);
+      textSize.merge(mediumWeight).merge(greenText);
+  static final ofStyle = textSize.merge(darkerText);
 }
