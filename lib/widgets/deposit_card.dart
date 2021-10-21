@@ -12,62 +12,57 @@ class _DepositCardState extends State<DepositCard> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => DepositCardState())],
-      builder: (context, child) => WithHoldings(
-        builder: (holdings) {
-          final state = context.watch<DepositCardState>();
-          return Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            elevation: 5,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.green[900]!),
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.red[200]!.withOpacity(.3),
-              ),
-              height: MediaQuery.of(context).size.height / 6,
-              width: MediaQuery.of(context).size.width / 2.2,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  MyText(
-                    'Deposit Dollars',
-                    fontSize: 18,
-                    color: Colors.grey[300],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      DepositDropdown(state.dropdownValue),
-                      TransactButton(
-                        Environment.trader.deposit,
-                        Colors.yellow.withOpacity(.7),
-                        state.dropdownValue.toString(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
+        providers: [ChangeNotifierProvider(create: (_) => DepositCardState())],
+        builder: (context, child) => WithHoldings(builder: (holdings) {
+              final state = context.watch<DepositCardState>();
+              return Card(
+                  shape: _roundedRectOuter(),
+                  elevation: 5,
+                  child: Container(
+                      decoration: _roundedRectInner(),
+                      height: MediaQuery.of(context).size.height / 6,
+                      width: MediaQuery.of(context).size.width / 2.2,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [_title(), _body(state)])));
+            }));
   }
+
+  RoundedRectangleBorder _roundedRectOuter() => RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      );
+
+  BoxDecoration _roundedRectInner() => BoxDecoration(
+        border: Border.all(color: Colors.green[900]!),
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.red[200]!.withOpacity(.3),
+      );
+
+  MyText _title() => MyText(
+        'Deposit Dollars',
+        fontSize: 18,
+        color: Colors.grey[300],
+      );
+
+  Row _body(DepositCardState state) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          DepositDropdown(state.value),
+          TransactButton(
+            Environment.trader.deposit,
+            Colors.yellow.withOpacity(.7),
+            state,
+          ),
+        ],
+      );
 }
 
-class DepositCardState extends ChangeNotifier {
-  final _dropdownValue = DropdownValue(50);
+const int _initial = 50;
+
+class DepositCardState extends ValueNotifier<String> {
+  DepositCardState() : super(_initial.toString());
+
   var _state = _DepositState.nothing;
-
-  int get dropdownValue => _dropdownValue.wrappedInt;
-
-  void changeDropdownValue(int newVal) {
-    _dropdownValue.wrappedInt = newVal;
-    notifyListeners();
-  }
 
   void start() {
     _state = _DepositState.depositing;

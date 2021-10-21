@@ -15,7 +15,7 @@ class TransactButton extends StatelessWidget {
 
   final Color color;
 
-  final String amount;
+  final ValueNotifier<String> amount;
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +32,14 @@ class TransactButton extends StatelessWidget {
 
   void _transact(BuildContext context) {
     // Get the NEWEST version of the input text.
-    if (!_inputIsValid(amount)) return _inputSnackbar(context, amount);
+    if (!_inputIsValid(amount.value))
+      return _inputSnackbar(context, amount.value);
     MySnackbar.simple(
-      text: 'Transacting $amount',
+      text: 'Transacting ${amount.value}',
       duration: const Duration(seconds: 2),
       context: context,
     );
-    _triggerAction(amount)
+    _triggerAction(amount.value)
         // There must be some way to clean this up.
         .then((_) {}, onError: (Object err) => _showError(context, err))
         .then((_) => _eventuallyRefresh(context));

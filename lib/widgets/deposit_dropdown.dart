@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 class DepositDropdown extends StatelessWidget {
   const DepositDropdown(this.selectedDropdownValue);
 
-  final int selectedDropdownValue;
+  final String selectedDropdownValue;
 
   @override
   Widget build(BuildContext context) {
@@ -13,17 +13,15 @@ class DepositDropdown extends StatelessWidget {
       width: 80,
       height: 55,
       child: DropdownButtonFormField<int>(
-        value: selectedDropdownValue,
+        value: int.parse(selectedDropdownValue),
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.grey[800],
         ),
         enableFeedback: true,
         iconSize: 16,
-        onChanged: (int? newValue) {
-          final state = context.read<DepositCardState>();
-          state.changeDropdownValue(newValue!);
-        },
+        onChanged: (int? newValue) =>
+            context.read<DepositCardState>().value = newValue!.toString(),
         items: [
           for (final dropdownValue in [10, 20, 50])
             DropdownMenuItem(
@@ -34,10 +32,4 @@ class DepositDropdown extends StatelessWidget {
       ),
     );
   }
-}
-
-class DropdownValue {
-  DropdownValue(this.wrappedInt);
-
-  int wrappedInt;
 }
