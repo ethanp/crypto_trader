@@ -33,10 +33,10 @@ class PortfolioCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 2),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [_name(), _percentageOfPortfolio()]
+            children: [_header(), _wrtPortfolio()]
                 .map(
                   (elem) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
                     child: elem,
                   ),
                 )
@@ -47,7 +47,7 @@ class PortfolioCard extends StatelessWidget {
     );
   }
 
-  Widget _name() {
+  Widget _header() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -65,7 +65,7 @@ class PortfolioCard extends StatelessWidget {
         style: _Style.holdingValueTextStyle,
       );
 
-  Widget _percentageOfPortfolio() {
+  Widget _wrtPortfolio() {
     if (holdings == null) return const CupertinoActivityIndicator();
     final actualPercentage = holdings!.percentageContaining(currency).round();
     return Row(

@@ -53,13 +53,13 @@ class AmountField extends StatelessWidget {
   /// Returns an error string if the input is invalid.
   static String? validateAmount(String? input) {
     if (input == null || input.isEmpty)
-      return 'Empty';
+      return 'Enter amount';
     else if (double.tryParse(input) == null)
       return 'Not \$';
     else if (double.parse(input) < 10)
-      return '≥\$10';
+      return 'at least \$10';
     else if (double.parse(input) >= 100)
-      return '<\$100';
+      return 'under \$100';
     else if (input.indexOf('.') < input.length - 3)
       return 'Not \$';
     else

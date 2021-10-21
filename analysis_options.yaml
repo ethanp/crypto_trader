@@ -13,3 +13,4 @@ linter:
     only_throw_errors: true
     require_trailing_commas: false
     avoid_print: false
+    curly_braces_in_flow_control_structures: false

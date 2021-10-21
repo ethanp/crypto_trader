@@ -25,40 +25,19 @@ class _SpendCardState extends State<SpendCard> {
       builder: (holdings) {
         _fillFieldWithInitialValue(holdings);
         return Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
+          shape: _roundedRectOuter(),
           elevation: 5,
           child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.green[900]!),
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.blue[400]!.withOpacity(.3),
-            ),
+            decoration: _roundedRectInner(),
             height: MediaQuery.of(context).size.height / 6,
             width: MediaQuery.of(context).size.width / 2.2,
-            child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, top: 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(height: 0),
-                  MyText(
-                    'Buy ${holdings?.shortest.currency.name ?? '(Loading...)'}',
-                    fontSize: 18,
-                    color: Colors.grey[300],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      AmountField(fieldController),
-                      TransactButton(
-                        Environment.trader.spend,
-                        Colors.yellow.withOpacity(.75),
-                        fieldController.text,
-                      ),
-                    ],
-                  ),
+                  _title(holdings),
+                  _body(),
                 ],
               ),
             ),
@@ -67,6 +46,39 @@ class _SpendCardState extends State<SpendCard> {
       },
     );
   }
+
+  Row _body() => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          AmountField(fieldController),
+          // TODO(BIG BUG): On my phone (ie. old version of the app), when
+          //  you change the amount and hit "play" it still spends your
+          //  *entire* cash available! Try replicating it in the Fake
+          //  environment :)
+          TransactButton(
+            Environment.trader.spend,
+            Colors.yellow.withOpacity(.75),
+            fieldController.text,
+          ),
+        ],
+      );
+
+  MyText _title(Holdings? holdings) => MyText(
+        'Buy ${holdings?.shortest.currency.name ?? '(Loading...)'}',
+        fontSize: 18,
+        color: Colors.grey[300],
+      );
+
+  BoxDecoration _roundedRectInner() => BoxDecoration(
+        border: Border.all(color: Colors.green[900]!),
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.blue[400]!.withOpacity(.3),
+      );
+
+  RoundedRectangleBorder _roundedRectOuter() => RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      );
 
   void _fillFieldWithInitialValue(Holdings? holdings) {
     if (holdings != null) {
