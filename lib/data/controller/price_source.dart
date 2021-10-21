@@ -5,7 +5,6 @@ import 'package:crypto_trader/import_facade/model.dart';
 
 /// Interface for retrieving price data from external sources.
 abstract class PriceSource {
-  // TODO cache individually at each Granularity.
   final CandleCaches _candlesCaches = CandleCaches.build();
 
   /// The current price of [Currency] [of] in [Dollars].
@@ -14,6 +13,8 @@ abstract class PriceSource {
   /// Historical price data for [currency].
   Future<List<Candle>> candles(Currency currency, Granularity granularity) =>
       _candlesCaches.get(currency, granularity);
+
+  void forceRefresh() => _candlesCaches.invalidate();
 }
 
 /// A [PriceSource] getter with fake data.
@@ -46,4 +47,7 @@ class CandleCaches {
 
   Future<List<Candle>> get(Currency currency, Granularity granularity) =>
       caches[currency]![granularity]!.get();
+
+  void invalidate() => Future.wait(
+      caches.values.expand((e1) => e1.values.map((e2) => e2.invalidate())));
 }

@@ -14,6 +14,7 @@ class UiRefresher extends ChangeNotifier {
   Future<void> _refreshUi() async {
     print('Refreshing UI');
     await Environment.trader.forceRefreshHoldings();
+    Environment.prices.forceRefresh();
     notifyListeners();
   }
 }
