@@ -32,7 +32,7 @@ class CoinbaseProPriceSource extends PriceSource {
 }
 
 class CandleCaches {
-  const CandleCaches._(this.caches);
+  const CandleCaches._(this._caches);
 
   factory CandleCaches.build() => CandleCaches._(
         Currencies.allCryptoCurrencies.asMap().map((_, currency) => MapEntry(
@@ -43,11 +43,11 @@ class CandleCaches {
                 )))),
       );
 
-  final Map<Currency, Map<Granularity, CandlesCache>> caches;
+  final Map<Currency, Map<Granularity, CandlesCache>> _caches;
 
   Future<List<Candle>> get(Currency currency, Granularity granularity) =>
-      caches[currency]![granularity]!.get();
+      _caches[currency]![granularity]!.get();
 
   void invalidate() => Future.wait(
-      caches.values.expand((e1) => e1.values.map((e2) => e2.invalidate())));
+      _caches.values.expand((e1) => e1.values.map((e2) => e2.invalidate())));
 }

@@ -52,10 +52,8 @@ class _SpendCardState extends State<SpendCard> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           AmountField(fieldController),
-          // TODO(BIG BUG): On my phone (ie. old version of the app), when
-          //  you change the amount and hit "play" it still spends your
-          //  *entire* cash available! Try replicating it in the Fake
-          //  environment :)
+          // TODO(BIG BUG): When you change the amount and hit "play" it still
+          //  spends your *entire* cash available!
           TransactButton(
             Environment.trader.spend,
             Colors.yellow.withOpacity(.75),
