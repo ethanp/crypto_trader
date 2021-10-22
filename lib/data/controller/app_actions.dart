@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:flutter/material.dart';
+import 'package:synchronized/synchronized.dart';
 
 /*
  * TODO Finish this. Still haven't quite figured out how it's gonna work.
@@ -13,16 +14,18 @@ import 'package:flutter/material.dart';
 /// Runs one [MultistageAction] at a time, and will [notifyListeners()] when
 /// the [_MultistageActionState] changes.
 class MultistageActionExecutor extends ChangeNotifier {
-  // TODO probably needs a synchronization lock for each method?
+  final _synchronizer = Lock(reentrant: true);
 
   final _actions = Queue<MultistageAction>();
 
   Queue<MultistageAction> get actions => _actions;
 
-  Future<List<void>> add(MultistageAction action) {
-    _actions.addLast(action);
-    return Future.wait([_onAdd()]);
-  }
+  Future<List<void>> add(MultistageAction action) =>
+      _synchronizer.synchronized(() {
+        print('Adding $action');
+        _actions.addLast(action);
+        return Future.wait([_onAdd()]);
+      });
 
   Future<void> _onAdd() async {
     // If the _actions queue wasn't empty, it will have an action that was
@@ -64,6 +67,9 @@ abstract class MultistageAction {
   Future<void> request();
 
   Future<void> verify();
+
+  @override
+  String toString() => '$runtimeType{_state: $_state}';
 }
 
 enum _MultistageActionState {

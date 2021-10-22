@@ -27,7 +27,11 @@ class AppActionsTrialTopLevel extends StatelessWidget {
                 children: [
                   Text('State: $text', style: font),
                   const SizedBox(height: size),
-                  _actionButton(executor, font, FakeAction()),
+                  _actionButton(executor, 'No error', FakeAction()),
+                  const SizedBox(height: size),
+                  _actionButton(executor, 'Error on request', FakeAction()),
+                  const SizedBox(height: size),
+                  _actionButton(executor, 'Error on verify', FakeAction()),
                 ],
               ),
             ),
@@ -39,15 +43,16 @@ class AppActionsTrialTopLevel extends StatelessWidget {
 
   Widget _actionButton(
     MultistageActionExecutor executor,
-    TextStyle font,
+    String text,
     MultistageAction action,
   ) {
+    const font = TextStyle(fontSize: 25);
     return ElevatedButton(
       style: ElevatedButton.styleFrom(elevation: 10),
       onPressed: () => _onPressed(executor, action),
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Text('Start', style: font),
+        child: Text(text, style: font),
       ),
     );
   }
