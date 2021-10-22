@@ -22,93 +22,74 @@ class PortfolioCard extends StatelessWidget {
   final bool isSelected;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(BuildContext context) => SizedBox(
       width: MediaQuery.of(context).size.width / 2.05,
       child: Card(
-        elevation: isSelected ? 0 : 10,
-        color:
-            isSelected ? _Style.selectedCardColor : _Style.unselectedCardColor,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [_header(), _wrtPortfolio()]
-                .map(
-                  (elem) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: elem,
-                  ),
-                )
-                .toList(),
-          ),
-        ),
-      ),
-    );
-  }
+          elevation: isSelected ? 0 : 10,
+          color: isSelected
+              ? _Style.selectedCardColor
+              : _Style.unselectedCardColor,
+          child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [_header(), _wrtPortfolio()]
+                      .map(_withPadding)
+                      .toList()))));
 
-  Widget _header() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+  Padding _withPadding(Widget child) =>
+      Padding(padding: const EdgeInsets.symmetric(vertical: 4), child: child);
+
+  Widget _header() =>
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         _holding(),
         MyText(' of ', style: _Style.ofStyle),
         MyText(currency.name, style: _Style.currencyNameTextStyle),
         const SizedBox(width: 4),
         MyText('(${currency.callLetters})', style: _Style.callLettersTextStyle),
-      ],
-    );
-  }
+      ]);
 
-  Widget _holding() => MyText(
-        holdings?.dollarsOf(currency).toString() ?? 'Loading',
-        style: _Style.holdingValueTextStyle,
-      );
+  Widget _holding() =>
+      MyText(holdings?.dollarsOf(currency).toString() ?? 'Loading',
+          style: _Style.holdingValueTextStyle);
 
   Widget _wrtPortfolio() {
     if (holdings == null) return const CupertinoActivityIndicator();
-    final actualPercentage = holdings!.percentageContaining(currency).round();
+    const spacing = SizedBox(width: 10);
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Column(
-          children: [
-            MyText(
-              '${currency.percentAllocation}%',
-              style: _Style.percentagesTextStyle,
-            ),
-            const MyText('Allocated', style: _Style.caption),
-          ],
-        ),
-        const SizedBox(width: 10),
-        Column(
-          children: [
-            MyText(
-              '$actualPercentage%',
-              style: _Style.percentagesTextStyle,
-            ),
-            const MyText('Actual', style: _Style.caption),
-          ],
-        ),
-        const SizedBox(width: 10),
-        _difference(),
-      ],
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [_allocation(), spacing, _actual(), spacing, _difference()]);
+  }
+
+  Widget _actual() {
+    if (holdings == null) return const CupertinoActivityIndicator();
+    final actualPercentage = holdings!.percentageContaining(currency).round();
+    final percentage =
+        MyText('$actualPercentage%', style: _Style.percentagesTextStyle);
+    const caption = MyText('Actual', style: _Style.caption);
+    return Column(children: [percentage, caption]);
+  }
+
+  Widget _allocation() {
+    final allocation = MyText(
+      '${currency.percentAllocation}%',
+      style: _Style.percentagesTextStyle,
     );
+    const caption = MyText('Allocated', style: _Style.caption);
+    return Column(children: [allocation, caption]);
   }
 
   Widget _difference() {
     final difference = holdings!.difference(currency);
     final Color color =
         difference >= 0 ? _Style.overheldColor : _Style.underheldColor;
-    return Column(
-      children: [
-        MyText('${difference.round()}%', style: _Style.differenceStyle(color)),
-        MyText(
-          difference >= 0 ? 'overheld' : 'underheld',
-          style: _Style.caption,
-        ),
-      ],
+    final diffText =
+        MyText('${difference.round()}%', style: _Style.differenceStyle(color));
+    final caption = MyText(
+      difference >= 0 ? 'overheld' : 'underheld',
+      style: _Style.caption,
     );
+    return Column(children: [diffText, caption]);
   }
 }
 
@@ -117,10 +98,10 @@ class _Style {
       percentagesTextStyle.copyWith(color: color);
 
   static const underheldColor = Colors.green;
-  static final overheldColor = Colors.red;
+  static const overheldColor = Colors.red;
   static final unselectedCardColor = Colors.grey[800];
   static final selectedCardColor = Colors.grey[700];
-  static final darkerText = TextStyle(color: Colors.grey[500]);
+  static final greyText = TextStyle(color: Colors.grey[500]);
   static final greenText = TextStyle(color: Colors.green[300]);
   static const heavyWeight = TextStyle(fontWeight: FontWeight.w700);
   static const mediumWeight = TextStyle(fontWeight: FontWeight.w500);
@@ -132,10 +113,10 @@ class _Style {
     color: Color.fromRGBO(150, 200, 255, 1),
   );
   static final callLettersTextStyle =
-      textSize.merge(heavyWeight).merge(darkerText);
+      textSize.merge(heavyWeight).merge(greyText);
   static final currencyNameTextStyle = textSize.merge(tight);
-  static final percentagesTextStyle = darkerText.merge(mediumWeight);
+  static final percentagesTextStyle = greyText.merge(mediumWeight);
   static final holdingValueTextStyle =
       textSize.merge(mediumWeight).merge(greenText);
-  static final ofStyle = textSize.merge(darkerText);
+  static final ofStyle = textSize.merge(greyText);
 }
