@@ -17,9 +17,9 @@ class MultistageActionExecutor extends ChangeNotifier {
 
   final _actions = Queue<_MultistageAction>();
 
-  void add(_MultistageAction action) {
+  Future<List<void>> add(_MultistageAction action) {
     _actions.addLast(action);
-    _onAdd();
+    return Future.wait([_onAdd()]);
   }
 
   Future<void> _onAdd() async {
@@ -27,8 +27,23 @@ class MultistageActionExecutor extends ChangeNotifier {
     // already executing.
     if (_actions.first._state == _MultistageActionState.scheduled) {
       _actions.first._state = _MultistageActionState.requesting;
-      await _actions.first.request();
+      await (_actions.first.request()).onError((error, stackTrace) =>
+          _actions.first._state = _MultistageActionState.error);
+      if (_actions.first.state == _MultistageActionState.error) {
+        notifyListeners();
+        _actions.removeFirst();
+      }
+      _actions.first._state = _MultistageActionState.verifying;
       notifyListeners();
+      await _actions.first.verify().onError((error, stackTrace) =>
+          _actions.first._state = _MultistageActionState.error);
+      if (_actions.first.state == _MultistageActionState.error) {
+        notifyListeners();
+        _actions.removeFirst();
+      }
+      _actions.first._state = _MultistageActionState.completeWithoutError;
+      notifyListeners();
+      _actions.removeFirst();
     }
   }
 }
@@ -85,13 +100,15 @@ class DepositAction extends _MultistageAction {
 class FakeAction extends _MultistageAction {
   @override
   Future<void> request() {
-    // TODO: implement request
-    throw UnimplementedError();
+    return Future.delayed(const Duration(seconds: 1), () {
+      print('$runtimeType request()');
+    });
   }
 
   @override
   Future<void> verify() {
-    // TODO: implement verify
-    throw UnimplementedError();
+    return Future.delayed(const Duration(seconds: 1), () {
+      print('$runtimeType verify()');
+    });
   }
 }

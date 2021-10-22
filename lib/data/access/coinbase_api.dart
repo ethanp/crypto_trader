@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:crypto_trader/import_facade/extensions.dart';
 import 'package:crypto_trader/import_facade/model.dart';
@@ -87,13 +88,15 @@ class CoinbaseApi {
     );
     if (postResponse.statusCode != 200) {
       if (postResponse.body.toLowerCase().contains('insufficient funds')) {
-        throw StateError('Insufficient Funds');
+        throw HttpException('Insufficient Funds', uri: url);
       } else {
-        throw StateError('\n\nError in POST $url from Coinbase API!\n'
+        throw HttpException(
+            '\n\nError in POST $url from Coinbase API!\n'
             'response code: ${postResponse.statusCode}\n'
             'response body: ${postResponse.body}\n'
             'sent headers: $headers\n'
-            'sent body: $body\n\n');
+            'sent body: $body\n\n',
+            uri: url);
       }
     }
     return postResponse.body;

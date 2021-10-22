@@ -5,12 +5,13 @@ include: package:lint/analysis_options.yaml
 linter:
   rules:
     # Given
-    sort_constructors_first: true
-    prefer_single_quotes: true
     avoid_classes_with_only_static_members: false
+    prefer_single_quotes: true
+    sort_constructors_first: true
 
     # Mine
-    only_throw_errors: true
-    require_trailing_commas: false
     avoid_print: false
     curly_braces_in_flow_control_structures: false
+    no_runtimeType_toString: false
+    only_throw_errors: true
+    require_trailing_commas: false
