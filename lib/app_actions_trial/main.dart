@@ -27,9 +27,11 @@ class AppActionsTrialTopLevel extends StatelessWidget {
                   const SizedBox(height: size),
                   _actionButton(executor, 'No error', FakeAction()),
                   const SizedBox(height: size),
-                  _actionButton(executor, 'Error on request', FakeAction()),
+                  _actionButton(
+                      executor, 'Error on request', ErrantRequestAction()),
                   const SizedBox(height: size),
-                  _actionButton(executor, 'Error on verify', FakeAction()),
+                  _actionButton(
+                      executor, 'Error on verify', ErrantVerifyAction()),
                 ],
               ),
             ),
@@ -55,8 +57,16 @@ class AppActionsTrialTopLevel extends StatelessWidget {
     );
   }
 
-  void _onPressed(MultistageActionExecutor executor, MultistageAction action) {
+  Future<void> _onPressed(
+    MultistageActionExecutor executor,
+    MultistageAction action,
+  ) async {
     print('Button pressed');
-    executor.add(action);
+    // Docs for this: https://dart.dev/codelabs/async-await#handling-errors
+    try {
+      await executor.add(action);
+    } on Exception catch (e) {
+      print('Caught exception $e');
+    }
   }
 }

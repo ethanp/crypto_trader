@@ -3,24 +3,17 @@ import 'package:crypto_trader/import_facade/model.dart';
 import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
 
-/*
- * TODO Finish this. Still haven't quite figured out how it's gonna work.
- *  Could be best to start out with a design doc.
- *  See diagram in https://lucid.app/lucidchart/6b93f504-d4fe-4678-ac79-7367588f256f/edit?invitationId=inv_b2451dd2-8c3a-4353-8815-b600572ba92d
- */
-
 /// Runs one [MultistageAction] at a time, and will [notifyListeners()] when
 /// the [_MultistageActionState] changes.
 class MultistageActionExecutor extends ChangeNotifier {
   final _synchronizer = Lock(reentrant: true);
-  MultistageAction? currAction = null;
+  MultistageAction? currAction;
 
-  Future<List<void>> add(MultistageAction action) =>
-      // This synchronization turns this Executor into an implicit Queue ADT.
-      _synchronizer.synchronized(() {
+  // This synchronization turns this Executor into an implicit Queue ADT.
+  Future<void> add(MultistageAction action) => _synchronizer.synchronized(() {
         print('starting $action');
         currAction = action;
-        return Future.wait([_onAdd()]);
+        return _onAdd();
       });
 
   Future<void> _onAdd() async {
@@ -28,23 +21,25 @@ class MultistageActionExecutor extends ChangeNotifier {
     if (action._state == _MultistageActionState.scheduled) {
       action._state = _MultistageActionState.requesting;
       notifyListeners();
-      await (action.request()).onError(
-          (error, stackTrace) => action._state = _MultistageActionState.error);
-      if (action.state == _MultistageActionState.error) {
-        print('Error case 1');
+      try {
+        await action.request();
+      } on Exception {
+        action._state = _MultistageActionState.error;
+        print('Error during request phase of $action');
         notifyListeners();
-        return;
+        rethrow;
       }
       action._state = _MultistageActionState.verifying;
       notifyListeners();
-      await action.verify().onError(
-          (error, stackTrace) => action._state = _MultistageActionState.error);
-      if (action.state == _MultistageActionState.error) {
-        print('Error case 2');
+      try {
+        await action.verify();
+      } on Exception {
+        action._state = _MultistageActionState.error;
+        print('Error during verify phase of $action');
         notifyListeners();
-        return;
+        rethrow;
       }
-      print('success case');
+      print('$action action succeeded');
       action._state = _MultistageActionState.completeWithoutError;
       notifyListeners();
     }
@@ -115,6 +110,38 @@ class FakeAction extends MultistageAction {
   Future<void> verify() {
     return Future.delayed(const Duration(seconds: 1), () {
       print('$runtimeType verify()');
+    });
+  }
+}
+
+class ErrantRequestAction extends MultistageAction {
+  @override
+  Future<void> request() {
+    return Future.delayed(const Duration(seconds: 1), () {
+      throw Exception('error from $runtimeType#request()');
+    });
+  }
+
+  @override
+  Future<void> verify() {
+    return Future.delayed(const Duration(seconds: 1), () {
+      print('ERROR: Should not have gotten here in $runtimeType');
+    });
+  }
+}
+
+class ErrantVerifyAction extends MultistageAction {
+  @override
+  Future<void> request() {
+    return Future.delayed(const Duration(seconds: 1), () {
+      print('$runtimeType request()');
+    });
+  }
+
+  @override
+  Future<void> verify() {
+    return Future.delayed(const Duration(seconds: 1), () {
+      throw Exception('error from $runtimeType#verify()');
     });
   }
 }
