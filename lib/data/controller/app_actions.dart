@@ -81,3 +81,17 @@ class DepositAction extends _MultistageAction {
     throw StateError('Operation timed out');
   }
 }
+
+class FakeAction extends _MultistageAction {
+  @override
+  Future<void> request() {
+    // TODO: implement request
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> verify() {
+    // TODO: implement verify
+    throw UnimplementedError();
+  }
+}

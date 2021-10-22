@@ -12,7 +12,7 @@ class AppActionsTrialTopLevel extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MultistageActionExecutor())
       ],
       builder: (context, _) {
-        context.watch<MultistageActionExecutor>();
+        final executor = context.watch<MultistageActionExecutor>();
         return MaterialApp(
           title: 'App actions trial',
           home: Scaffold(
@@ -21,7 +21,7 @@ class AppActionsTrialTopLevel extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   OutlinedButton(
-                    onPressed: _onPressed,
+                    onPressed: () => _onPressed(executor),
                     child: const Text('Start'),
                   ),
                   const SizedBox(height: 10),
@@ -35,7 +35,8 @@ class AppActionsTrialTopLevel extends StatelessWidget {
     );
   }
 
-  void _onPressed() {
+  void _onPressed(MultistageActionExecutor executor) {
     print('Button pressed');
+    executor.add(FakeAction());
   }
 }
