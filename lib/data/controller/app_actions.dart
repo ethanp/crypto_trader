@@ -10,14 +10,16 @@ import 'package:flutter/material.dart';
  *  See diagram in https://lucid.app/lucidchart/6b93f504-d4fe-4678-ac79-7367588f256f/edit?invitationId=inv_b2451dd2-8c3a-4353-8815-b600572ba92d
  */
 
-/// Runs one [_MultistageAction] at a time, and will [notifyListeners()] when
+/// Runs one [MultistageAction] at a time, and will [notifyListeners()] when
 /// the [_MultistageActionState] changes.
 class MultistageActionExecutor extends ChangeNotifier {
   // TODO probably needs a synchronization lock for each method?
 
-  final _actions = Queue<_MultistageAction>();
+  final _actions = Queue<MultistageAction>();
 
-  Future<List<void>> add(_MultistageAction action) {
+  Queue<MultistageAction> get actions => _actions;
+
+  Future<List<void>> add(MultistageAction action) {
     _actions.addLast(action);
     return Future.wait([_onAdd()]);
   }
@@ -27,20 +29,26 @@ class MultistageActionExecutor extends ChangeNotifier {
     // already executing.
     if (_actions.first._state == _MultistageActionState.scheduled) {
       _actions.first._state = _MultistageActionState.requesting;
+      notifyListeners();
       await (_actions.first.request()).onError((error, stackTrace) =>
           _actions.first._state = _MultistageActionState.error);
       if (_actions.first.state == _MultistageActionState.error) {
+        print('Error case 1');
         notifyListeners();
         _actions.removeFirst();
+        return;
       }
       _actions.first._state = _MultistageActionState.verifying;
       notifyListeners();
       await _actions.first.verify().onError((error, stackTrace) =>
           _actions.first._state = _MultistageActionState.error);
       if (_actions.first.state == _MultistageActionState.error) {
+        print('Error case 2');
         notifyListeners();
         _actions.removeFirst();
+        return;
       }
+      print('success case');
       _actions.first._state = _MultistageActionState.completeWithoutError;
       notifyListeners();
       _actions.removeFirst();
@@ -48,7 +56,7 @@ class MultistageActionExecutor extends ChangeNotifier {
   }
 }
 
-abstract class _MultistageAction {
+abstract class MultistageAction {
   var _state = _MultistageActionState.scheduled;
 
   get state => _state;
@@ -66,7 +74,7 @@ enum _MultistageActionState {
   error,
 }
 
-class DepositAction extends _MultistageAction {
+class DepositAction extends MultistageAction {
   DepositAction(this.amount);
 
   final Dollars amount;
@@ -97,7 +105,7 @@ class DepositAction extends _MultistageAction {
   }
 }
 
-class FakeAction extends _MultistageAction {
+class FakeAction extends MultistageAction {
   @override
   Future<void> request() {
     return Future.delayed(const Duration(seconds: 1), () {

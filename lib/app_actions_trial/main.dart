@@ -15,6 +15,9 @@ class AppActionsTrialTopLevel extends StatelessWidget {
         final executor = context.watch<MultistageActionExecutor>();
         const size = 40.0;
         const font = TextStyle(fontSize: size);
+        final text = executor.actions.isNotEmpty
+            ? executor.actions.first.state.toString()
+            : 'No action';
         return MaterialApp(
           title: 'App actions trial',
           home: Scaffold(
@@ -22,9 +25,9 @@ class AppActionsTrialTopLevel extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('State: Has not started', style: font),
+                  Text('State: $text', style: font),
                   const SizedBox(height: size),
-                  _startButton(executor, font),
+                  _actionButton(executor, font, FakeAction()),
                 ],
               ),
             ),
@@ -34,13 +37,14 @@ class AppActionsTrialTopLevel extends StatelessWidget {
     );
   }
 
-  Widget _startButton(
+  Widget _actionButton(
     MultistageActionExecutor executor,
     TextStyle font,
+    MultistageAction action,
   ) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(elevation: 10),
-      onPressed: () => _onPressed(executor),
+      onPressed: () => _onPressed(executor, action),
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Text('Start', style: font),
@@ -48,8 +52,8 @@ class AppActionsTrialTopLevel extends StatelessWidget {
     );
   }
 
-  void _onPressed(MultistageActionExecutor executor) {
+  void _onPressed(MultistageActionExecutor executor, MultistageAction action) {
     print('Button pressed');
-    executor.add(FakeAction());
+    executor.add(action);
   }
 }
