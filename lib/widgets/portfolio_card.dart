@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 /// Chip at the bottom displaying info about [holdings] of a particular
 /// [currency]. When it [isSelected], it is used as the graph currency.
 class PortfolioCard extends StatelessWidget {
-  /// Create a chip at the bottom displaying info about [holdings] of a
-  /// particular [currency].
   const PortfolioCard({
     required this.holdings,
     required this.currency,
