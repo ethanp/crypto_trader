@@ -1,21 +1,68 @@
-// TODO Finish this. Still haven't quite figured out how it's gonna work.
-//  Could be best to start out with a design doc.
-//  See diagram in https://lucid.app/lucidchart/6b93f504-d4fe-4678-ac79-7367588f256f/edit?invitationId=inv_b2451dd2-8c3a-4353-8815-b600572ba92d
 import 'dart:collection';
 
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:flutter/material.dart';
 
-class DepositAction extends AppAction {
+/*
+ * TODO Finish this. Still haven't quite figured out how it's gonna work.
+ *  Could be best to start out with a design doc.
+ *  See diagram in https://lucid.app/lucidchart/6b93f504-d4fe-4678-ac79-7367588f256f/edit?invitationId=inv_b2451dd2-8c3a-4353-8815-b600572ba92d
+ */
+
+/// Runs one [_MultistageAction] at a time, and will [notifyListeners()] when
+/// the [_MultistageActionState] changes.
+class MultistageActionExecutor extends ChangeNotifier {
+  // TODO probably needs a synchronization lock for each method?
+
+  final _actions = Queue<_MultistageAction>();
+
+  void add(_MultistageAction action) {
+    _actions.addLast(action);
+    _onAdd();
+  }
+
+  Future<void> _onAdd() async {
+    // If the _actions queue wasn't empty, it will have an action that was
+    // already executing.
+    if (_actions.first._state == _MultistageActionState.scheduled) {
+      _actions.first._state = _MultistageActionState.requesting;
+      await _actions.first.request();
+      notifyListeners();
+    }
+  }
+}
+
+abstract class _MultistageAction {
+  var _state = _MultistageActionState.scheduled;
+
+  get state => _state;
+
+  Future<void> request();
+
+  Future<void> verify();
+}
+
+enum _MultistageActionState {
+  scheduled,
+  requesting,
+  verifying,
+  completeWithoutError,
+  error,
+}
+
+class DepositAction extends _MultistageAction {
   DepositAction(this.amount);
 
   final Dollars amount;
-  late final Holdings holdingsCopy;
+  late final Dollars _originalDollarsHolding;
 
   @override
   Future<void> request() async {
-    holdingsCopy = (await Environment.trader.getMyHoldings()).copy();
+    // TODO catch errors (thrown at the bottom) here.
+    final holdings = await Environment.trader.getMyHoldings();
+    _originalDollarsHolding = holdings.dollarsOf(Currencies.dollars);
+    // TODO catch errors (thrown at the bottom) here.
     await Environment.trader.deposit(amount);
   }
 
@@ -24,43 +71,13 @@ class DepositAction extends AppAction {
     int numRuns = 0;
     while (numRuns++ < 6) {
       await Future.delayed(const Duration(seconds: 2));
+      // TODO catch errors (thrown at the bottom) here.
       final holdings = await Environment.trader.forceRefreshHoldings();
-      if (holdings != holdingsCopy) return;
+      final dollarsNow = holdings.dollarsOf(Currencies.dollars);
+      if (dollarsNow != _originalDollarsHolding) {
+        _state = _MultistageActionState.completeWithoutError;
+      }
     }
     throw StateError('Operation timed out');
-  }
-}
-
-enum _ActionState {
-  scheduled,
-  requesting,
-  verifying,
-  completeWithoutError,
-  error,
-}
-
-abstract class AppAction {
-  var state = _ActionState.scheduled;
-
-  Future<void> request();
-
-  Future<void> verify();
-}
-
-// TODO probably needs a synchronization lock.
-class Executor extends ChangeNotifier {
-  final _actions = Queue<AppAction>();
-
-  void add(AppAction action) {
-    _actions.addLast(action);
-    _onAdd();
-  }
-
-  Future<void> _onAdd() async {
-    if (_actions.first.state == _ActionState.scheduled) {
-      _actions.first.state = _ActionState.requesting;
-      await _actions.first.request();
-      notifyListeners();
-    }
   }
 }
