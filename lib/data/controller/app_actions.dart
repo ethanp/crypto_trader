@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:flutter/material.dart';
@@ -16,45 +14,37 @@ import 'package:synchronized/synchronized.dart';
 class MultistageActionExecutor extends ChangeNotifier {
   final _synchronizer = Lock(reentrant: true);
 
-  final _actions = Queue<MultistageAction>();
-
-  Queue<MultistageAction> get actions => _actions;
-
   Future<List<void>> add(MultistageAction action) =>
       _synchronizer.synchronized(() {
-        print('Adding $action');
-        _actions.addLast(action);
-        return Future.wait([_onAdd()]);
+        print('starting $action');
+        return Future.wait([_onAdd(action)]);
       });
 
-  Future<void> _onAdd() async {
+  Future<void> _onAdd(MultistageAction action) async {
     // If the _actions queue wasn't empty, it will have an action that was
     // already executing.
-    if (_actions.first._state == _MultistageActionState.scheduled) {
-      _actions.first._state = _MultistageActionState.requesting;
+    if (action._state == _MultistageActionState.scheduled) {
+      action._state = _MultistageActionState.requesting;
       notifyListeners();
-      await (_actions.first.request()).onError((error, stackTrace) =>
-          _actions.first._state = _MultistageActionState.error);
-      if (_actions.first.state == _MultistageActionState.error) {
+      await (action.request()).onError(
+          (error, stackTrace) => action._state = _MultistageActionState.error);
+      if (action.state == _MultistageActionState.error) {
         print('Error case 1');
         notifyListeners();
-        _actions.removeFirst();
         return;
       }
-      _actions.first._state = _MultistageActionState.verifying;
+      action._state = _MultistageActionState.verifying;
       notifyListeners();
-      await _actions.first.verify().onError((error, stackTrace) =>
-          _actions.first._state = _MultistageActionState.error);
-      if (_actions.first.state == _MultistageActionState.error) {
+      await action.verify().onError(
+          (error, stackTrace) => action._state = _MultistageActionState.error);
+      if (action.state == _MultistageActionState.error) {
         print('Error case 2');
         notifyListeners();
-        _actions.removeFirst();
         return;
       }
       print('success case');
-      _actions.first._state = _MultistageActionState.completeWithoutError;
+      action._state = _MultistageActionState.completeWithoutError;
       notifyListeners();
-      _actions.removeFirst();
     }
   }
 }
