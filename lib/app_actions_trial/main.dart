@@ -13,6 +13,8 @@ class AppActionsTrialTopLevel extends StatelessWidget {
       ],
       builder: (context, _) {
         final executor = context.watch<MultistageActionExecutor>();
+        const size = 40.0;
+        const font = TextStyle(fontSize: size);
         return MaterialApp(
           title: 'App actions trial',
           home: Scaffold(
@@ -20,12 +22,16 @@ class AppActionsTrialTopLevel extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  OutlinedButton(
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(elevation: 10),
                     onPressed: () => _onPressed(executor),
-                    child: const Text('Start'),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text('Start', style: font),
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  const Text('State: Has not started'),
+                  const SizedBox(height: size),
+                  const Text('State: Has not started', style: font),
                 ],
               ),
             ),
