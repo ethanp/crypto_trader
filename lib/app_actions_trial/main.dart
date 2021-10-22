@@ -22,22 +22,29 @@ class AppActionsTrialTopLevel extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(elevation: 10),
-                    onPressed: () => _onPressed(executor),
-                    child: const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text('Start', style: font),
-                    ),
-                  ),
-                  const SizedBox(height: size),
                   const Text('State: Has not started', style: font),
+                  const SizedBox(height: size),
+                  _startButton(executor, font),
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _startButton(
+    MultistageActionExecutor executor,
+    TextStyle font,
+  ) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(elevation: 10),
+      onPressed: () => _onPressed(executor),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Text('Start', style: font),
+      ),
     );
   }
 
