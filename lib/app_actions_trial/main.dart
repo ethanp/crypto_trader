@@ -13,11 +13,9 @@ class AppActionsTrialTopLevel extends StatelessWidget {
       ],
       builder: (context, _) {
         final executor = context.watch<MultistageActionExecutor>();
-        const size = 40.0;
+        const size = 30.0;
         const font = TextStyle(fontSize: size);
-        final text = executor.actions.isNotEmpty
-            ? executor.actions.first.state.toString()
-            : 'No action';
+        final text = executor.currAction?.state ?? 'No action';
         return MaterialApp(
           title: 'App actions trial',
           home: Scaffold(

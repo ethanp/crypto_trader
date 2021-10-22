@@ -13,16 +13,18 @@ import 'package:synchronized/synchronized.dart';
 /// the [_MultistageActionState] changes.
 class MultistageActionExecutor extends ChangeNotifier {
   final _synchronizer = Lock(reentrant: true);
+  MultistageAction? currAction = null;
 
   Future<List<void>> add(MultistageAction action) =>
+      // This synchronization turns this Executor into an implicit Queue ADT.
       _synchronizer.synchronized(() {
         print('starting $action');
-        return Future.wait([_onAdd(action)]);
+        currAction = action;
+        return Future.wait([_onAdd()]);
       });
 
-  Future<void> _onAdd(MultistageAction action) async {
-    // If the _actions queue wasn't empty, it will have an action that was
-    // already executing.
+  Future<void> _onAdd() async {
+    final action = currAction!;
     if (action._state == _MultistageActionState.scheduled) {
       action._state = _MultistageActionState.requesting;
       notifyListeners();
