@@ -28,6 +28,7 @@ class _SpendCardState extends State<SpendCard> {
     // Required in docs:
     // https://api.flutter.dev/flutter/widgets/TextEditingController-class.html
     _fieldController.dispose();
+    _currentFieldText.dispose();
     super.dispose();
   }
 

@@ -35,4 +35,6 @@ class Holdings {
 
   double difference(Currency currency) =>
       percentageContaining(currency) - currency.percentAllocation;
+
+  Holdings copy() => Holdings(holdings.map((e) => e.copy()));
 }

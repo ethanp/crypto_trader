@@ -12,4 +12,7 @@ class Holding {
   @override
   String toString() =>
       'Holding{currency: $currency, dollarValue: $dollarValue}';
+
+  Holding copy() =>
+      Holding(currency: currency, dollarValue: dollarValue.copy());
 }

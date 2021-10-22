@@ -21,7 +21,7 @@ class DepositDropdown extends StatelessWidget {
         enableFeedback: true,
         iconSize: 16,
         onChanged: (int? newValue) =>
-            context.read<DepositCardState>().value = newValue!.toString(),
+            context.read<DepositCardValue>().value = newValue!.toString(),
         items: [
           for (final dropdownValue in [10, 20, 50])
             DropdownMenuItem(

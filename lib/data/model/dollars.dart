@@ -22,4 +22,6 @@ class Dollars {
   Dollars operator /(Dollars o) => Dollars(amt / o.amt);
 
   double get rounded => double.parse(amt.toStringAsFixed(2));
+
+  Dollars copy() => Dollars(amt);
 }

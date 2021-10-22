@@ -9,6 +9,7 @@ import 'package:synchronized/synchronized.dart';
 abstract class Brokerage extends ChangeNotifier {
   final HoldingsCache _holdingsCache = HoldingsCache();
 
+  /// Makes it so that one spend() or deposit() can be active at a time.
   final _synchronizer = Lock(reentrant: true);
 
   /// Earnings = Holdings - Deposits.
