@@ -8,11 +8,7 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     UiRefresher.register(context);
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: const MyText('Crypto: auto-balancing DCA'),
-        leading: _refreshButton(context),
-      ),
+      appBar: _appBar(context),
       body: SafeArea(
         child: Column(children: [
           HoldingsFacts(),
@@ -20,6 +16,14 @@ class Body extends StatelessWidget {
           if (!_keyboardIsShowing(context)) Portfolio(),
         ]),
       ),
+    );
+  }
+
+  AppBar _appBar(BuildContext context) {
+    return AppBar(
+      elevation: 0,
+      title: const MyText('Crypto: auto-balancing DCA'),
+      leading: _refreshButton(context),
     );
   }
 

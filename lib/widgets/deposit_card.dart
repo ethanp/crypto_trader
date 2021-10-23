@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class DepositCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MultiProvider(
-      providers: [DepositCardValue.provider()],
+      providers: [ChangeNotifierProvider(create: (_) => DepositCardValue())],
       builder: (context, child) => WithHoldings(builder: (holdings) {
             final state = context.watch<DepositCardValue>();
             return Card(
@@ -52,7 +52,4 @@ class DepositCard extends StatelessWidget {
 
 class DepositCardValue extends ValueNotifier<String> {
   DepositCardValue() : super(50.toString());
-
-  static ChangeNotifierProvider provider() =>
-      ChangeNotifierProvider(create: (_) => DepositCardValue());
 }

@@ -14,8 +14,8 @@ class OutermostWidget extends StatelessWidget {
     _printWhichEnvironmentIsActive();
     return MultiProvider(
         providers: [
-          UiRefresher.provider(),
-          MultistageActionExecutor.provider(),
+          ChangeNotifierProvider(create: (_) => UiRefresher()),
+          ChangeNotifierProvider(create: (_) => MultistageActionExecutor()),
         ],
         child: _enableKeyboardHiding(
             child: MaterialApp(

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:synchronized/synchronized.dart';
 
 /// Runs one [MultistageAction] at a time, and will [notifyListeners()] when
@@ -58,9 +57,6 @@ class MultistageActionExecutor extends ChangeNotifier {
     action._state = _MultistageActionState.completeWithoutError;
     notifyListeners();
   }
-
-  static ChangeNotifierProvider provider() =>
-      ChangeNotifierProvider(create: (_) => MultistageActionExecutor());
 }
 
 abstract class MultistageAction {
