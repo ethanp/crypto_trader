@@ -92,17 +92,17 @@ class ChartData extends StatelessWidget {
 
     final tooltip = LineTouchData(
       touchTooltipData: LineTouchTooltipData(
-        getTooltipItems: (List<LineBarSpot> touchedSpots) =>
-            touchedSpots.map((touched) {
-          final millis = touched.x.toInt();
+        getTooltipItems: (touchedSpots) => touchedSpots.map((touchedSpot) {
+          final millis = touchedSpot.x.toInt();
           final dateTime = DateTime.fromMillisecondsSinceEpoch(millis);
           final day = DateFormat.E().format(dateTime);
           final date = DateFormat.MMMd().format(dateTime);
           final hourMin = DateFormat.jm().format(dateTime);
           final time = '$day $date\n$hourMin';
-          final dollars = Dollars(touched.y);
+          final dollars = Dollars(touchedSpot.y);
+          final text = '$dollars\n$time';
           const style = TextStyle(color: Colors.lightBlueAccent);
-          return LineTooltipItem('$dollars\n$time', style);
+          return LineTooltipItem(text, style);
         }).toList(),
       ),
     );
@@ -119,6 +119,7 @@ class ChartData extends StatelessWidget {
         borderData: greyBorder,
         lineTouchData: tooltip,
       ),
+      // Without this, swapping from Bitcoin to Cardano takes ~10sec.
       swapAnimationDuration: Duration.zero,
     );
 

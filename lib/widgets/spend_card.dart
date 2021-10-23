@@ -33,25 +33,24 @@ class _SpendCardState extends State<SpendCard> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return WithHoldings(builder: (holdings) {
-      _fillFieldWithInitialValue(holdings);
-      return Card(
-          shape: _roundedRectOuter(),
-          elevation: 5,
-          child: Container(
-              decoration: _roundedRectInner(),
-              height: MediaQuery.of(context).size.height / 6,
-              width: MediaQuery.of(context).size.width / 2.2,
-              child: Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 20),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [_title(holdings), _body()]))));
-    });
-  }
+  Widget build(BuildContext context) => WithHoldings(builder: (holdings) {
+        // Different placement of this may lead to different refresh semantics.
+        _fillFieldWithInitialValue(holdings);
+        return Card(
+            shape: _roundedRectOuter(),
+            elevation: 5,
+            child: Container(
+                decoration: _roundedRectInner(),
+                height: MediaQuery.of(context).size.height / 6,
+                width: MediaQuery.of(context).size.width / 2.2,
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 10, top: 20),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [_title(holdings), _body()]))));
+      });
 
-  Row _body() => Row(
+  Widget _body() => Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -64,7 +63,7 @@ class _SpendCardState extends State<SpendCard> {
         ],
       );
 
-  MyText _title(Holdings? holdings) => MyText(
+  Widget _title(Holdings? holdings) => MyText(
         'Buy ${holdings?.shortest.currency.name ?? '(Loading...)'}',
         fontSize: 18,
         color: Colors.grey[300],

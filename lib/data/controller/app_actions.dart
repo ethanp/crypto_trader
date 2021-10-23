@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
 
 /// Runs one [MultistageAction] at a time, and will [notifyListeners()] when
-/// the [_MultistageActionState] changes.
+/// the [MultistageActionState] changes.
 ///
 /// This class is testable using $BASE_DIR/lib/app_actions_trial/main.dart.
 class MultistageActionExecutor extends ChangeNotifier {
@@ -14,6 +14,9 @@ class MultistageActionExecutor extends ChangeNotifier {
 
   /// Only useful for debugging this class.
   MultistageAction? currAction;
+
+  MultistageActionState get state =>
+      currAction?.state ?? MultistageActionState.nonExistent;
 
   // This synchronization turns this Executor into an implicit Queue ADT.
   Future<void> add(MultistageAction action) =>
@@ -25,14 +28,20 @@ class MultistageActionExecutor extends ChangeNotifier {
         _complete(action);
       });
 
+  bool get isRunning => [
+        MultistageActionState.scheduled,
+        MultistageActionState.requesting,
+        MultistageActionState.verifying
+      ].contains(state);
+
   Future<void> _request(MultistageAction action) async {
     // See https://dart.dev/codelabs/async-await#handling-errors
     try {
-      action._state = _MultistageActionState.requesting;
+      action._state = MultistageActionState.requesting;
       notifyListeners();
       await action.request();
     } on Exception {
-      action._state = _MultistageActionState.error;
+      action._state = MultistageActionState.error;
       print('Error during request phase of $action');
       notifyListeners();
       rethrow;
@@ -41,11 +50,11 @@ class MultistageActionExecutor extends ChangeNotifier {
 
   Future<void> _verify(MultistageAction action) async {
     try {
-      action._state = _MultistageActionState.verifying;
+      action._state = MultistageActionState.verifying;
       notifyListeners();
       await action.verify();
     } on Exception {
-      action._state = _MultistageActionState.error;
+      action._state = MultistageActionState.error;
       print('Error during verify phase of $action');
       notifyListeners();
       rethrow;
@@ -54,15 +63,15 @@ class MultistageActionExecutor extends ChangeNotifier {
 
   void _complete(MultistageAction action) {
     print('$action action succeeded');
-    action._state = _MultistageActionState.completeWithoutError;
+    action._state = MultistageActionState.completeWithoutError;
     notifyListeners();
   }
 }
 
 abstract class MultistageAction {
-  var _state = _MultistageActionState.scheduled;
+  var _state = MultistageActionState.scheduled;
 
-  get state => _state;
+  MultistageActionState get state => _state;
 
   Future<void> request();
 
@@ -72,7 +81,8 @@ abstract class MultistageAction {
   String toString() => '$runtimeType{_state: $_state}';
 }
 
-enum _MultistageActionState {
+enum MultistageActionState {
+  nonExistent,
   scheduled,
   requesting,
   verifying,
