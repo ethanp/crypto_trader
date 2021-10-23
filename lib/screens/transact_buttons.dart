@@ -27,9 +27,31 @@ class TransactButtons extends StatelessWidget {
           title: 'Cash available',
           value: holdings?.dollarsOf(Currencies.dollars).toString()));
 
-  Widget _actionProgress(MultistageActionExecutor executor) => Padding(
-      padding: const EdgeInsets.all(20),
-      child: Text(executor.state.toString()));
+  String _stageName(MultistageActionState state) {
+    switch (state) {
+      case MultistageActionState.scheduled:
+        return 'Scheduled';
+      case MultistageActionState.requesting:
+        return 'Requesting';
+      case MultistageActionState.verifying:
+        return 'Requesting';
+      case MultistageActionState.success:
+        return 'Completed without any errors';
+      case MultistageActionState.errorDuringRequest:
+        return 'Aborted due to error, s';
+      case MultistageActionState.errorDuringVerify:
+        return 'Aborted due to error, s';
+
+      default:
+        throw Exception('Insufficient switch case: $state');
+    }
+  }
+
+  Widget _actionProgress(MultistageActionExecutor executor) {
+    return Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text(_stageName(executor.state)));
+  }
 
   Widget _transactionCards() => Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -40,8 +40,9 @@ class MultistageActionExecutor extends ChangeNotifier {
       action._state = MultistageActionState.requesting;
       notifyListeners();
       await action.request();
-    } on Exception {
-      action._state = MultistageActionState.error;
+    } on Exception catch (e) {
+      action._state = MultistageActionState.errorDuringRequest;
+      action.error = e;
       print('Error during request phase of $action');
       notifyListeners();
       rethrow;
@@ -53,8 +54,9 @@ class MultistageActionExecutor extends ChangeNotifier {
       action._state = MultistageActionState.verifying;
       notifyListeners();
       await action.verify();
-    } on Exception {
-      action._state = MultistageActionState.error;
+    } on Exception catch (e) {
+      action._state = MultistageActionState.errorDuringVerify;
+      action.error = e;
       print('Error during verify phase of $action');
       notifyListeners();
       rethrow;
@@ -63,13 +65,22 @@ class MultistageActionExecutor extends ChangeNotifier {
 
   void _complete(MultistageAction action) {
     print('$action action succeeded');
-    action._state = MultistageActionState.completeWithoutError;
+    action._state = MultistageActionState.success;
     notifyListeners();
   }
 }
 
 abstract class MultistageAction {
   var _state = MultistageActionState.scheduled;
+
+  // Clarification on terminology:
+  //
+  // [Exception] = the standard Dart term for a non-terminal failure condition
+  //
+  // "error"     = standard English term denoting something that went wrong
+  //               during an operation
+  //
+  Exception? error;
 
   MultistageActionState get state => _state;
 
@@ -86,8 +97,9 @@ enum MultistageActionState {
   scheduled,
   requesting,
   verifying,
-  completeWithoutError,
-  error,
+  success,
+  errorDuringRequest,
+  errorDuringVerify,
 }
 
 class TransactAction extends MultistageAction {
