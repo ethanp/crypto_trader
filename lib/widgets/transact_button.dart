@@ -1,9 +1,11 @@
+import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/ui_refresher.dart';
 import 'package:crypto_trader/import_facade/util.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// UI [Button] that triggers a financial transaction.
 class TransactButton extends StatelessWidget {
@@ -28,23 +30,28 @@ class TransactButton extends StatelessWidget {
         ),
       );
 
-  void _transact(BuildContext context) {
+  Future<void> _transact(BuildContext context) async {
     // Get the NEWEST version of the input text.
-    if (!_inputIsValid(amount.value))
-      return _inputSnackbar(context, amount.value);
+    final userAmt = amount.value;
+    if (AmountField.validateAmount(userAmt) != null)
+      return _inputSnackbar(context, userAmt);
     MySnackbar.simple(
-      text: 'Transacting ${amount.value}',
+      text: 'Transacting $userAmt',
       duration: const Duration(seconds: 2),
       context: context,
     );
-    _triggerAction(amount.value)
-        // There must be some way to clean this up.
-        .then((_) {}, onError: (Object err) => _showError(context, err))
-        .then((_) => _eventuallyRefresh(context));
+    try {
+      final executor = context.read<MultistageActionExecutor>();
+      final cmd = TransactAction(Dollars(double.parse(userAmt)), action);
+      await executor.add(cmd);
+    } catch (err) {
+      _showError(context, err);
+    } finally {
+      // TODO Remove this, context.watch<Executor> should be sufficient if
+      //  placed in the right build() impls.
+      UiRefresher.refresh(context);
+    }
   }
-
-  Future<String> _triggerAction(String amount) =>
-      action(Dollars(double.parse(amount)));
 
   void _inputSnackbar(BuildContext context, String amount) => MySnackbar.simple(
         context: context,
@@ -58,20 +65,4 @@ class TransactButton extends StatelessWidget {
         text: err.toString(),
         duration: const Duration(minutes: 1),
       );
-
-  Future<void> _eventuallyRefresh(BuildContext context) {
-    MySnackbar.simple(
-      context: context,
-      text: 'Waiting for Coinbase to update',
-      duration: const Duration(seconds: 3),
-    );
-    print('Scheduling refresh');
-    // We need this delay because the transfer from Schwab takes a
-    // few seconds to be reflected. 4 wasn't enough so using 8.
-    return Future.delayed(
-        const Duration(seconds: 8), () => UiRefresher.refresh(context));
-  }
-
-  static bool _inputIsValid(String? input) =>
-      AmountField.validateAmount(input) == null;
 }

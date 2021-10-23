@@ -80,8 +80,8 @@ enum _MultistageActionState {
   error,
 }
 
-abstract class TransferAction extends MultistageAction {
-  TransferAction(this.amount, this.fun);
+class TransactAction extends MultistageAction {
+  TransactAction(this.amount, this.fun);
 
   final Future<String> Function(Dollars) fun;
   final Dollars amount;
@@ -113,14 +113,6 @@ abstract class TransferAction extends MultistageAction {
     final dollarsNow = holdings.dollarsOf(Currencies.dollars);
     return dollarsNow;
   }
-}
-
-class DepositAction extends TransferAction {
-  DepositAction(Dollars amount) : super(amount, Environment.trader.deposit);
-}
-
-class SpendAction extends TransferAction {
-  SpendAction(Dollars amount) : super(amount, Environment.trader.spend);
 }
 
 class FakeAction extends MultistageAction {

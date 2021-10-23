@@ -35,9 +35,10 @@ class AppActionsTrialTopLevel extends StatelessWidget {
                           executor, 'Error on request', ErrantRequestAction()),
                       ActionButton(
                           executor, 'Error on verify', ErrantVerifyAction()),
-                      ActionButton(
-                          executor, 'Deposit $amount', DepositAction(amount)),
-                      ActionButton(executor, buyText, SpendAction(amount)),
+                      ActionButton(executor, 'Deposit $amount',
+                          TransactAction(amount, Environment.trader.deposit)),
+                      ActionButton(executor, buyText,
+                          TransactAction(amount, Environment.trader.spend)),
                     ]
                         .expand(
                             (element) => [const SizedBox(height: 10), element])
