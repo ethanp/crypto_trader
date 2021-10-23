@@ -1,6 +1,7 @@
 import 'package:crypto_trader/data/access/granularity.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/extensions.dart';
+import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +90,23 @@ class ChartData extends StatelessWidget {
       leftTitles: yAxisLabels,
     );
 
+    final tooltip = LineTouchData(
+      touchTooltipData: LineTouchTooltipData(
+        getTooltipItems: (List<LineBarSpot> touchedSpots) =>
+            touchedSpots.map((touched) {
+          final millis = touched.x.toInt();
+          final dateTime = DateTime.fromMillisecondsSinceEpoch(millis);
+          final day = DateFormat.E().format(dateTime);
+          final date = DateFormat.MMMd().format(dateTime);
+          final hourMin = DateFormat.jm().format(dateTime);
+          final time = '$day $date\n$hourMin';
+          final dollars = Dollars(touched.y);
+          const style = TextStyle(color: Colors.lightBlueAccent);
+          return LineTooltipItem('$dollars\n$time', style);
+        }).toList(),
+      ),
+    );
+
     final lineChart = LineChart(
       LineChartData(
         minX: minX,
@@ -99,6 +117,7 @@ class ChartData extends StatelessWidget {
         lineBarsData: [_priceData()],
         gridData: greyVertAndHorizGrid,
         borderData: greyBorder,
+        lineTouchData: tooltip,
       ),
       swapAnimationDuration: Duration.zero,
     );
@@ -112,7 +131,7 @@ class ChartData extends StatelessWidget {
   }
 
   LineChartBarData _priceData() {
-    const _gradientColors = [Color(0xFF64B5F6), Color(0xFF69F0AE)];
+    const _gradientColors = [Colors.lightBlueAccent, Colors.tealAccent];
     return LineChartBarData(
       spots: candles
           .map((c) => FlSpot(

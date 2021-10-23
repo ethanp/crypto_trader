@@ -60,8 +60,7 @@ class CandlesCache extends CachedValue<List<Candle>> {
   final Granularity granularity;
 
   @override
-  String toString() =>
-      'CandlesCache{currency: $currency, granularity: $granularity}';
+  String toString() => '$runtimeType($currency, $granularity)';
 
   @override
   Future<List<Candle>> _retrieve() =>
