@@ -61,28 +61,19 @@ class PriceChart extends StatelessWidget {
         ),
         enableFeedback: true,
         onChanged: (Granularity? newValue) => state.setGranularity(newValue!),
-        items: [
-          for (final dropdownValue in Granularities.all)
-            DropdownMenuItem(
-              value: dropdownValue,
-              child: Text(
-                dropdownValue.toString(),
-                style: const TextStyle(fontSize: 14),
-              ),
-            )
-        ],
+        items: _dropdownItems(),
       ),
     );
   }
-}
 
-class CurrentGranularity extends ChangeNotifier {
-  var _granularity = Granularities.days;
-
-  Granularity get granularity => _granularity;
-
-  void setGranularity(Granularity granularity) {
-    _granularity = granularity;
-    notifyListeners();
-  }
+  List<DropdownMenuItem<Granularity>> _dropdownItems() => [
+        for (final dropdownValue in Granularities.all)
+          DropdownMenuItem(
+            value: dropdownValue,
+            child: Text(
+              dropdownValue.toString(),
+              style: const TextStyle(fontSize: 14),
+            ),
+          )
+      ];
 }
