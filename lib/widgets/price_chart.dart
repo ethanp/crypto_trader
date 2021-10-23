@@ -49,22 +49,20 @@ class PriceChart extends StatelessWidget {
         ),
       );
 
-  Widget _granularityDropdown(PortfolioState state) {
-    return SizedBox(
-      width: 140,
-      height: 45,
-      child: DropdownButtonFormField<Granularity>(
-        value: state.granularity,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.grey[800],
+  Widget _granularityDropdown(PortfolioState state) => SizedBox(
+        width: 140,
+        height: 45,
+        child: DropdownButtonFormField<Granularity>(
+          value: state.granularity,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[800],
+          ),
+          enableFeedback: true,
+          onChanged: (Granularity? newValue) => state.setGranularity(newValue!),
+          items: _dropdownItems(),
         ),
-        enableFeedback: true,
-        onChanged: (Granularity? newValue) => state.setGranularity(newValue!),
-        items: _dropdownItems(),
-      ),
-    );
-  }
+      );
 
   List<DropdownMenuItem<Granularity>> _dropdownItems() => [
         for (final dropdownValue in Granularities.all)

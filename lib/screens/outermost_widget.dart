@@ -13,15 +13,15 @@ class OutermostWidget extends StatelessWidget {
     _alwaysRenderInPortraitOrientation();
     _printWhichEnvironmentIsActive();
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => UiRefresher())],
-      child: _enableKeyboardHiding(
-        child: MaterialApp(
-          theme: ThemeData.dark(),
-          title: 'Crypto Trader',
-          home: Body(),
-        ),
-      ),
-    );
+        providers: [
+          UiRefresher.provider(),
+          MultistageActionExecutor.provider(),
+        ],
+        child: _enableKeyboardHiding(
+            child: MaterialApp(
+                theme: ThemeData.dark(),
+                title: 'Crypto Trader',
+                home: Body())));
   }
 
   void _printWhichEnvironmentIsActive() =>
@@ -31,11 +31,9 @@ class OutermostWidget extends StatelessWidget {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   /// Hide the keyboard on global tap.
-  Widget _enableKeyboardHiding({required Widget child}) {
-    return GestureDetector(
-      /// Source: https://stackoverflow.com/a/62327156/1959155
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: child,
-    );
-  }
+  Widget _enableKeyboardHiding({required Widget child}) => GestureDetector(
+        /// Source: https://stackoverflow.com/a/62327156/1959155
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: child,
+      );
 }

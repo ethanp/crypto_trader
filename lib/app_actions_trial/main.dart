@@ -1,4 +1,5 @@
 import 'package:crypto_trader/data/controller/app_actions.dart';
+import 'package:crypto_trader/import_facade/model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +14,7 @@ class AppActionsTrialTopLevel extends StatelessWidget {
       ],
       builder: (context, _) {
         final executor = context.watch<MultistageActionExecutor>();
-        const size = 30.0;
+        const size = 15.0;
         const font = TextStyle(fontSize: size);
         final text = executor.currAction?.state ?? 'No action';
         return MaterialApp(
@@ -24,15 +25,16 @@ class AppActionsTrialTopLevel extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('State: $text', style: font),
-                  const SizedBox(height: size),
                   _actionButton(executor, 'No error', FakeAction()),
-                  const SizedBox(height: size),
                   _actionButton(
                       executor, 'Error on request', ErrantRequestAction()),
-                  const SizedBox(height: size),
                   _actionButton(
                       executor, 'Error on verify', ErrantVerifyAction()),
-                ],
+                  _actionButton(
+                      executor, 'Deposit \$10', DepositAction(Dollars(10))),
+                ]
+                    .expand((element) => [const SizedBox(height: 10), element])
+                    .toList(),
               ),
             ),
           ),
@@ -46,7 +48,7 @@ class AppActionsTrialTopLevel extends StatelessWidget {
     String text,
     MultistageAction action,
   ) {
-    const font = TextStyle(fontSize: 25);
+    const font = TextStyle(fontSize: 20);
     return ElevatedButton(
       style: ElevatedButton.styleFrom(elevation: 10),
       onPressed: () => _onPressed(executor, action),

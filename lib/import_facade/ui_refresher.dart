@@ -17,4 +17,7 @@ class UiRefresher extends ChangeNotifier {
     Environment.prices.forceRefresh();
     notifyListeners();
   }
+
+  static ChangeNotifierProvider provider() =>
+      ChangeNotifierProvider(create: (_) => UiRefresher());
 }

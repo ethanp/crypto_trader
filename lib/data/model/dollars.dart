@@ -22,4 +22,12 @@ class Dollars {
   Dollars operator /(Dollars o) => Dollars(amt / o.amt);
 
   double get rounded => double.parse(amt.toStringAsFixed(2));
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Dollars && runtimeType == other.runtimeType && amt == other.amt;
+
+  @override
+  int get hashCode => amt.hashCode;
 }

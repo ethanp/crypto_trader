@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:synchronized/synchronized.dart';
 
 /// Runs one [MultistageAction] at a time, and will [notifyListeners()] when
@@ -9,44 +12,55 @@ import 'package:synchronized/synchronized.dart';
 /// This class is testable using $BASE_DIR/lib/app_actions_trial/main.dart.
 class MultistageActionExecutor extends ChangeNotifier {
   final _synchronizer = Lock(reentrant: true);
+
+  /// Only useful for debugging this class.
   MultistageAction? currAction;
 
   // This synchronization turns this Executor into an implicit Queue ADT.
-  Future<void> add(MultistageAction action) => _synchronizer.synchronized(() {
+  Future<void> add(MultistageAction action) =>
+      _synchronizer.synchronized(() async {
         print('starting $action');
         currAction = action;
-        return _onAdd();
+        await _request(action);
+        await _verify(action);
+        _complete(action);
       });
 
-  Future<void> _onAdd() async {
-    final action = currAction!;
-    if (action._state == _MultistageActionState.scheduled) {
+  Future<void> _request(MultistageAction action) async {
+    // See https://dart.dev/codelabs/async-await#handling-errors
+    try {
       action._state = _MultistageActionState.requesting;
       notifyListeners();
-      // Docs for this: https://dart.dev/codelabs/async-await#handling-errors
-      try {
-        await action.request();
-      } on Exception {
-        action._state = _MultistageActionState.error;
-        print('Error during request phase of $action');
-        notifyListeners();
-        rethrow;
-      }
-      action._state = _MultistageActionState.verifying;
+      await action.request();
+    } on Exception {
+      action._state = _MultistageActionState.error;
+      print('Error during request phase of $action');
       notifyListeners();
-      try {
-        await action.verify();
-      } on Exception {
-        action._state = _MultistageActionState.error;
-        print('Error during verify phase of $action');
-        notifyListeners();
-        rethrow;
-      }
-      print('$action action succeeded');
-      action._state = _MultistageActionState.completeWithoutError;
-      notifyListeners();
+      rethrow;
     }
   }
+
+  Future<void> _verify(MultistageAction action) async {
+    try {
+      action._state = _MultistageActionState.verifying;
+      notifyListeners();
+      await action.verify();
+    } on Exception {
+      action._state = _MultistageActionState.error;
+      print('Error during verify phase of $action');
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  void _complete(MultistageAction action) {
+    print('$action action succeeded');
+    action._state = _MultistageActionState.completeWithoutError;
+    notifyListeners();
+  }
+
+  static ChangeNotifierProvider provider() =>
+      ChangeNotifierProvider(create: (_) => MultistageActionExecutor());
 }
 
 abstract class MultistageAction {
@@ -78,26 +92,29 @@ class DepositAction extends MultistageAction {
 
   @override
   Future<void> request() async {
-    // TODO catch errors (thrown at the bottom) here.
-    final holdings = await Environment.trader.getMyHoldings();
-    _originalDollarsHolding = holdings.dollarsOf(Currencies.dollars);
-    // TODO catch errors (thrown at the bottom) here.
+    _originalDollarsHolding = await _dollarsNow();
+    print('Original dollars: $_originalDollarsHolding');
     await Environment.trader.deposit(amount);
   }
 
   @override
   Future<void> verify() async {
-    int numRuns = 0;
-    while (numRuns++ < 6) {
+    for (int numRuns = 0; numRuns < 6; numRuns++) {
       await Future.delayed(const Duration(seconds: 2));
-      // TODO catch errors (thrown at the bottom) here.
-      final holdings = await Environment.trader.forceRefreshHoldings();
-      final dollarsNow = holdings.dollarsOf(Currencies.dollars);
+      final dollarsNow = await _dollarsNow();
       if (dollarsNow != _originalDollarsHolding) {
-        _state = _MultistageActionState.completeWithoutError;
+        print('Updated dollars: $dollarsNow');
+        return;
       }
+      print('Deposited amount has not been received yet');
     }
-    throw StateError('Operation timed out');
+    throw TimeoutException('Operation timed out');
+  }
+
+  Future<Dollars> _dollarsNow() async {
+    final holdings = await Environment.trader.forceRefreshHoldings();
+    final dollarsNow = holdings.dollarsOf(Currencies.dollars);
+    return dollarsNow;
   }
 }
 

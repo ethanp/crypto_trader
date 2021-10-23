@@ -18,17 +18,15 @@ class TransactButton extends StatelessWidget {
   final ValueNotifier<String> amount;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 35,
-      child: FloatingActionButton(
-        elevation: 4,
-        onPressed: () => _transact(context),
-        backgroundColor: color,
-        child: const Icon(Icons.play_arrow_rounded),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => SizedBox(
+        height: 35,
+        child: FloatingActionButton(
+          elevation: 4,
+          onPressed: () => _transact(context),
+          backgroundColor: color,
+          child: const Icon(Icons.play_arrow_rounded),
+        ),
+      );
 
   void _transact(BuildContext context) {
     // Get the NEWEST version of the input text.
