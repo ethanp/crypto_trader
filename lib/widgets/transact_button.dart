@@ -43,8 +43,8 @@ class TransactButton extends StatelessWidget {
       throw Exception('Should not have invalid amount $userAmt');
     MySnackbar(context, 'Transacting $userAmt', const Duration(seconds: 2));
     try {
-      final executor = context.read<MultistageActionExecutor>();
-      final cmd = TransactAction(Dollars(double.parse(userAmt)), action);
+      final executor = context.read<MultistageCommandExecutor>();
+      final cmd = TransactCommand(Dollars(double.parse(userAmt)), action);
       await executor.add(cmd);
     } catch (err) {
       MySnackbar(context, err.toString(), const Duration(seconds: 20));

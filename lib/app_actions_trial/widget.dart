@@ -9,13 +9,13 @@ class AppActionsTrialTopLevel extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => MultistageActionExecutor())
+        ChangeNotifierProvider(create: (_) => MultistageCommandExecutor())
       ],
       builder: (context, _) {
-        final executor = context.watch<MultistageActionExecutor>();
+        final executor = context.watch<MultistageCommandExecutor>();
         const size = 15.0;
         const font = TextStyle(fontSize: size);
-        final text = executor.currAction?.state ?? 'No action';
+        final text = executor.currCommand?.state ?? 'No action';
         return MaterialApp(
           title: 'App actions trial',
           home: Scaffold(
@@ -30,15 +30,15 @@ class AppActionsTrialTopLevel extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('State: $text', style: font),
-                      ActionButton(executor, 'No error', FakeAction()),
+                      ActionButton(executor, 'No error', FakeCommand()),
                       ActionButton(
-                          executor, 'Error on request', ErrantRequestAction()),
+                          executor, 'Error on request', ErrantRequestCommand()),
                       ActionButton(
-                          executor, 'Error on verify', ErrantVerifyAction()),
+                          executor, 'Error on verify', ErrantVerifyCommand()),
                       ActionButton(executor, 'Deposit $amount',
-                          TransactAction(amount, Environment.trader.deposit)),
+                          TransactCommand(amount, Environment.trader.deposit)),
                       ActionButton(executor, buyText,
-                          TransactAction(amount, Environment.trader.spend)),
+                          TransactCommand(amount, Environment.trader.spend)),
                     ]
                         .expand(
                             (element) => [const SizedBox(height: 10), element])
@@ -55,23 +55,23 @@ class AppActionsTrialTopLevel extends StatelessWidget {
 }
 
 class ActionButton extends StatelessWidget {
-  const ActionButton(this.executor, this.text, this.action);
+  const ActionButton(this.executor, this.text, this.command);
 
-  final MultistageActionExecutor executor;
+  final MultistageCommandExecutor executor;
   final String text;
-  final MultistageAction action;
+  final MultistageCommand command;
 
   @override
   Widget build(BuildContext context) => ElevatedButton(
       style: ElevatedButton.styleFrom(elevation: 10),
-      onPressed: () => _onPressed(executor, action),
+      onPressed: () => _onPressed(executor, command),
       child: Padding(
           padding: const EdgeInsets.all(8),
           child: Text(text, style: const TextStyle(fontSize: 20))));
 
   Future<void> _onPressed(
-    MultistageActionExecutor executor,
-    MultistageAction action,
+    MultistageCommandExecutor executor,
+    MultistageCommand action,
   ) async {
     print('Button pressed');
     // Docs for this: https://dart.dev/codelabs/async-await#handling-errors

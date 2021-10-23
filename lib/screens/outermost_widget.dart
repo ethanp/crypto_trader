@@ -15,7 +15,7 @@ class OutermostWidget extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => UiRefresher()),
-          ChangeNotifierProvider(create: (_) => MultistageActionExecutor()),
+          ChangeNotifierProvider(create: (_) => MultistageCommandExecutor()),
         ],
         child: _enableKeyboardHiding(
             child: MaterialApp(

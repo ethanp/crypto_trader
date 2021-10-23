@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class TransactButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final executor = context.watch<MultistageActionExecutor>();
+    final executor = context.watch<MultistageCommandExecutor>();
     return Container(
         color: Colors.grey[800],
         child: Padding(
@@ -27,19 +27,19 @@ class TransactButtons extends StatelessWidget {
           title: 'Cash available',
           value: holdings?.dollarsOf(Currencies.dollars).toString()));
 
-  String _stageName(MultistageActionState state) {
+  String _stageName(MultistageCommandState state) {
     switch (state) {
-      case MultistageActionState.scheduled:
+      case MultistageCommandState.scheduled:
         return 'Scheduled';
-      case MultistageActionState.requesting:
+      case MultistageCommandState.requesting:
         return 'Requesting';
-      case MultistageActionState.verifying:
+      case MultistageCommandState.verifying:
         return 'Requesting';
-      case MultistageActionState.success:
+      case MultistageCommandState.success:
         return 'Completed without any errors';
-      case MultistageActionState.errorDuringRequest:
+      case MultistageCommandState.errorDuringRequest:
         return 'Aborted due to error, s';
-      case MultistageActionState.errorDuringVerify:
+      case MultistageCommandState.errorDuringVerify:
         return 'Aborted due to error, s';
 
       default:
@@ -47,7 +47,7 @@ class TransactButtons extends StatelessWidget {
     }
   }
 
-  Widget _actionProgress(MultistageActionExecutor executor) {
+  Widget _actionProgress(MultistageCommandExecutor executor) {
     return Padding(
         padding: const EdgeInsets.all(20),
         child: Text(_stageName(executor.state)));

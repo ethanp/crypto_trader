@@ -5,73 +5,76 @@ import 'package:crypto_trader/import_facade/model.dart';
 import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
 
-/// Runs one [MultistageAction] at a time, and will [notifyListeners()] when
-/// the [MultistageActionState] changes.
+/// Runs one [MultistageCommand] at a time, and will [notifyListeners()] when
+/// the [MultistageCommandState] changes.
 ///
 /// This class is testable using $BASE_DIR/lib/app_actions_trial/main.dart.
-class MultistageActionExecutor extends ChangeNotifier {
+class MultistageCommandExecutor extends ChangeNotifier {
   final _synchronizer = Lock(reentrant: true);
 
   /// Only useful for debugging this class.
-  MultistageAction? currAction;
+  MultistageCommand? currCommand;
 
-  MultistageActionState get state =>
-      currAction?.state ?? MultistageActionState.nonExistent;
+  MultistageCommandState get state =>
+      currCommand?.state ?? MultistageCommandState.nonExistent;
 
   // This synchronization turns this Executor into an implicit Queue ADT.
-  Future<void> add(MultistageAction action) =>
+  Future<void> add(MultistageCommand command) =>
       _synchronizer.synchronized(() async {
-        print('starting $action');
-        currAction = action;
-        await _request(action);
-        await _verify(action);
-        _complete(action);
+        print('starting $command');
+        currCommand = command;
+        await _request(command);
+        await _verify(command);
+        _complete(command);
       });
 
   bool get isRunning => [
-        MultistageActionState.scheduled,
-        MultistageActionState.requesting,
-        MultistageActionState.verifying
+        MultistageCommandState.scheduled,
+        MultistageCommandState.requesting,
+        MultistageCommandState.verifying
       ].contains(state);
 
-  Future<void> _request(MultistageAction action) async {
+  Future<void> _request(MultistageCommand command) async {
     // See https://dart.dev/codelabs/async-await#handling-errors
     try {
-      action._state = MultistageActionState.requesting;
+      command._state = MultistageCommandState.requesting;
       notifyListeners();
-      await action.request();
+      await command.request();
     } on Exception catch (e) {
-      action._state = MultistageActionState.errorDuringRequest;
-      action.error = e;
-      print('Error during request phase of $action');
+      command._state = MultistageCommandState.errorDuringRequest;
+      command.error = e;
+      print('Error during request phase of $command');
       notifyListeners();
       rethrow;
     }
   }
 
-  Future<void> _verify(MultistageAction action) async {
+  Future<void> _verify(MultistageCommand command) async {
     try {
-      action._state = MultistageActionState.verifying;
+      command._state = MultistageCommandState.verifying;
       notifyListeners();
-      await action.verify();
+      await command.verify();
     } on Exception catch (e) {
-      action._state = MultistageActionState.errorDuringVerify;
-      action.error = e;
-      print('Error during verify phase of $action');
+      command._state = MultistageCommandState.errorDuringVerify;
+      command.error = e;
+      print('Error during verify phase of $command');
       notifyListeners();
       rethrow;
     }
   }
 
-  void _complete(MultistageAction action) {
-    print('$action action succeeded');
-    action._state = MultistageActionState.success;
+  void _complete(MultistageCommand command) {
+    print('$command command succeeded');
+    command._state = MultistageCommandState.success;
     notifyListeners();
   }
 }
 
-abstract class MultistageAction {
-  var _state = MultistageActionState.scheduled;
+/// This is an "interface" in the sense that other classes should refer to all
+/// instances of this with this static type. To prevent leaking implementation
+/// details and making things too coupled and hard to change in the future.
+abstract class MultistageCommand {
+  var _state = MultistageCommandState.scheduled;
 
   // Clarification on terminology:
   //
@@ -82,7 +85,7 @@ abstract class MultistageAction {
   //
   Exception? error;
 
-  MultistageActionState get state => _state;
+  MultistageCommandState get state => _state;
 
   Future<void> request();
 
@@ -92,7 +95,7 @@ abstract class MultistageAction {
   String toString() => '$runtimeType{_state: $_state}';
 }
 
-enum MultistageActionState {
+enum MultistageCommandState {
   nonExistent,
   scheduled,
   requesting,
@@ -102,8 +105,8 @@ enum MultistageActionState {
   errorDuringVerify,
 }
 
-class TransactAction extends MultistageAction {
-  TransactAction(this.amount, this.fun);
+class TransactCommand extends MultistageCommand {
+  TransactCommand(this.amount, this.fun);
 
   final Future<String> Function(Dollars) fun;
   final Dollars amount;
@@ -137,7 +140,7 @@ class TransactAction extends MultistageAction {
   }
 }
 
-class FakeAction extends MultistageAction {
+class FakeCommand extends MultistageCommand {
   @override
   Future<void> request() {
     return Future.delayed(const Duration(seconds: 1), () {
@@ -153,7 +156,7 @@ class FakeAction extends MultistageAction {
   }
 }
 
-class ErrantRequestAction extends MultistageAction {
+class ErrantRequestCommand extends MultistageCommand {
   @override
   Future<void> request() {
     return Future.delayed(const Duration(seconds: 1), () {
@@ -169,7 +172,7 @@ class ErrantRequestAction extends MultistageAction {
   }
 }
 
-class ErrantVerifyAction extends MultistageAction {
+class ErrantVerifyCommand extends MultistageCommand {
   @override
   Future<void> request() {
     return Future.delayed(const Duration(seconds: 1), () {
