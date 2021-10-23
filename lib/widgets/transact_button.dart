@@ -22,11 +22,17 @@ class TransactButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
         height: 35,
-        child: FloatingActionButton(
-          elevation: 4,
-          onPressed: () => _transact(context),
-          backgroundColor: color,
-          child: const Icon(Icons.play_arrow_rounded),
+        child: ValueListenableBuilder<String>(
+          valueListenable: amount,
+          builder: (context, value, child) {
+            final valid = AmountField.validateAmount(amount.value) == null;
+            return FloatingActionButton(
+              elevation: 7,
+              onPressed: valid ? () => _transact(context) : null,
+              backgroundColor: valid ? color : Colors.grey,
+              child: const Icon(Icons.attach_money),
+            );
+          },
         ),
       );
 
@@ -34,11 +40,7 @@ class TransactButton extends StatelessWidget {
     // Get the NEWEST version of the input text.
     final userAmt = amount.value;
     if (AmountField.validateAmount(userAmt) != null)
-      // Early return
-      // TODO we should disable the button when the amount is invalid, which
-      //  would make this happily-inaccessible code.
-      return MySnackbar(
-          context, 'Invalid amount \$$userAmt', const Duration(seconds: 3));
+      throw Exception('Should not have invalid amount $userAmt');
     MySnackbar(context, 'Transacting $userAmt', const Duration(seconds: 2));
     try {
       final executor = context.read<MultistageActionExecutor>();

@@ -25,7 +25,6 @@ class ChartData extends StatelessWidget {
     final Iterable<double> closingPrices = candles.map((c) => c.closingPrice);
     final minY = closingPrices.min;
     final maxY = closingPrices.max;
-    _debugPrintBounds(minX, maxX, minY, maxY);
 
     final greyBorder = FlBorderData(
       show: true,
@@ -110,12 +109,6 @@ class ChartData extends StatelessWidget {
         child: lineChart,
       ),
     );
-  }
-
-  void _debugPrintBounds(double minX, double maxX, double minY, double maxY) {
-    final minXPrint = DateTime.fromMillisecondsSinceEpoch(minX.toInt());
-    final maxXPrint = DateTime.fromMillisecondsSinceEpoch(maxX.toInt());
-    print('minX=$minXPrint maxX=$maxXPrint minY=$minY maxY=$maxY');
   }
 
   LineChartBarData _priceData() {
