@@ -34,7 +34,14 @@ class TransactButton extends StatelessWidget {
     // Get the NEWEST version of the input text.
     final userAmt = amount.value;
     if (AmountField.validateAmount(userAmt) != null)
-      return _inputSnackbar(context, userAmt);
+      // Early return
+      // TODO we should disable the button when the amount is invalid, which
+      //  would make this happily-inaccessible code.
+      return MySnackbar.simple(
+        context: context,
+        text: 'Invalid amount \$$userAmt',
+        duration: const Duration(seconds: 3),
+      );
     MySnackbar.simple(
       text: 'Transacting $userAmt',
       duration: const Duration(seconds: 2),
@@ -45,24 +52,15 @@ class TransactButton extends StatelessWidget {
       final cmd = TransactAction(Dollars(double.parse(userAmt)), action);
       await executor.add(cmd);
     } catch (err) {
-      _showError(context, err);
+      MySnackbar.simple(
+        context: context,
+        text: err.toString(),
+        duration: const Duration(seconds: 20),
+      );
     } finally {
       // TODO Remove this, context.watch<Executor> should be sufficient if
       //  placed in the right build() impls.
       UiRefresher.refresh(context);
     }
   }
-
-  void _inputSnackbar(BuildContext context, String amount) => MySnackbar.simple(
-        context: context,
-        text: 'Invalid amount \$$amount',
-        duration: const Duration(seconds: 3),
-      );
-
-  // TODO change the color: make it redder too.
-  void _showError(BuildContext context, Object err) => MySnackbar.simple(
-        context: context,
-        text: err.toString(),
-        duration: const Duration(minutes: 1),
-      );
 }
