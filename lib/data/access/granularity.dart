@@ -7,38 +7,27 @@ class Granularity {
   final Duration duration;
   final String name;
 
-  bool operator >=(Granularity other) {
-    return duration >= other.duration;
-  }
+  bool operator >=(Granularity other) => duration >= other.duration;
 
   @override
   String toString() => name;
+}
 
-  static const Granularity oneMinute = Granularity(
-    duration: Duration(seconds: 60),
-    name: '1 Minute',
-  );
-  static const Granularity fiveMinutes = Granularity(
-    duration: Duration(seconds: 300),
-    name: '5 Minutes',
-  );
-  static const Granularity fifteenMinutes = Granularity(
-    duration: Duration(seconds: 900),
-    name: '15 Minutes',
-  );
-  static const Granularity oneHour = Granularity(
-    duration: Duration(seconds: 3600),
-    name: '1 Hour',
-  );
-  static const Granularity sixHours = Granularity(
-    duration: Duration(seconds: 21600),
-    name: '6 Hours',
-  );
-  static const Granularity days = Granularity(
-    duration: Duration(seconds: 86400),
-    name: '1 Day',
-  );
-  static List<Granularity> granularities = [
+class Granularities {
+  static const Granularity oneMinute =
+      Granularity(duration: Duration(minutes: 1), name: '1 Minute');
+  static const Granularity fiveMinutes =
+      Granularity(duration: Duration(minutes: 5), name: '5 Minutes');
+  static const Granularity fifteenMinutes =
+      Granularity(duration: Duration(minutes: 15), name: '15 Minutes');
+  static const Granularity oneHour =
+      Granularity(duration: Duration(hours: 1), name: '1 Hour');
+  static const Granularity sixHours =
+      Granularity(duration: Duration(hours: 6), name: '6 Hours');
+  static const Granularity days =
+      Granularity(duration: Duration(days: 1), name: '1 Day');
+
+  static List<Granularity> all = [
     oneMinute,
     fiveMinutes,
     fifteenMinutes,

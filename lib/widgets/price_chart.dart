@@ -62,7 +62,7 @@ class PriceChart extends StatelessWidget {
         enableFeedback: true,
         onChanged: (Granularity? newValue) => state.setGranularity(newValue!),
         items: [
-          for (final dropdownValue in Granularity.granularities)
+          for (final dropdownValue in Granularities.all)
             DropdownMenuItem(
               value: dropdownValue,
               child: Text(
@@ -77,7 +77,7 @@ class PriceChart extends StatelessWidget {
 }
 
 class CurrentGranularity extends ChangeNotifier {
-  var _granularity = Granularity.days;
+  var _granularity = Granularities.days;
 
   Granularity get granularity => _granularity;
 

@@ -5,6 +5,8 @@ import 'package:synchronized/synchronized.dart';
 
 /// Runs one [MultistageAction] at a time, and will [notifyListeners()] when
 /// the [_MultistageActionState] changes.
+///
+/// This class is testable using $BASE_DIR/lib/app_actions_trial/main.dart.
 class MultistageActionExecutor extends ChangeNotifier {
   final _synchronizer = Lock(reentrant: true);
   MultistageAction? currAction;
@@ -21,6 +23,7 @@ class MultistageActionExecutor extends ChangeNotifier {
     if (action._state == _MultistageActionState.scheduled) {
       action._state = _MultistageActionState.requesting;
       notifyListeners();
+      // Docs for this: https://dart.dev/codelabs/async-await#handling-errors
       try {
         await action.request();
       } on Exception {

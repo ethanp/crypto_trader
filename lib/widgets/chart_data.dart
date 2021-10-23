@@ -32,8 +32,8 @@ class ChartData extends StatelessWidget {
       border: Border.all(color: Colors.grey[700]!, width: 2),
     );
 
-    final horizontalInterval =
-        (maxX - minX) / (state.granularity == Granularity.sixHours ? 3.2 : 5.2);
+    final horizontalInterval = (maxX - minX) /
+        (state.granularity == Granularities.sixHours ? 3.2 : 5.2);
     final verticalInterval = (maxY - minY) / 3.2;
 
     final gridLine = FlLine(color: Colors.grey[800], strokeWidth: 1);
@@ -64,7 +64,7 @@ class ChartData extends StatelessWidget {
           value.toInt(),
           isUtc: true,
         );
-        if (state.granularity >= Granularity.sixHours) {
+        if (state.granularity >= Granularities.sixHours) {
           final day = DateFormat.EEEE().format(dateTime);
           final date = DateFormat.MMMd().format(dateTime);
           return '$day\n$date';

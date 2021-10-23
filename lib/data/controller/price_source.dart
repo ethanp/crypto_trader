@@ -37,7 +37,7 @@ class CandleCaches {
   factory CandleCaches.build() => CandleCaches._(
         Currencies.allCryptoCurrencies.asMap().map((_, currency) => MapEntry(
             currency,
-            Granularity.granularities.asMap().map((__, granularity) => MapEntry(
+            Granularities.all.asMap().map((__, granularity) => MapEntry(
                   granularity,
                   CandlesCache(currency, granularity),
                 )))),
