@@ -14,20 +14,24 @@ class TransactButtons extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.only(top: 2, bottom: 2),
             child: Column(children: [
-              WithHoldings(
-                builder: (holdings) => LineItem(
-                  title: 'Cash available',
-                  value: holdings?.dollarsOf(Currencies.dollars).toString(),
-                ),
-              ),
+              _cashAvailable(),
               if (executor.isRunning)
-                Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Text(executor.state.toString()))
+                _actionProgress(executor)
               else
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [DepositCard(), SpendCard()])
+                _transactionCards()
             ])));
   }
+
+  Widget _cashAvailable() => WithHoldings(
+      builder: (holdings) => LineItem(
+          title: 'Cash available',
+          value: holdings?.dollarsOf(Currencies.dollars).toString()));
+
+  Widget _actionProgress(MultistageActionExecutor executor) => Padding(
+      padding: const EdgeInsets.all(20),
+      child: Text(executor.state.toString()));
+
+  Widget _transactionCards() => Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [DepositCard(), SpendCard()]);
 }
