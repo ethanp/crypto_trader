@@ -1,5 +1,9 @@
+import 'package:crypto_trader/commands/command.dart';
+import 'package:crypto_trader/commands/executor.dart';
+import 'package:crypto_trader/commands/test.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
+import 'package:crypto_trader/import_facade/util.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

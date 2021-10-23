@@ -1,4 +1,3 @@
-import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/ui_refresher.dart';
 import 'package:crypto_trader/import_facade/util.dart';
