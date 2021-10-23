@@ -13,3 +13,4 @@ export 'package:crypto_trader/widgets/price_chart.dart';
 export 'package:crypto_trader/widgets/spend_card.dart';
 export 'package:crypto_trader/widgets/text_with_countdown.dart';
 export 'package:crypto_trader/widgets/transact_button.dart';
+export 'package:crypto_trader/widgets/transact_card.dart';

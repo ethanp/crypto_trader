@@ -4,12 +4,25 @@ import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class SpendCard extends StatefulWidget {
+class SpendCard extends TransactCard {
   @override
-  State<SpendCard> createState() => _SpendCardState();
+  Widget body() => SpendCardInner();
+
+  @override
+  Widget title() => WithHoldings(
+      builder: (holdings) => MyText(
+            'Buy ${holdings?.shortest.currency.name ?? '(Loading...)'}',
+            fontSize: 18,
+            color: Colors.grey[300],
+          ));
 }
 
-class _SpendCardState extends State<SpendCard> {
+class SpendCardInner extends StatefulWidget {
+  @override
+  State<SpendCardInner> createState() => _SpendCardInnerState();
+}
+
+class _SpendCardInnerState extends State<SpendCardInner> {
   /// Lives in State so that it survives across Widget re-builds.
   late final TextEditingController _fieldController;
   late final ValueNotifier<String> _currentFieldText;
@@ -33,50 +46,23 @@ class _SpendCardState extends State<SpendCard> {
   }
 
   @override
-  Widget build(BuildContext context) => WithHoldings(builder: (holdings) {
-        // Different placement of this may lead to different refresh semantics.
-        _fillFieldWithInitialValue(holdings);
-        return Card(
-            shape: _roundedRectOuter(),
-            elevation: 5,
-            child: Container(
-                decoration: _roundedRectInner(),
-                height: MediaQuery.of(context).size.height / 6,
-                width: MediaQuery.of(context).size.width / 2.2,
-                child: Padding(
-                    padding: const EdgeInsets.only(left: 10, top: 20),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [_title(holdings), _body()]))));
-      });
-
-  Widget _body() => Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          AmountField(_fieldController),
-          TransactButton(
-            Environment.trader.spend,
-            Colors.yellow.withOpacity(.75),
-            _currentFieldText,
-          ),
-        ],
-      );
-
-  Widget _title(Holdings? holdings) => MyText(
-        'Buy ${holdings?.shortest.currency.name ?? '(Loading...)'}',
-        fontSize: 18,
-        color: Colors.grey[300],
-      );
-
-  BoxDecoration _roundedRectInner() => BoxDecoration(
-        border: Border.all(color: Colors.green[900]!),
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.blue[400]!.withOpacity(.3),
-      );
-
-  RoundedRectangleBorder _roundedRectOuter() => RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+  Widget build(BuildContext context) => WithHoldings(
+        builder: (holdings) {
+          // Different placement of this may lead to different refresh semantics.
+          _fillFieldWithInitialValue(holdings);
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              AmountField(_fieldController),
+              TransactButton(
+                Environment.trader.spend,
+                Colors.yellow.withOpacity(.75),
+                _currentFieldText,
+              ),
+            ],
+          );
+        },
       );
 
   void _fillFieldWithInitialValue(Holdings? holdings) {

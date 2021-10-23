@@ -15,10 +15,12 @@ class TransactButtons extends StatelessWidget {
             padding: const EdgeInsets.only(top: 2, bottom: 2),
             child: Column(children: [
               _cashAvailable(),
-              if (executor.isRunning)
-                _actionProgress(executor)
-              else
-                _transactionCards()
+              // TODO janky switch due to different sizes.
+              AnimatedSwitcher(
+                  duration: const Duration(seconds: 1),
+                  child: executor.isRunning
+                      ? _actionProgress(executor)
+                      : _transactionCards()),
             ])));
   }
 
@@ -34,13 +36,13 @@ class TransactButtons extends StatelessWidget {
       case MultistageCommandState.requesting:
         return 'Requesting';
       case MultistageCommandState.verifying:
-        return 'Requesting';
+        return 'Verifying';
       case MultistageCommandState.success:
-        return 'Completed without any errors';
+        return 'Completed successfully';
       case MultistageCommandState.errorDuringRequest:
-        return 'Aborted due to error, s';
+        return 'Aborted: something went wrong during request';
       case MultistageCommandState.errorDuringVerify:
-        return 'Aborted due to error, s';
+        return 'Aborted: something went wrong during verify';
 
       default:
         throw Exception('Insufficient switch case: $state');
@@ -48,6 +50,10 @@ class TransactButtons extends StatelessWidget {
   }
 
   Widget _actionProgress(MultistageCommandExecutor executor) {
+    // TODO easy but not great change: Wrap this in a card that takes up
+    //  space matching the two cards that were taken away.
+    // TODO better difficult change: show an animation here that demonstrates
+    //  what's going on.
     return Padding(
         padding: const EdgeInsets.all(20),
         child: Text(_stageName(executor.state)));
