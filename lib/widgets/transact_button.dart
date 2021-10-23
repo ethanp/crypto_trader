@@ -37,26 +37,15 @@ class TransactButton extends StatelessWidget {
       // Early return
       // TODO we should disable the button when the amount is invalid, which
       //  would make this happily-inaccessible code.
-      return MySnackbar.simple(
-        context: context,
-        text: 'Invalid amount \$$userAmt',
-        duration: const Duration(seconds: 3),
-      );
-    MySnackbar.simple(
-      text: 'Transacting $userAmt',
-      duration: const Duration(seconds: 2),
-      context: context,
-    );
+      return MySnackbar(
+          context, 'Invalid amount \$$userAmt', const Duration(seconds: 3));
+    MySnackbar(context, 'Transacting $userAmt', const Duration(seconds: 2));
     try {
       final executor = context.read<MultistageActionExecutor>();
       final cmd = TransactAction(Dollars(double.parse(userAmt)), action);
       await executor.add(cmd);
     } catch (err) {
-      MySnackbar.simple(
-        context: context,
-        text: err.toString(),
-        duration: const Duration(seconds: 20),
-      );
+      MySnackbar(context, err.toString(), const Duration(seconds: 20));
     } finally {
       // TODO Remove this, context.watch<Executor> should be sufficient if
       //  placed in the right build() impls.

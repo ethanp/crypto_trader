@@ -25,11 +25,7 @@ class EasyFutureBuilder<T> extends StatelessWidget {
       future: future.onError((error, stackTrace) {
         print(error);
         print(stackTrace);
-        MySnackbar.simple(
-          context: context,
-          text: '$error',
-          duration: const Duration(seconds: 3),
-        );
+        MySnackbar(context, '$error', const Duration(seconds: 3));
         return future;
       }),
       builder: (_ctx, holdings) => builder != null
