@@ -16,6 +16,10 @@ class TransactButtons extends StatelessWidget {
             child: Column(children: [
               _cashAvailable(),
               // TODO janky switch due to different sizes.
+              // TODO this switcher should wrap the whole column so that
+              //  during a txn, instead of _cashAvailable() it shows
+              //  eg. "Depositing $20.23" or "Buying $10 of Bitcoin" etc.
+              //  instead of showing the snackbar at the beginning of the txn.
               AnimatedSwitcher(
                   duration: const Duration(seconds: 1),
                   child: executor.isRunning

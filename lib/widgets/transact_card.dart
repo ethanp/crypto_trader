@@ -2,6 +2,10 @@ import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 
 abstract class TransactCard extends StatelessWidget {
+  Widget title();
+
+  Widget body();
+
   @override
   Widget build(BuildContext context) => WithHoldings(builder: (holdings) {
         return Card(
@@ -29,8 +33,4 @@ abstract class TransactCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         color: Colors.red[200]!.withOpacity(.3),
       );
-
-  Widget title();
-
-  Widget body();
 }

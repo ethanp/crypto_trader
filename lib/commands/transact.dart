@@ -28,7 +28,7 @@ class TransactCommand extends MultistageCommand {
         print('Updated dollars: $dollarsNow');
         return;
       }
-      print('Deposited amount has not been received yet');
+      print('Updated account balances have not been received yet');
     }
     throw TimeoutException('$this timed out');
   }

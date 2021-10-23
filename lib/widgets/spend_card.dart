@@ -6,15 +6,15 @@ import 'package:intl/intl.dart';
 
 class SpendCard extends TransactCard {
   @override
-  Widget body() => SpendCardInner();
-
-  @override
   Widget title() => WithHoldings(
       builder: (holdings) => MyText(
             'Buy ${holdings?.shortest.currency.name ?? '(Loading...)'}',
             fontSize: 18,
             color: Colors.grey[300],
           ));
+
+  @override
+  Widget body() => SpendCardInner();
 }
 
 class SpendCardInner extends StatefulWidget {
