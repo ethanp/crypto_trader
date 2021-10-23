@@ -34,9 +34,10 @@ abstract class Brokerage extends ChangeNotifier {
   /// Trade USD for the "shortest" currency. Ie. the one where we have the
   /// largest deficit compared to its portfolio allocation.
   Future<String> spend(Dollars dollars) => _synchronizer.synchronized(() async {
-        print('Spending $dollars');
+        final currency = (await getMyHoldings()).shortest.currency;
+        print('Buying $dollars of $currency');
         return _spendInternal(Holding(
-          currency: (await getMyHoldings()).shortest.currency,
+          currency: currency,
           dollarValue: dollars,
         ));
       });

@@ -1,5 +1,6 @@
 import 'package:crypto_trader/data/controller/app_actions.dart';
 import 'package:crypto_trader/import_facade/model.dart';
+import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,20 +22,30 @@ class AppActionsTrialTopLevel extends StatelessWidget {
           title: 'App actions trial',
           home: Scaffold(
             body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('State: $text', style: font),
-                  _actionButton(executor, 'No error', FakeAction()),
-                  _actionButton(
-                      executor, 'Error on request', ErrantRequestAction()),
-                  _actionButton(
-                      executor, 'Error on verify', ErrantVerifyAction()),
-                  _actionButton(
-                      executor, 'Deposit \$10', DepositAction(Dollars(10))),
-                ]
-                    .expand((element) => [const SizedBox(height: 10), element])
-                    .toList(),
+              child: WithHoldings(
+                builder: (holdings) {
+                  final shortestCurrency = holdings?.shortest.currency.name;
+                  final buyText =
+                      'Buy \$10 of ${shortestCurrency ?? 'Loading'}';
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('State: $text', style: font),
+                      _actionButton(executor, 'No error', FakeAction()),
+                      _actionButton(
+                          executor, 'Error on request', ErrantRequestAction()),
+                      _actionButton(
+                          executor, 'Error on verify', ErrantVerifyAction()),
+                      _actionButton(
+                          executor, 'Deposit \$10', DepositAction(Dollars(10))),
+                      _actionButton(
+                          executor, buyText, SpendAction(Dollars(10))),
+                    ]
+                        .expand(
+                            (element) => [const SizedBox(height: 10), element])
+                        .toList(),
+                  );
+                },
               ),
             ),
           ),

@@ -84,9 +84,10 @@ enum _MultistageActionState {
   error,
 }
 
-class DepositAction extends MultistageAction {
-  DepositAction(this.amount);
+abstract class TransferAction extends MultistageAction {
+  TransferAction(this.amount, this.fun);
 
+  final Future<String> Function(Dollars) fun;
   final Dollars amount;
   late final Dollars _originalDollarsHolding;
 
@@ -94,7 +95,7 @@ class DepositAction extends MultistageAction {
   Future<void> request() async {
     _originalDollarsHolding = await _dollarsNow();
     print('Original dollars: $_originalDollarsHolding');
-    await Environment.trader.deposit(amount);
+    await fun(amount);
   }
 
   @override
@@ -108,7 +109,7 @@ class DepositAction extends MultistageAction {
       }
       print('Deposited amount has not been received yet');
     }
-    throw TimeoutException('Operation timed out');
+    throw TimeoutException('$this timed out');
   }
 
   Future<Dollars> _dollarsNow() async {
@@ -116,6 +117,14 @@ class DepositAction extends MultistageAction {
     final dollarsNow = holdings.dollarsOf(Currencies.dollars);
     return dollarsNow;
   }
+}
+
+class DepositAction extends TransferAction {
+  DepositAction(Dollars amount) : super(amount, Environment.trader.deposit);
+}
+
+class SpendAction extends TransferAction {
+  SpendAction(Dollars amount) : super(amount, Environment.trader.spend);
 }
 
 class FakeAction extends MultistageAction {
