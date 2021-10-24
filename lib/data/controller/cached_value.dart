@@ -73,7 +73,7 @@ class CandlesCache extends CachedValue<List<Candle>> {
     final String rawResponse =
         await CoinbaseApi().candles(currency, granularity, count: 100);
     final parsed = jsonDecode(rawResponse) as List<dynamic>;
-    return parsed.map((e) => Candle.fromCoinbase(e)).toList().takeEvery(3);
+    return parsed.map((e) => Candle.fromCoinbase(e)).toList().takeEvery(1);
   }
 }
 

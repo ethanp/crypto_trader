@@ -24,7 +24,8 @@ class ChartData extends StatelessWidget {
     final minX = timestamps.min;
     final maxX = timestamps.max;
     final Iterable<double> closingPrices = candles.map((c) => c.closingPrice);
-    const minY = .0;
+    final minY =
+        state.granularity == Granularities.oneDay ? .0 : closingPrices.min;
     final maxY = closingPrices.max;
 
     final greyBorder = FlBorderData(

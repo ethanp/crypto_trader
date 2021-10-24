@@ -24,7 +24,7 @@ class Granularities {
       Granularity(duration: Duration(hours: 1), name: '1 Hour');
   static const Granularity sixHours =
       Granularity(duration: Duration(hours: 6), name: '6 Hours');
-  static const Granularity days =
+  static const Granularity oneDay =
       Granularity(duration: Duration(days: 1), name: '1 Day');
 
   static List<Granularity> all = [
@@ -33,6 +33,6 @@ class Granularities {
     fifteenMinutes,
     oneHour,
     sixHours,
-    days,
+    oneDay,
   ];
 }

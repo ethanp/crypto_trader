@@ -46,7 +46,7 @@ class Portfolio extends StatelessWidget {
 
 class PortfolioState extends ChangeNotifier {
   var _currency = Currencies.bitcoin;
-  var _granularity = Granularities.days;
+  var _granularity = Granularities.oneDay;
 
   Currency get currency => _currency;
 
