@@ -35,12 +35,10 @@ class CoinbaseProPriceSource extends PriceSource {
 class CandleCaches {
   const CandleCaches._(this._caches);
 
-  factory CandleCaches.build() {
-    return CandleCaches._({
-      for (final c in Currencies.allCryptoCurrencies)
-        c: {for (final g in Granularities.all) g: CandlesCache(c, g)}
-    });
-  }
+  factory CandleCaches.build() => CandleCaches._({
+        for (final c in Currencies.allCryptoCurrencies)
+          c: {for (final g in Granularities.all) g: CandlesCache(c, g)}
+      });
 
   final Map<Currency, Map<Granularity, CandlesCache>> _caches;
 
