@@ -16,7 +16,7 @@ class TransactionArea extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.only(top: 2, bottom: 2),
             child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 1000),
+                duration: const Duration(milliseconds: 800),
                 switchInCurve: Curves.easeInToLinear,
                 switchOutCurve: Curves.easeInToLinear,
                 child: executor.isRunning

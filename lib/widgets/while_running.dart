@@ -8,34 +8,34 @@ class WhileRunning extends StatelessWidget {
   final MultistageCommandExecutor executor;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      _txnTitle(),
-      _actionProgress(),
-    ]);
-  }
+  Widget build(BuildContext context) =>
+      Column(children: [_txnTitle(), _actionProgress()]);
 
   Widget _txnTitle() {
     final commandType = executor.currCommand?.runtimeType;
     final text = commandType == DepositCommand ? 'Depositing' : 'Buying crypto';
     final transactCommand = executor.currCommand! as TransactCommand;
     return Padding(
-      padding: const EdgeInsets.only(top: 30),
-      child: LineItem(
-        title: text,
-        value: transactCommand.amount.toString(),
-        bigger: true,
-      ),
-    );
+        padding: const EdgeInsets.only(top: 30),
+        child: LineItem(
+            title: text,
+            value: transactCommand.amount.toString(),
+            bigger: true));
   }
 
   Widget _actionProgress() => Padding(
       padding: const EdgeInsets.all(30),
-      child: Text(
-        _stageName(),
-        textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 22, fontStyle: FontStyle.italic),
-      ));
+      child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 800),
+          switchInCurve: Curves.easeInToLinear,
+          switchOutCurve: Curves.easeInToLinear,
+          child: Text(_stageName(),
+              key: ValueKey(_stageName()),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 22,
+                fontStyle: FontStyle.italic,
+              ))));
 
   String _stageName() {
     switch (executor.state) {

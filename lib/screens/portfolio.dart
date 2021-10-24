@@ -31,13 +31,10 @@ class Portfolio extends StatelessWidget {
       children: Currencies.allCryptoCurrencies.map(_asPortfolioCard).toList());
 
   Widget _asPortfolioCard(Currency currency) => WithHoldings(
-        builderC: (ctx, holdings) {
-          final state = ctx.read<PortfolioState>();
+        builderC: (context, holdings) {
+          final state = context.read<PortfolioState>();
           return GestureDetector(
-            onTap: () {
-              print('Tapped card ${currency.name}');
-              state.setCurrency(currency);
-            },
+            onTap: () => state.setCurrency(currency),
             child: PortfolioCard(
               holdings: holdings,
               currency: currency,
