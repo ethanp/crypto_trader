@@ -32,6 +32,8 @@ class CoinbaseApi {
         params: {
           'granularity': granularity.duration.inSeconds.toString(),
           'start': DateTime.now()
+              // TODO how far back can I go here with one request?
+              //   And how many Spots will fit on my LineChart?
               .subtract(granularity.duration * 16)
               .toIso8601String(),
           'end': DateTime.now().toIso8601String(),

@@ -5,11 +5,9 @@ import 'package:provider/provider.dart';
 
 class DepositCard extends TransactCard {
   @override
-  Widget title() => MyText(
-        'Deposit Dollars',
-        fontSize: 18,
-        color: Colors.grey[300],
-      );
+  Widget title() => Padding(
+      padding: const EdgeInsets.only(top: 20, bottom: 13),
+      child: MyText('Deposit Dollars', fontSize: 18, color: Colors.grey[300]));
 
   @override
   Widget body() {

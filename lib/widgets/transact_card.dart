@@ -15,13 +15,7 @@ abstract class TransactCard extends StatelessWidget {
                 decoration: _roundedRectInner(),
                 height: MediaQuery.of(context).size.height / 6,
                 width: MediaQuery.of(context).size.width / 2.2,
-                child: Column(children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: title(),
-                  ),
-                  body()
-                ])));
+                child: Column(children: [title(), body()])));
       });
 
   RoundedRectangleBorder _roundedRectOuter() => RoundedRectangleBorder(

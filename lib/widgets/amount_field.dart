@@ -3,21 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Custom [TextField] for this project that pairs with a [SpendButton]
-/// and [TransferRow] to allow the user to select an amount and then conduct
-/// a financial transaction.
-///
-/// It is given a [TextEditingController] that it shares with the [SpendButton].
 class AmountField extends StatelessWidget {
-  /// Custom [TextField] for this project that pairs with a [SpendButton]
-  /// and [TransferRow] to allow the user to select an amount and then conduct
-  /// a financial transaction.
-  ///
-  /// It is given a [TextEditingController] that it shares with the [SpendButton].
   const AmountField(this.fieldController);
 
-  /// Shared with the [SpendButton] and [TransferRow].
-  /// In this class, it captures the user's input into the field.
+  /// Captures the user's input into the field for use in the [TransactButton].
   final TextEditingController fieldController;
 
   @override
@@ -29,7 +18,7 @@ class AmountField extends StatelessWidget {
         controller: fieldController,
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
-          fillColor: Colors.grey[800],
+          fillColor: Colors.grey[800]!.withOpacity(0.7),
           filled: true,
           labelText: '\$ Amount',
           labelStyle: TextStyle(color: Colors.green[200]),
