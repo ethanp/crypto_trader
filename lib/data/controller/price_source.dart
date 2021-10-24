@@ -1,5 +1,6 @@
 import 'package:crypto_trader/data/access/coinbase_api.dart';
 import 'package:crypto_trader/data/access/granularity.dart';
+import 'package:crypto_trader/data/model/currencies.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 
@@ -34,14 +35,12 @@ class CoinbaseProPriceSource extends PriceSource {
 class CandleCaches {
   const CandleCaches._(this._caches);
 
-  factory CandleCaches.build() => CandleCaches._(
-        Currencies.allCryptoCurrencies.asMap().map((_, currency) => MapEntry(
-            currency,
-            Granularities.all.asMap().map((__, granularity) => MapEntry(
-                  granularity,
-                  CandlesCache(currency, granularity),
-                )))),
-      );
+  factory CandleCaches.build() {
+    return CandleCaches._({
+      for (final c in Currencies.allCryptoCurrencies)
+        c: {for (final g in Granularities.all) g: CandlesCache(c, g)}
+    });
+  }
 
   final Map<Currency, Map<Granularity, CandlesCache>> _caches;
 
