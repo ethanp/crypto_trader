@@ -18,7 +18,7 @@ class LineItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(bottom: 5, left: 10, right: 10),
+      padding: const EdgeInsets.only(bottom: 5, left: 10, right: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
