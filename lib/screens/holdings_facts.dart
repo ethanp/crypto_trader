@@ -8,10 +8,9 @@ class HoldingsFacts extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
       margin: EdgeInsets.zero,
-      elevation: 15,
       child: Container(
           decoration: _gradient,
-          padding: const EdgeInsets.only(left: 1, right: 1),
+          padding: const EdgeInsets.only(bottom: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

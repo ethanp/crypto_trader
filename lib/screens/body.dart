@@ -12,7 +12,7 @@ class Body extends StatelessWidget {
       body: SafeArea(
         child: Column(children: [
           HoldingsFacts(),
-          TransactButtons(),
+          TransactionArea(),
           if (!_keyboardIsShowing(context)) Portfolio(),
         ]),
       ),

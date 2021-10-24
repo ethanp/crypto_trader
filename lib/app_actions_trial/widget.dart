@@ -1,7 +1,6 @@
 import 'package:crypto_trader/commands/command.dart';
 import 'package:crypto_trader/commands/executor.dart';
 import 'package:crypto_trader/commands/test.dart';
-import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/util.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
@@ -39,10 +38,9 @@ class AppActionsTrialTopLevel extends StatelessWidget {
                           executor, 'Error on request', ErrantRequestCommand()),
                       ActionButton(
                           executor, 'Error on verify', ErrantVerifyCommand()),
-                      ActionButton(executor, 'Deposit $amount',
-                          TransactCommand(amount, Environment.trader.deposit)),
-                      ActionButton(executor, buyText,
-                          TransactCommand(amount, Environment.trader.spend)),
+                      ActionButton(
+                          executor, 'Deposit $amount', DepositCommand(amount)),
+                      ActionButton(executor, buyText, SpendCommand(amount)),
                     ]
                         .expand(
                             (element) => [const SizedBox(height: 10), element])
