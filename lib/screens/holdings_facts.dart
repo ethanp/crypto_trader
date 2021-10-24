@@ -13,10 +13,7 @@ class HoldingsFacts extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 5),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _cryptoHoldings(),
-              _cryptoEarnings(),
-            ],
+            children: [_cryptoHoldings(), _cryptoEarnings()],
           )));
 
   BoxDecoration get _gradient => BoxDecoration(

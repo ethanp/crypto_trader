@@ -19,19 +19,16 @@ class LineItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
       padding: const EdgeInsets.only(bottom: 5, left: 10, right: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          MyText('$title: ', style: _Style.labelStyle(bigger: bigger)),
-          Row(children: [
-            if (value != null)
-              MyText(value!, style: _Style.amountStyle(bigger: bigger))
-            else
-              const CupertinoActivityIndicator(),
-            if (percent != null) _percentText()
-          ])
-        ],
-      ));
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        MyText('$title: ', style: _Style.labelStyle(bigger: bigger)),
+        Row(children: [
+          if (value != null)
+            MyText(value!, style: _Style.amountStyle(bigger: bigger))
+          else
+            const CupertinoActivityIndicator(),
+          if (percent != null) _percentText()
+        ])
+      ]));
 
   Widget _percentText() {
     final pct = percent!.toInt();
@@ -45,18 +42,14 @@ class LineItem extends StatelessWidget {
 
 class _Style {
   static TextStyle labelStyle({bool bigger = false}) =>
-      GoogleFonts.aBeeZee().merge(
-        TextStyle(
+      GoogleFonts.aBeeZee().merge(TextStyle(
           color: Colors.grey[300],
           fontSize: bigger ? 30 : 15,
-          fontWeight: FontWeight.w900,
-        ),
-      );
+          fontWeight: FontWeight.w900));
 
-  static TextStyle amountStyle({bool bigger = false}) => TextStyle(
-        color: Colors.green[300],
-        fontSize: bigger ? 35 : 17,
-      );
+  static TextStyle amountStyle({bool bigger = false}) =>
+      TextStyle(color: Colors.green[300], fontSize: bigger ? 35 : 17);
+
   static final percentStyle =
-      amountStyle().copyWith(fontSize: 14, color: Colors.lightBlueAccent[400]);
+      amountStyle().copyWith(fontSize: 14, color: Colors.tealAccent);
 }

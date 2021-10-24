@@ -27,19 +27,24 @@ class CoinbaseApi {
   }
 
   /// https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles
-  Future<String> candles(Currency currency, Granularity granularity) => _get(
-        path: 'products/${currency.callLetters}-USD/candles',
-        params: {
-          'granularity': granularity.duration.inSeconds.toString(),
-          'start': DateTime.now()
-              // TODO how far back can I go here with one request?
-              //   And how many Spots will fit on my LineChart?
-              .subtract(granularity.duration * 16)
-              .toIso8601String(),
-          'end': DateTime.now().toIso8601String(),
-        },
-        endpoint: _exchangeEndpoint,
-      );
+  Future<String> candles(Currency currency, Granularity granularity) {
+    // Coinbase allows retrieving up to 300 candles per request.
+    // So we're just limited by whatever looks best for the user.
+    // TODO: Consider allowing the user to set this.
+    // TODO consider dropping 3 out of 4 candles to make the graph smoother.
+    const count = 100;
+    return _get(
+      path: 'products/${currency.callLetters}-USD/candles',
+      params: {
+        'granularity': granularity.duration.inSeconds.toString(),
+        'start': DateTime.now()
+            .subtract(granularity.duration * count)
+            .toIso8601String(),
+        'end': DateTime.now().toIso8601String(),
+      },
+      endpoint: _exchangeEndpoint,
+    );
+  }
 
   /// https://docs.pro.coinbase.com/#payment-method
   Future<String> deposit(Dollars dollars) async => _post(
