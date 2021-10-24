@@ -27,12 +27,11 @@ class CoinbaseApi {
   }
 
   /// https://docs.cloud.coinbase.com/exchange/reference/exchangerestapi_getproductcandles
-  Future<String> candles(Currency currency, Granularity granularity) {
-    // Coinbase allows retrieving up to 300 candles per request.
-    // So we're just limited by whatever looks best for the user.
-    // TODO: Consider allowing the user to set this.
-    // TODO consider dropping 3 out of 4 candles to make the graph smoother.
-    const count = 100;
+  ///
+  /// Coinbase allows retrieving up to 300 candles per request.
+  /// So we're just limited by whatever looks best for the user.
+  Future<String> candles(Currency currency, Granularity granularity,
+      {required int count}) {
     return _get(
       path: 'products/${currency.callLetters}-USD/candles',
       params: {

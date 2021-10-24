@@ -24,7 +24,7 @@ class ChartData extends StatelessWidget {
     final minX = timestamps.min;
     final maxX = timestamps.max;
     final Iterable<double> closingPrices = candles.map((c) => c.closingPrice);
-    final minY = closingPrices.min;
+    const minY = .0;
     final maxY = closingPrices.max;
 
     final greyBorder = FlBorderData(
@@ -142,12 +142,17 @@ class ChartData extends StatelessWidget {
           .toList(),
       isCurved: true,
       colors: _gradientColors,
-      barWidth: 5,
+      barWidth: 1,
       isStrokeCapRound: true,
       dotData: FlDotData(show: false),
       belowBarData: BarAreaData(
         show: true,
-        colors: _gradientColors.map((c) => c.withOpacity(0.3)).toList(),
+        colors: [
+          _gradientColors[0].withOpacity(0.3),
+          _gradientColors[1].withOpacity(0.6)
+        ],
+        gradientFrom: const Offset(.5, 1),
+        gradientTo: const Offset(.5, 0),
       ),
     );
   }

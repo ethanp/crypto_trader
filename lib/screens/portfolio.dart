@@ -27,7 +27,6 @@ class Portfolio extends StatelessWidget {
               : PriceChart(candles: candles)));
 
   Widget _currencyCards() => Wrap(
-      spacing: 6,
       children: Currencies.allCryptoCurrencies.map(_asPortfolioCard).toList());
 
   Widget _asPortfolioCard(Currency currency) => WithHoldings(

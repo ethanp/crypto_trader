@@ -21,22 +21,22 @@ class PortfolioCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-      width: MediaQuery.of(context).size.width / 2.05,
-      child: Card(
-          elevation: isSelected ? 0 : 10,
+      width: MediaQuery.of(context).size.width,
+      child: Container(
           color: isSelected
               ? _Style.selectedCardColor
               : _Style.unselectedCardColor,
           child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Column(
+              padding: const EdgeInsets.only(top: 3, bottom: 3),
+              child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [_header(), _wrtPortfolio()]
                       .map(_withPadding)
                       .toList()))));
 
-  Padding _withPadding(Widget child) =>
-      Padding(padding: const EdgeInsets.symmetric(vertical: 4), child: child);
+  Padding _withPadding(Widget child) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 13),
+      child: child);
 
   Widget _header() =>
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -103,7 +103,7 @@ class _Style {
   static final greenText = TextStyle(color: Colors.green[300]);
   static const heavyWeight = TextStyle(fontWeight: FontWeight.w700);
   static const mediumWeight = TextStyle(fontWeight: FontWeight.w500);
-  static const textSize = TextStyle(fontSize: 12);
+  static const textSize = TextStyle(fontSize: 13);
   static const tight = TextStyle(letterSpacing: -1);
 
   static const caption = TextStyle(
