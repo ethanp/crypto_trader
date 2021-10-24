@@ -26,14 +26,22 @@ class TransactButtons extends StatelessWidget {
                 ]))));
   }
 
-  Widget _title(MultistageCommandExecutor executor) =>
-      executor.isRunning ? _txnTitle(executor) : _cashAvailable();
+  Widget _title(MultistageCommandExecutor executor) => Padding(
+      padding: const EdgeInsets.only(top: 7),
+      child: executor.isRunning ? _txnTitle(executor) : _cashAvailable());
 
   Widget _txnTitle(MultistageCommandExecutor executor) {
     final commandType = executor.currCommand?.runtimeType;
     final text = commandType == DepositCommand ? 'Depositing' : 'Buying crypto';
     final transactCommand = executor.currCommand! as TransactCommand;
-    return LineItem(title: text, value: transactCommand.amount.toString());
+    return Padding(
+      padding: const EdgeInsets.only(top: 30),
+      child: LineItem(
+        title: text,
+        value: transactCommand.amount.toString(),
+        bigger: true,
+      ),
+    );
   }
 
   Widget _cashAvailable() => WithHoldings(
@@ -48,7 +56,7 @@ class TransactButtons extends StatelessWidget {
       case MultistageCommandState.requesting:
         return 'Issuing transaction request';
       case MultistageCommandState.verifying:
-        return 'Verifying transaction';
+        return 'Verifying transaction...';
       case MultistageCommandState.success:
         return 'Completed successfully';
       case MultistageCommandState.errorDuringRequest:
@@ -66,7 +74,7 @@ class TransactButtons extends StatelessWidget {
       child: Text(
         _stageName(executor.state),
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 30),
+        style: const TextStyle(fontSize: 22, fontStyle: FontStyle.italic),
       ));
 
   Widget _transactionCards() => Row(

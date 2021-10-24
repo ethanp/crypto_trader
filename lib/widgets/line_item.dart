@@ -8,45 +8,55 @@ class LineItem extends StatelessWidget {
     required this.title,
     required this.value,
     this.percent,
+    this.bigger = false,
   });
 
   final String title;
   final String? value;
   final double? percent;
+  final bool bigger;
 
   @override
   Widget build(BuildContext context) => Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          MyText('$title: ', style: _Style.labelStyle),
-          if (value != null)
-            MyText(value!, style: _Style.amountStyle)
-          else
-            const CupertinoActivityIndicator(),
-          if (percent != null)
-            Padding(
-                padding: const EdgeInsets.only(left: 14),
-                child: MyText(
-                  '+${percent!.toInt()}%',
-                  style: _Style.percentStyle,
-                ))
+          MyText('$title: ', style: _Style.labelStyle(bigger: bigger)),
+          Row(children: [
+            if (value != null)
+              MyText(value!, style: _Style.amountStyle(bigger: bigger))
+            else
+              const CupertinoActivityIndicator(),
+            if (percent != null) _percentText()
+          ])
         ],
       ));
+
+  Widget _percentText() {
+    final pct = percent!.toInt();
+    var text = '$pct%';
+    if (pct > 0) text = '+$text';
+    return Padding(
+        padding: const EdgeInsets.only(left: 7),
+        child: MyText(text, style: _Style.percentStyle));
+  }
 }
 
 class _Style {
-  static final labelStyle = GoogleFonts.aBeeZee().merge(
-    TextStyle(
-      color: Colors.grey[300],
-      fontSize: 15,
-      fontWeight: FontWeight.w900,
-    ),
-  );
-  static final amountStyle = TextStyle(
-    color: Colors.green[300],
-    fontSize: 17,
-  );
-  static final percentStyle = amountStyle.copyWith(fontSize: 13);
+  static TextStyle labelStyle({bool bigger = false}) =>
+      GoogleFonts.aBeeZee().merge(
+        TextStyle(
+          color: Colors.grey[300],
+          fontSize: bigger ? 30 : 15,
+          fontWeight: FontWeight.w900,
+        ),
+      );
+
+  static TextStyle amountStyle({bool bigger = false}) => TextStyle(
+        color: Colors.green[300],
+        fontSize: bigger ? 35 : 17,
+      );
+  static final percentStyle =
+      amountStyle().copyWith(fontSize: 14, color: Colors.lightBlueAccent[400]);
 }
