@@ -11,7 +11,6 @@ import 'command.dart';
 class MultistageCommandExecutor extends ChangeNotifier {
   final _synchronizer = Lock(reentrant: true);
 
-  /// Only useful for debugging this class.
   MultistageCommand? currCommand;
 
   MultistageCommandState get state =>

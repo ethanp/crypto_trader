@@ -3,7 +3,7 @@ import 'package:crypto_trader/import_facade/controller.dart';
 /// Whether to use live data or fake data.
 class Environment {
   /// Use fake data iff true.
-  static const bool fake = false;
+  static const bool fake = true;
 
   /// The [Brokerage] to use for the given environment.
   static Brokerage trader = fake ? FakeBrokerage() : CoinbaseProBrokerage();

@@ -1,5 +1,5 @@
-import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
+import 'package:crypto_trader/import_facade/util.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -56,7 +56,7 @@ class _SpendCardInnerState extends State<SpendCardInner> {
             children: [
               AmountField(_fieldController),
               TransactButton(
-                Environment.trader.spend,
+                (amount) => SpendCommand(amount),
                 Colors.yellow.withOpacity(.75),
                 _currentFieldText,
               ),

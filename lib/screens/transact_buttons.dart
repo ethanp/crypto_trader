@@ -11,21 +11,29 @@ class TransactButtons extends StatelessWidget {
     final executor = context.watch<MultistageCommandExecutor>();
     return Container(
         color: Colors.grey[800],
+        height: MediaQuery.of(context).size.height / 4.4,
+        width: MediaQuery.of(context).size.width,
         child: Padding(
             padding: const EdgeInsets.only(top: 2, bottom: 2),
-            child: Column(children: [
-              _cashAvailable(),
-              // TODO janky switch due to different sizes.
-              // TODO this switcher should wrap the whole column so that
-              //  during a txn, instead of _cashAvailable() it shows
-              //  eg. "Depositing $20.23" or "Buying $10 of Bitcoin" etc.
-              //  instead of showing the snackbar at the beginning of the txn.
-              AnimatedSwitcher(
-                  duration: const Duration(seconds: 1),
-                  child: executor.isRunning
-                      ? _actionProgress(executor)
-                      : _transactionCards()),
-            ])));
+            child: AnimatedSwitcher(
+                duration: const Duration(seconds: 1),
+                child: Column(children: [
+                  _title(executor),
+                  if (executor.isRunning)
+                    _actionProgress(executor)
+                  else
+                    _transactionCards(),
+                ]))));
+  }
+
+  Widget _title(MultistageCommandExecutor executor) =>
+      executor.isRunning ? _txnTitle(executor) : _cashAvailable();
+
+  Widget _txnTitle(MultistageCommandExecutor executor) {
+    final commandType = executor.currCommand?.runtimeType;
+    final text = commandType == DepositCommand ? 'Depositing' : 'Buying crypto';
+    final transactCommand = executor.currCommand! as TransactCommand;
+    return LineItem(title: text, value: transactCommand.amount.toString());
   }
 
   Widget _cashAvailable() => WithHoldings(
@@ -38,9 +46,9 @@ class TransactButtons extends StatelessWidget {
       case MultistageCommandState.scheduled:
         return 'Scheduled';
       case MultistageCommandState.requesting:
-        return 'Requesting';
+        return 'Issuing transaction request';
       case MultistageCommandState.verifying:
-        return 'Verifying';
+        return 'Verifying transaction';
       case MultistageCommandState.success:
         return 'Completed successfully';
       case MultistageCommandState.errorDuringRequest:
@@ -53,15 +61,13 @@ class TransactButtons extends StatelessWidget {
     }
   }
 
-  Widget _actionProgress(MultistageCommandExecutor executor) {
-    // TODO easy but not great change: Wrap this in a card that takes up
-    //  space matching the two cards that were taken away.
-    // TODO better difficult change: show an animation here that demonstrates
-    //  what's going on.
-    return Padding(
-        padding: const EdgeInsets.all(20),
-        child: Text(_stageName(executor.state)));
-  }
+  Widget _actionProgress(MultistageCommandExecutor executor) => Padding(
+      padding: const EdgeInsets.all(30),
+      child: Text(
+        _stageName(executor.state),
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 30),
+      ));
 
   Widget _transactionCards() => Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -5,7 +5,7 @@ import 'package:crypto_trader/import_facade/model.dart';
 
 import 'command.dart';
 
-class TransactCommand extends MultistageCommand {
+abstract class TransactCommand extends MultistageCommand {
   TransactCommand(this.amount, this.fun);
 
   final Future<String> Function(Dollars) fun;
@@ -38,4 +38,12 @@ class TransactCommand extends MultistageCommand {
     final dollarsNow = holdings.dollarsOf(Currencies.dollars);
     return dollarsNow;
   }
+}
+
+class DepositCommand extends TransactCommand {
+  DepositCommand(Dollars amount) : super(amount, Environment.trader.deposit);
+}
+
+class SpendCommand extends TransactCommand {
+  SpendCommand(Dollars amount) : super(amount, Environment.trader.spend);
 }

@@ -1,5 +1,4 @@
 import 'package:crypto_trader/import_facade/model.dart';
-import 'package:crypto_trader/import_facade/ui_refresher.dart';
 import 'package:crypto_trader/import_facade/util.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,10 +8,10 @@ import 'package:provider/provider.dart';
 /// UI [Button] that triggers a financial transaction.
 class TransactButton extends StatelessWidget {
   /// UI [Button] that triggers a financial transaction.
-  const TransactButton(this.action, this.color, this.amount);
+  const TransactButton(this.command, this.color, this.amount);
 
   /// What happens when you click the button.
-  final Future<String> Function(Dollars) action;
+  final MultistageCommand Function(Dollars) command;
 
   final Color color;
 
@@ -36,21 +35,13 @@ class TransactButton extends StatelessWidget {
       );
 
   Future<void> _transact(BuildContext context) async {
-    // Get the NEWEST version of the input text.
-    final userAmt = amount.value;
-    if (AmountField.validateAmount(userAmt) != null)
-      throw Exception('Should not have invalid amount $userAmt');
-    MySnackbar(context, 'Transacting $userAmt', const Duration(seconds: 2));
     try {
       final executor = context.read<MultistageCommandExecutor>();
-      final cmd = TransactCommand(Dollars(double.parse(userAmt)), action);
+      // Get the NEWEST version of the input text.
+      final cmd = command(Dollars(double.parse(amount.value)));
       await executor.add(cmd);
     } catch (err) {
       MySnackbar(context, err.toString(), const Duration(seconds: 20));
-    } finally {
-      // TODO Remove this, context.watch<Executor> should be sufficient if
-      //  placed in the right build() impls.
-      UiRefresher.refresh(context);
     }
   }
 }
