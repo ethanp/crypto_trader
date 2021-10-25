@@ -2,7 +2,7 @@ import 'package:crypto_trader/data/access/granularity.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
-import 'package:crypto_trader/widgets/portfolio_card.dart';
+import 'package:crypto_trader/widgets/portfolio_list_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +14,8 @@ class Portfolio extends StatelessWidget {
       builder: (context, _) => Flexible(
             child: Column(children: [
               _chart(context.watch<PortfolioState>()),
-              const SizedBox(height: 5),
-              _currencyCards(),
+              const SizedBox(height: 12),
+              _currencyList(),
             ]),
           ));
 
@@ -26,22 +26,23 @@ class Portfolio extends StatelessWidget {
               ? const CupertinoActivityIndicator()
               : PriceChart(candles: candles)));
 
-  Widget _currencyCards() => Wrap(
-      children: Currencies.allCryptoCurrencies.map(_asPortfolioCard).toList());
+  // Using ListView instead would allow user scrolling, which would help if
+  // there were more portfolio items.
+  Widget _currencyList() => Column(
+      children: Currencies.allCryptoCurrencies.map(_asListItem).toList());
 
-  Widget _asPortfolioCard(Currency currency) => WithHoldings(
-        builderC: (context, holdings) {
-          final state = context.read<PortfolioState>();
-          return GestureDetector(
+  Widget _asListItem(Currency currency) => Container(
+      decoration: BoxDecoration(border: Border.all(color: Colors.grey[900]!)),
+      child: WithHoldings(builderC: (context, holdings) {
+        final state = context.read<PortfolioState>();
+        return GestureDetector(
             onTap: () => state.setCurrency(currency),
-            child: PortfolioCard(
+            child: PortfolioListItem(
               holdings: holdings,
               currency: currency,
               isSelected: currency == state.currency,
-            ),
-          );
-        },
-      );
+            ));
+      }));
 }
 
 class PortfolioState extends ChangeNotifier {

@@ -19,19 +19,25 @@ class Body extends StatelessWidget {
     );
   }
 
-  AppBar _appBar(BuildContext context) {
-    return AppBar(
+  AppBar _appBar(BuildContext context) => AppBar(
       elevation: 0,
-      title: const MyText('Crypto: auto-balancing DCA'),
-      leading: _refreshButton(context),
-    );
-  }
+      toolbarHeight: 65,
+      backgroundColor: Colors.grey[900],
+      title: const MyText('crypto_trader'),
+      actions: [_refreshButton(context)]);
 
-  Widget _refreshButton(BuildContext context) => IconButton(
-        onPressed: () => UiRefresher.refresh(context),
-        tooltip: 'Refresh data',
-        icon: const Icon(Icons.refresh),
-      );
+  Widget _refreshButton(BuildContext context) => InkWell(
+      onTap: () => UiRefresher.refresh(context),
+      child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Stack(children: [_icon(context), _label()])));
+
+  Widget _label() => const Positioned(
+      bottom: 3,
+      child: Text('reload', style: TextStyle(fontSize: 8, color: Colors.grey)));
+
+  Widget _icon(BuildContext context) =>
+      Icon(Icons.refresh, size: 25, color: Colors.grey[300]!.withGreen(250));
 
   bool _keyboardIsShowing(BuildContext context) =>
       MediaQuery.of(context).viewInsets.bottom != 0;

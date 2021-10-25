@@ -12,7 +12,8 @@ class TransactButtons extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8),
           child: LineItem(
               title: 'Cash available',
-              value: holdings?.dollarsOf(Currencies.dollars).toString())));
+              value: holdings?.dollarsOf(Currencies.dollars).toString(),
+              row: true)));
 
   Widget _transactionCards() => Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

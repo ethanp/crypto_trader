@@ -8,7 +8,7 @@ export 'package:crypto_trader/widgets/deposit_dropdown.dart';
 export 'package:crypto_trader/widgets/future_builders.dart';
 export 'package:crypto_trader/widgets/line_item.dart';
 export 'package:crypto_trader/widgets/my_text.dart';
-export 'package:crypto_trader/widgets/portfolio_card.dart';
+export 'package:crypto_trader/widgets/portfolio_list_item.dart';
 export 'package:crypto_trader/widgets/price_chart.dart';
 export 'package:crypto_trader/widgets/spend_card.dart';
 export 'package:crypto_trader/widgets/text_with_countdown.dart';

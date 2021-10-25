@@ -8,19 +8,25 @@ class HoldingsFacts extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
       margin: EdgeInsets.zero,
-      child: Container(
-          decoration: _gradient,
-          padding: const EdgeInsets.only(bottom: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [_cryptoHoldings(), _cryptoEarnings()],
-          )));
+      child: Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Container(
+              decoration: BoxDecoration(
+                gradient: _gradient,
+                boxShadow: const [BoxShadow(blurRadius: 2, spreadRadius: 2)],
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(80),
+                    bottomRight: Radius.circular(80)),
+              ),
+              padding: const EdgeInsets.only(top: 5, bottom: 20),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [_cryptoHoldings(), _cryptoEarnings()]))));
 
-  BoxDecoration get _gradient => BoxDecoration(
-      gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomRight,
-          colors: [Colors.grey[800]!, Colors.grey[900]!]));
+  Gradient get _gradient => LinearGradient(
+      begin: Alignment.topRight,
+      end: Alignment.bottomRight,
+      colors: [Colors.grey[900]!, Colors.black]);
 
   Widget _cryptoHoldings() => WithHoldings(
       builder: (holdings) => LineItem(

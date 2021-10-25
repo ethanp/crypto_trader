@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 /// Chip at the bottom displaying info about [holdings] of a particular
 /// [currency]. When it [isSelected], it is used as the graph currency.
-class PortfolioCard extends StatelessWidget {
-  const PortfolioCard({
+class PortfolioListItem extends StatelessWidget {
+  const PortfolioListItem({
     required this.holdings,
     required this.currency,
     required this.isSelected,
@@ -27,36 +27,28 @@ class PortfolioCard extends StatelessWidget {
               ? _Style.selectedCardColor
               : _Style.unselectedCardColor,
           child: Padding(
-              padding: const EdgeInsets.only(top: 3, bottom: 3),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [_header(), _wrtPortfolio()]
-                      .map(_withPadding)
-                      .toList()))));
-
-  Padding _withPadding(Widget child) => Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 13),
-      child: child);
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [_header(), _wrtPortfolio()]))));
 
   Widget _header() =>
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        _holding(),
+        MyText(holdings?.dollarsOf(currency).toString() ?? 'Loading',
+            style: _Style.holdingValueTextStyle, textAlign: TextAlign.right),
         MyText(' of ', style: _Style.ofStyle),
         MyText(currency.name, style: _Style.currencyNameTextStyle),
         const SizedBox(width: 4),
         MyText('(${currency.callLetters})', style: _Style.callLettersTextStyle),
       ]);
 
-  Widget _holding() =>
-      MyText(holdings?.dollarsOf(currency).toString() ?? 'Loading',
-          style: _Style.holdingValueTextStyle);
-
   Widget _wrtPortfolio() {
     if (holdings == null) return const CupertinoActivityIndicator();
-    const spacing = SizedBox(width: 10);
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [_allocation(), spacing, _actual(), spacing, _difference()]);
+        children: [_allocation(), _actual(), _difference()]
+            .map((w) => SizedBox(width: 48, child: w))
+            .toList());
   }
 
   Widget _actual() {

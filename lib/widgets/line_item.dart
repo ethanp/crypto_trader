@@ -9,26 +9,35 @@ class LineItem extends StatelessWidget {
     required this.value,
     this.percent,
     this.bigger = false,
+    this.row = false,
   });
 
   final String title;
   final String? value;
   final double? percent;
   final bool bigger;
+  final bool row;
 
   @override
-  Widget build(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(bottom: 5, left: 10, right: 5),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        MyText('$title: ', style: _Style.labelStyle(bigger: bigger)),
-        Row(children: [
-          if (value != null)
-            MyText(value!, style: _Style.amountStyle(bigger: bigger))
-          else
-            const CupertinoActivityIndicator(),
-          if (percent != null) _percentText()
-        ])
-      ]));
+  Widget build(BuildContext context) {
+    final children = [
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        if (value != null)
+          MyText(value!, style: _Style.amountStyle(bigger: bigger))
+        else
+          const CupertinoActivityIndicator(),
+        if (percent != null) _percentText()
+      ]),
+      MyText('$title: ', style: _Style.labelStyle(bigger: bigger)),
+    ];
+    return Padding(
+        padding: const EdgeInsets.only(bottom: 5, left: 40, right: 20),
+        child: row
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: children.reversed.toList())
+            : Column(children: children));
+  }
 
   Widget _percentText() {
     final pct = percent!.toInt();
@@ -44,7 +53,7 @@ class _Style {
   static TextStyle labelStyle({bool bigger = false}) =>
       GoogleFonts.aBeeZee().merge(TextStyle(
           color: Colors.grey[300],
-          fontSize: bigger ? 30 : 15,
+          fontSize: bigger ? 30 : 13,
           fontWeight: FontWeight.w900));
 
   static TextStyle amountStyle({bool bigger = false}) =>

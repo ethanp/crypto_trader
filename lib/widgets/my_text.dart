@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 /// Text widget pre-themed for use in this app.
 class MyText extends StatelessWidget {
   /// Text widget pre-themed for use in this app.
-  const MyText(this.text, {Key? key, this.style, this.fontSize, this.color})
+  const MyText(this.text,
+      {Key? key, this.style, this.fontSize, this.color, this.textAlign})
       : super(key: key);
 
   /// The string to display in the widget.
@@ -19,9 +20,12 @@ class MyText extends StatelessWidget {
   /// Size of shown text (overrides what is set in [style]).
   final double? fontSize;
 
+  final TextAlign? textAlign;
+
   @override
   Widget build(BuildContext context) {
     return Text(text,
+        textAlign: textAlign,
         style: GoogleFonts.prompt()
             .copyWith(height: 1)
             .merge(style)
