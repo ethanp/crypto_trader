@@ -26,7 +26,7 @@ class HoldingsFacts extends StatelessWidget {
   Gradient get _gradient => LinearGradient(
       begin: Alignment.topRight,
       end: Alignment.bottomRight,
-      colors: [Colors.grey[900]!, Colors.black]);
+      colors: [Colors.grey[900]!.withBlue(50), Colors.black.withBlue(10)]);
 
   Widget _cryptoHoldings() => WithHoldings(
       builder: (holdings) => LineItem(

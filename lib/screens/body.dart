@@ -22,7 +22,7 @@ class Body extends StatelessWidget {
   AppBar _appBar(BuildContext context) => AppBar(
       elevation: 0,
       toolbarHeight: 65,
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.grey[900]!.withBlue(50),
       title: const MyText('crypto_trader'),
       actions: [_refreshButton(context)]);
 

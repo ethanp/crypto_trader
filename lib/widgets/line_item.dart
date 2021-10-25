@@ -28,7 +28,11 @@ class LineItem extends StatelessWidget {
           const CupertinoActivityIndicator(),
         if (percent != null) _percentText()
       ]),
-      MyText('$title: ', style: _Style.labelStyle(bigger: bigger)),
+      Padding(
+        padding: const EdgeInsets.all(3),
+        child: MyText(row ? '$title: ' : title,
+            style: _Style.labelStyle(bigger: bigger)),
+      ),
     ];
     return Padding(
         padding: const EdgeInsets.only(bottom: 5, left: 40, right: 20),
@@ -53,12 +57,12 @@ class _Style {
   static TextStyle labelStyle({bool bigger = false}) =>
       GoogleFonts.aBeeZee().merge(TextStyle(
           color: Colors.grey[300],
-          fontSize: bigger ? 30 : 13,
+          fontSize: bigger ? 30 : 14,
           fontWeight: FontWeight.w900));
 
   static TextStyle amountStyle({bool bigger = false}) =>
-      TextStyle(color: Colors.green[300], fontSize: bigger ? 35 : 17);
+      TextStyle(color: Colors.green[300], fontSize: bigger ? 35 : 20);
 
   static final percentStyle =
-      amountStyle().copyWith(fontSize: 14, color: Colors.tealAccent);
+      amountStyle().copyWith(fontSize: 16, color: Colors.tealAccent);
 }

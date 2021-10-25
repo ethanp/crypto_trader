@@ -25,6 +25,6 @@ abstract class TransactCard extends StatelessWidget {
   BoxDecoration _roundedRectInner() => BoxDecoration(
         border: Border.all(color: Colors.grey[700]!),
         borderRadius: BorderRadius.circular(20),
-        color: Colors.red[200]!.withOpacity(.2),
+        color: Colors.blue[200]!.withOpacity(.2),
       );
 }
