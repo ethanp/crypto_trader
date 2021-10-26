@@ -24,7 +24,7 @@ class WhileRunning extends StatelessWidget {
   }
 
   Widget _actionProgress() => Padding(
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.all(15),
       child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 800),
           switchInCurve: Curves.easeInToLinear,
