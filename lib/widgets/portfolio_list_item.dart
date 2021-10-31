@@ -44,6 +44,8 @@ class PortfolioListItem extends StatelessWidget {
 
   Widget _wrtPortfolio() {
     if (holdings == null) return const CupertinoActivityIndicator();
+    // TODO try wrapping this with IntrinsicWidth instead of using SizedBox
+    //  https://api.flutter.dev/flutter/widgets/IntrinsicWidth-class.html
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [_allocation(), _actual(), _difference()]

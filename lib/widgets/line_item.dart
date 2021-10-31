@@ -64,5 +64,5 @@ class _Style {
       TextStyle(color: Colors.green[300], fontSize: bigger ? 35 : 20);
 
   static final percentStyle =
-      amountStyle().copyWith(fontSize: 16, color: Colors.tealAccent);
+      amountStyle().copyWith(fontSize: 16, color: Colors.lightBlueAccent);
 }

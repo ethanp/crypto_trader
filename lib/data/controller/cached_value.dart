@@ -70,7 +70,7 @@ class CandlesCache extends CachedValue<List<Candle>> {
 
   Future<List<Candle>> _coinbaseInternal() async {
     final String rawResponse =
-        await CoinbaseApi().candles(currency, granularity, count: 100);
+        await CoinbaseApi().candles(currency, granularity, count: 300);
     final parsed = jsonDecode(rawResponse) as List<dynamic>;
     return parsed.map((e) => Candle.fromCoinbase(e)).toList();
   }

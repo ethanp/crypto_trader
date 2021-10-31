@@ -1,5 +1,6 @@
 import 'package:crypto_trader/import_facade/util.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
+import 'package:crypto_trader/widgets/transact_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,7 @@ class DepositCard extends TransactCard {
             DepositDropdown(state.value),
             TransactButton(
               (amount) => DepositCommand(amount),
-              Colors.yellow.withOpacity(.7),
+              TransactCard.buttonColor,
               state,
             ),
           ],

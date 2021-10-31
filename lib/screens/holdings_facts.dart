@@ -12,12 +12,11 @@ class HoldingsFacts extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 4),
           child: Container(
               decoration: BoxDecoration(
-                gradient: _gradient,
-                boxShadow: const [BoxShadow(blurRadius: 2, spreadRadius: 2)],
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(80),
-                    bottomRight: Radius.circular(80)),
-              ),
+                  gradient: _gradient,
+                  boxShadow: const [BoxShadow(blurRadius: 2, spreadRadius: 2)],
+                  borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(80),
+                      bottomRight: Radius.circular(80))),
               padding: const EdgeInsets.only(top: 5, bottom: 20),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

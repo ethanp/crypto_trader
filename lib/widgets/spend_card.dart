@@ -1,9 +1,12 @@
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/util.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
+import 'package:crypto_trader/widgets/transact_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+// TODO(bug) it doesn't reload amounts after spend completes.
+//  Although for deposits it does.
 class SpendCard extends TransactCard {
   @override
   Widget title() => Padding(
@@ -58,7 +61,7 @@ class _SpendCardInnerState extends State<SpendCardInner> {
               AmountField(_fieldController),
               TransactButton(
                 (amount) => SpendCommand(amount),
-                Colors.yellow.withOpacity(.75),
+                TransactCard.buttonColor,
                 _currentFieldText,
               ),
             ],
