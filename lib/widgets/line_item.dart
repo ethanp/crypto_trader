@@ -29,7 +29,9 @@ class LineItem extends StatelessWidget {
         if (percent != null) _percentText()
       ]),
       Padding(
-        padding: const EdgeInsets.all(3),
+        padding: row
+            ? const EdgeInsets.only(bottom: 2, right: 3)
+            : const EdgeInsets.only(top: 6),
         child: MyText(row ? '$title: ' : title,
             style: _Style.labelStyle(bigger: bigger)),
       ),

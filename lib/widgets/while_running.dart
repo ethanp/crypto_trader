@@ -15,12 +15,9 @@ class WhileRunning extends StatelessWidget {
     final commandType = executor.currCommand?.runtimeType;
     final text = commandType == DepositCommand ? 'Depositing' : 'Buying crypto';
     final transactCommand = executor.currCommand! as TransactCommand;
-    return Padding(
-        padding: const EdgeInsets.only(top: 30),
-        child: LineItem(
-            title: text,
-            value: transactCommand.amount.toString(),
-            bigger: true));
+    final transactAmount = transactCommand.amount.toString();
+    final lineItem = LineItem(title: text, value: transactAmount, bigger: true);
+    return Padding(padding: const EdgeInsets.only(top: 30), child: lineItem);
   }
 
   Widget _actionProgress() => Padding(

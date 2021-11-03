@@ -31,8 +31,8 @@ class Portfolio extends StatelessWidget {
   Widget _currencyList() => Column(
       children: Currencies.allCryptoCurrencies.map(_asListItem).toList());
 
-  Widget _asListItem(Currency currency) => Container(
-      decoration: BoxDecoration(border: Border.all(color: Colors.grey[900]!)),
+  Widget _asListItem(Currency currency) => Padding(
+      padding: const EdgeInsets.all(2),
       child: WithHoldings(builderC: (context, holdings) {
         final state = context.read<PortfolioState>();
         return GestureDetector(

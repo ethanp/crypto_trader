@@ -23,11 +23,14 @@ class PortfolioListItem extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Container(
-          color: isSelected
-              ? _Style.selectedCardColor
-              : _Style.unselectedCardColor,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey[900]!),
+              borderRadius: BorderRadius.circular(6),
+              color: isSelected
+                  ? _Style.selectedCardColor
+                  : _Style.unselectedCardColor),
           child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 12),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [_header(), _wrtPortfolio()]))));
@@ -58,8 +61,8 @@ class PortfolioListItem extends StatelessWidget {
     final actualPercentage = holdings!.percentageContaining(currency).round();
     final percentage =
         MyText('$actualPercentage%', style: _Style.percentagesTextStyle);
-    const caption = MyText('Actual', style: _Style.caption);
-    return Column(children: [percentage, caption]);
+    const caption = MyText('actual', style: _Style.caption);
+    return Column(children: [percentage, const SizedBox(height: 2), caption]);
   }
 
   Widget _allocation() {
@@ -67,7 +70,7 @@ class PortfolioListItem extends StatelessWidget {
       '${currency.percentAllocation}%',
       style: _Style.percentagesTextStyle,
     );
-    const caption = MyText('Allocated', style: _Style.caption);
+    const caption = MyText('allocated', style: _Style.caption);
     return Column(children: [allocation, caption]);
   }
 
@@ -91,17 +94,17 @@ class _Style {
 
   static const underheldColor = Colors.green;
   static const overheldColor = Colors.red;
-  static final unselectedCardColor = Colors.grey[800];
-  static final selectedCardColor = Colors.grey[700];
+  static final unselectedCardColor = Colors.grey[900]!.withOpacity(.5);
+  static final selectedCardColor = Colors.grey[800]!;
   static final greyText = TextStyle(color: Colors.grey[500]);
   static final greenText = TextStyle(color: Colors.green[300]);
   static const heavyWeight = TextStyle(fontWeight: FontWeight.w700);
   static const mediumWeight = TextStyle(fontWeight: FontWeight.w500);
-  static const textSize = TextStyle(fontSize: 13);
+  static const textSize = TextStyle(fontSize: 14);
   static const tight = TextStyle(letterSpacing: -1);
 
   static const caption = TextStyle(
-    fontSize: 8,
+    fontSize: 9,
     color: Color.fromRGBO(150, 200, 255, 1),
   );
   static final callLettersTextStyle =

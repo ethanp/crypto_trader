@@ -98,6 +98,7 @@ class ChartData extends StatelessWidget {
           final dateTime = DateTime.fromMillisecondsSinceEpoch(millis);
           final day = DateFormat.E().format(dateTime);
           final date = DateFormat.MMMd().format(dateTime);
+          // TODO Get the right timezone here! (Match the other one.)
           final hourMin = DateFormat.jm().format(dateTime);
           final time = '$day $date\n$hourMin';
           final dollars = Dollars(touchedSpot.y);

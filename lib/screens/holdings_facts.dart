@@ -11,13 +11,13 @@ class HoldingsFacts extends StatelessWidget {
       child: Padding(
           padding: const EdgeInsets.only(bottom: 4),
           child: Container(
+              padding: const EdgeInsets.only(bottom: 14),
               decoration: BoxDecoration(
                   gradient: _gradient,
                   boxShadow: const [BoxShadow(blurRadius: 2, spreadRadius: 2)],
                   borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(80),
                       bottomRight: Radius.circular(80))),
-              padding: const EdgeInsets.only(top: 5, bottom: 20),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [_cryptoHoldings(), _cryptoEarnings()]))));
