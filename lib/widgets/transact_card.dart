@@ -19,13 +19,10 @@ abstract class TransactCard extends StatelessWidget {
               width: MediaQuery.of(context).size.width / 2.2,
               child: Column(children: [title(), body()]))));
 
-  RoundedRectangleBorder _roundedRectOuter() => RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      );
+  RoundedRectangleBorder _roundedRectOuter() =>
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(20));
 
   BoxDecoration _roundedRectInner() => BoxDecoration(
-        border: Border.all(color: Colors.grey[700]!),
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.blue[200]!.withOpacity(.2),
-      );
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.blue[200]!.withOpacity(.2));
 }

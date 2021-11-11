@@ -94,7 +94,7 @@ class CoinbaseApi {
     );
     if (postResponse.statusCode != 200) {
       if (postResponse.body.toLowerCase().contains('insufficient funds')) {
-        throw HttpException('Insufficient Funds', uri: url);
+        throw const InsufficientFundsException();
       } else {
         throw HttpException(
             '\n\nError in POST $url from Coinbase API!\n'
@@ -143,5 +143,17 @@ class CoinbaseApi {
     final transfers = jsonDecode(transfersResponse) as List<dynamic>;
     return Dollars(
         transfers.map((xfr) => double.parse(xfr['amount'] as String)).sum);
+  }
+}
+
+class InsufficientFundsException implements Exception {
+  const InsufficientFundsException([this.amountAttempted]);
+
+  final Dollars? amountAttempted;
+
+  @override
+  String toString() {
+    final suffix = amountAttempted != null ? ' to spend $amountAttempted' : '';
+    return 'Insufficient funds$suffix';
   }
 }

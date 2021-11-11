@@ -39,7 +39,7 @@ class HoldingsFacts extends StatelessWidget {
               percent: _percent(holdings, earnings))));
 
   double _percent(Holdings? holdings, Dollars? earnings) {
-    // Default 1 instead of 0 so we don't get a NaN during division below.
+    // Default 1 instead of 0 to avoid NaN during division below.
     final total = holdings?.totalCryptoValue.amt ?? 1.0;
     final earnedAmt = earnings?.amt ?? 0.0;
     return earnedAmt / total * 100;

@@ -13,13 +13,13 @@ class Portfolio extends StatelessWidget {
       providers: [ChangeNotifierProvider(create: (_) => PortfolioState())],
       builder: (context, _) => Flexible(
             child: Column(children: [
-              _chart(context.watch<PortfolioState>()),
+              _priceChart(context.watch<PortfolioState>()),
               const SizedBox(height: 12),
               _currencyList(),
             ]),
           ));
 
-  Widget _chart(PortfolioState state) => Expanded(
+  Widget _priceChart(PortfolioState state) => Expanded(
       child: EasyFutureBuilder<List<Candle>>(
           future: Environment.prices.candles(state.currency, state.granularity),
           builder: (List<Candle>? candles) => candles == null

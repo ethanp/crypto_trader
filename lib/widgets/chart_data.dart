@@ -28,17 +28,43 @@ class ChartData extends StatelessWidget {
         state.granularity == Granularities.oneDay ? .0 : closingPrices.min;
     final maxY = closingPrices.max;
 
-    final greyBorder = FlBorderData(
-      show: true,
-      border: Border.all(color: Colors.grey[700]!, width: 2),
-    );
-
     final horizontalInterval = (maxX - minX) /
         (state.granularity == Granularities.sixHours ? 3.2 : 5.2);
     final verticalInterval = (maxY - minY) / 3.2;
 
+    final lineChart = LineChart(
+      LineChartData(
+        minX: minX,
+        maxX: maxX,
+        minY: minY,
+        maxY: maxY,
+        titlesData: _xyAxisLabels(
+          horizontalInterval,
+          verticalInterval,
+          state.granularity,
+        ),
+        lineBarsData: [_priceData()],
+        gridData: _grid(verticalInterval, horizontalInterval),
+        borderData: FlBorderData(
+            show: true,
+            border: Border.all(color: Colors.grey[700]!, width: .8)),
+        lineTouchData: _tooltip(),
+      ),
+      // Without this, swapping from Bitcoin to Cardano takes ~10sec.
+      swapAnimationDuration: Duration.zero,
+    );
+
+    return Flexible(
+      child: Padding(
+        padding: const EdgeInsets.only(right: 13),
+        child: lineChart,
+      ),
+    );
+  }
+
+  FlGridData _grid(double verticalInterval, double horizontalInterval) {
     final gridLine = FlLine(color: Colors.grey[800], strokeWidth: 1);
-    final greyVertAndHorizGrid = FlGridData(
+    return FlGridData(
       show: true,
       drawVerticalLine: true,
       horizontalInterval: verticalInterval,
@@ -46,52 +72,10 @@ class ChartData extends StatelessWidget {
       getDrawingHorizontalLine: (value) => gridLine,
       getDrawingVerticalLine: (value) => gridLine,
     );
+  }
 
-    final xAxisLabelStyle = TextStyle(
-      color: Colors.grey[400],
-      fontWeight: FontWeight.w500,
-      fontSize: 12,
-      letterSpacing: -1.5,
-    );
-    final xAxisLabels = SideTitles(
-      showTitles: true,
-      // Height available to label
-      reservedSize: 28,
-      margin: 7,
-      interval: horizontalInterval,
-      getTextStyles: (context, value) => xAxisLabelStyle,
-      getTitles: (value) {
-        final dateTime = DateTime.fromMillisecondsSinceEpoch(
-          value.toInt(),
-          isUtc: true,
-        );
-        if (state.granularity >= Granularities.sixHours) {
-          final day = DateFormat.EEEE().format(dateTime);
-          final date = DateFormat.MMMd().format(dateTime);
-          return '$day\n$date';
-        }
-        return DateFormat.jm().format(dateTime);
-      },
-    );
-
-    final yAxisLabelStyle = xAxisLabelStyle.copyWith(fontSize: 15);
-    final yAxisLabels = SideTitles(
-      showTitles: true,
-      interval: verticalInterval,
-      reservedSize: 55,
-      margin: 7,
-      getTextStyles: (context, value) => yAxisLabelStyle,
-      getTitles: (value) => NumberFormat.compactSimpleCurrency().format(value),
-    );
-    final xyAxisLabels = FlTitlesData(
-      show: true,
-      rightTitles: SideTitles(showTitles: false),
-      topTitles: SideTitles(showTitles: false),
-      bottomTitles: xAxisLabels,
-      leftTitles: yAxisLabels,
-    );
-
-    final tooltip = LineTouchData(
+  LineTouchData _tooltip() {
+    return LineTouchData(
       touchTooltipData: LineTouchTooltipData(
         getTooltipItems: (touchedSpots) => touchedSpots.map((touchedSpot) {
           final millis = touchedSpot.x.toInt();
@@ -106,29 +90,6 @@ class ChartData extends StatelessWidget {
           const style = TextStyle(color: Colors.lightBlueAccent);
           return LineTooltipItem(text, style);
         }).toList(),
-      ),
-    );
-
-    final lineChart = LineChart(
-      LineChartData(
-        minX: minX,
-        maxX: maxX,
-        minY: minY,
-        maxY: maxY,
-        titlesData: xyAxisLabels,
-        lineBarsData: [_priceData()],
-        gridData: greyVertAndHorizGrid,
-        borderData: greyBorder,
-        lineTouchData: tooltip,
-      ),
-      // Without this, swapping from Bitcoin to Cardano takes ~10sec.
-      swapAnimationDuration: Duration.zero,
-    );
-
-    return Flexible(
-      child: Padding(
-        padding: const EdgeInsets.only(right: 13),
-        child: lineChart,
       ),
     );
   }
@@ -157,5 +118,56 @@ class ChartData extends StatelessWidget {
         gradientTo: const Offset(.5, 0),
       ),
     );
+  }
+
+  FlTitlesData _xyAxisLabels(
+    double horizontalInterval,
+    double verticalInterval,
+    Granularity granularity,
+  ) {
+    final xAxisLabelStyle = TextStyle(
+      color: Colors.grey[400],
+      fontWeight: FontWeight.w500,
+      fontSize: 12,
+      letterSpacing: -1.5,
+    );
+    final xAxisLabels = SideTitles(
+      showTitles: true,
+      // Height available to label
+      reservedSize: 28,
+      margin: 7,
+      interval: horizontalInterval,
+      getTextStyles: (context, value) => xAxisLabelStyle,
+      getTitles: (value) {
+        final dateTime = DateTime.fromMillisecondsSinceEpoch(
+          value.toInt(),
+          isUtc: true,
+        );
+        if (granularity >= Granularities.sixHours) {
+          final day = DateFormat.EEEE().format(dateTime);
+          final date = DateFormat.MMMd().format(dateTime);
+          return '$day\n$date';
+        }
+        return DateFormat.jm().format(dateTime);
+      },
+    );
+
+    final yAxisLabelStyle = xAxisLabelStyle.copyWith(fontSize: 15);
+    final yAxisLabels = SideTitles(
+      showTitles: true,
+      interval: verticalInterval,
+      reservedSize: 55,
+      margin: 7,
+      getTextStyles: (context, value) => yAxisLabelStyle,
+      getTitles: (value) => NumberFormat.compactSimpleCurrency().format(value),
+    );
+    final xyAxisLabels = FlTitlesData(
+      show: true,
+      rightTitles: SideTitles(showTitles: false),
+      topTitles: SideTitles(showTitles: false),
+      bottomTitles: xAxisLabels,
+      leftTitles: yAxisLabels,
+    );
+    return xyAxisLabels;
   }
 }
