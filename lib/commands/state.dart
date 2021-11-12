@@ -5,7 +5,8 @@ enum MultistageCommandState {
   /// There was an error before, but it was shown to user so now it was cleared.
   resetted,
 
-  /// Phase 0: Command is just about to start.
+  /// Phase 0: Command was created but hasn't started. Potentially waiting for
+  /// previous command to complete.
   scheduled,
 
   /// Phase 1: Send request to modify remote state.
