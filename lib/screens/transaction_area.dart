@@ -21,6 +21,14 @@ class TransactionArea extends StatelessWidget {
                 switchOutCurve: Curves.easeInToLinear,
                 child: executor.isRunning
                     ? WhileRunning(executor)
-                    : TransactButtons())));
+                    : executor.hasError
+                        ? _showError(executor)
+                        : TransactButtons())));
+  }
+
+  Text _showError(MultistageCommandExecutor executor) {
+    Future.delayed(const Duration(seconds: 2), () => executor.resetError());
+    // TODO format this better
+    return Text('Error ${executor.currCommand!.error}');
   }
 }

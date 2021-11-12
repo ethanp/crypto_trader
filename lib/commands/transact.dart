@@ -21,7 +21,7 @@ abstract class TransactCommand extends MultistageCommand {
 
   @override
   Future<void> verify() async {
-    for (int numRuns = 0; numRuns < 12; numRuns++) {
+    for (int numRuns = 0; numRuns < 10; numRuns++) {
       await Future.delayed(const Duration(seconds: 1));
       final dollarsNow = await _dollarsNow();
       if (dollarsNow != _originalDollarsHolding) {

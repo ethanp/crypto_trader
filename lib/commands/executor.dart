@@ -13,6 +13,8 @@ class MultistageCommandExecutor extends ChangeNotifier {
 
   MultistageCommand? currCommand;
 
+  MultistageCommand get _command => currCommand!;
+
   MultistageCommandState get state =>
       currCommand?.state ?? MultistageCommandState.nonExistent;
 
@@ -21,9 +23,9 @@ class MultistageCommandExecutor extends ChangeNotifier {
       _synchronizer.synchronized(() async {
         print('starting $command');
         currCommand = command;
-        await _request(command);
-        await _verify(command);
-        _complete(command);
+        await _request();
+        await _verify();
+        _complete();
       });
 
   bool get isRunning => [
@@ -32,38 +34,49 @@ class MultistageCommandExecutor extends ChangeNotifier {
         MultistageCommandState.verifying
       ].contains(state);
 
-  Future<void> _request(MultistageCommand command) async {
+  bool get hasError => [
+        MultistageCommandState.errorDuringRequest,
+        MultistageCommandState.errorDuringVerify
+      ].contains(state);
+
+  Future<void> _request() async {
     // See https://dart.dev/codelabs/async-await#handling-errors
     try {
-      command.state = MultistageCommandState.requesting;
+      _command.state = MultistageCommandState.requesting;
       notifyListeners();
-      await command.request();
+      await _command.request();
     } on Exception catch (e) {
-      command.state = MultistageCommandState.errorDuringRequest;
-      command.error = e;
-      print('Error during request phase of $command');
+      _command.state = MultistageCommandState.errorDuringRequest;
+      _command.error = e;
+      print('Error during request phase of $currCommand');
       notifyListeners();
       rethrow;
     }
   }
 
-  Future<void> _verify(MultistageCommand command) async {
+  Future<void> _verify() async {
     try {
-      command.state = MultistageCommandState.verifying;
+      _command.state = MultistageCommandState.verifying;
       notifyListeners();
-      await command.verify();
+      await _command.verify();
     } on Exception catch (e) {
-      command.state = MultistageCommandState.errorDuringVerify;
-      command.error = e;
-      print('Error during verify phase of $command');
+      _command.state = MultistageCommandState.errorDuringVerify;
+      _command.error = e;
+      print('Error during verify phase of $currCommand');
       notifyListeners();
       rethrow;
     }
   }
 
-  void _complete(MultistageCommand command) {
-    print('$command command succeeded');
-    command.state = MultistageCommandState.success;
+  void _complete() {
+    print('$currCommand command succeeded');
+    _command.state = MultistageCommandState.success;
+    notifyListeners();
+  }
+
+  void resetError() {
+    print('Resetting error');
+    _command.state = MultistageCommandState.nonExistent;
     notifyListeners();
   }
 }

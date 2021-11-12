@@ -36,10 +36,20 @@ abstract class Brokerage extends ChangeNotifier {
   Future<String> spend(Dollars dollars) => _synchronizer.synchronized(() async {
         final currency = (await getMyHoldings()).shortest.currency;
         print('Buying $dollars of $currency');
-        return _spendInternal(Holding(
-          currency: currency,
-          dollarValue: dollars,
-        ));
+        try {
+          // `await` makes the exception "catchable".
+          return await _spendInternal(Holding(
+            currency: currency,
+            dollarValue: dollars,
+          ));
+        } on InsufficientFundsException {
+          dollars -= Dollars(0.01);
+          print('Insufficient funds trying $dollars of $currency');
+          return _spendInternal(Holding(
+            currency: currency,
+            dollarValue: dollars,
+          ));
+        }
       });
 
   /// Deposit [dollars] into brokerage account from linked checking account.

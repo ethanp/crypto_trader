@@ -1,3 +1,4 @@
+import 'package:crypto_trader/data/access/coinbase_api.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/util.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
@@ -41,8 +42,11 @@ class TransactButton extends StatelessWidget {
       // By the time the `add` returns the command has queued.
       // By the time `await` returns the command has executed.
       await executor.add(cmd);
+    } on InsufficientFundsException {
+      // Not sure why we need a separate catch for this exception but we do.
+      print('Insufficient funds (user was already notified)');
     } catch (err) {
-      MySnackbar(context, err.toString(), const Duration(seconds: 20));
+      MySnackbar.create(context, err.toString(), const Duration(seconds: 20));
     }
   }
 }

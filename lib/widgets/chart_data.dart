@@ -83,7 +83,6 @@ class ChartData extends StatelessWidget {
                 DateTime.fromMillisecondsSinceEpoch(millis, isUtc: true);
             final day = DateFormat.E().format(dateTime);
             final date = DateFormat.MMMd().format(dateTime);
-            // initializeDateFormatting(dateTime.timeZoneName);
             final hourMin = DateFormat.jm().format(dateTime);
             final time = '$day $date\n$hourMin';
             final dollars = Dollars(touchedSpot.y);
@@ -112,7 +111,7 @@ class ChartData extends StatelessWidget {
         show: true,
         colors: [
           _gradientColors[0].withOpacity(0.3),
-          _gradientColors[1].withOpacity(0.6)
+          _gradientColors[1].withOpacity(0.6),
         ],
         gradientFrom: const Offset(.5, 1),
         gradientTo: const Offset(.5, 0),
