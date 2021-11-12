@@ -12,13 +12,13 @@ class WhileRunning extends StatelessWidget {
       Column(children: [_txnTitle(), _actionProgress()]);
 
   Widget _txnTitle() {
-    final text = executor.currCommand!.runtimeType == DepositCommand
-        ? 'Depositing'
-        : 'Buying crypto';
     final transactCommand = executor.currCommand! as TransactCommand;
-    final transactAmount = transactCommand.amount.toString();
-    final lineItem = LineItem(title: text, value: transactAmount, bigger: true);
-    return Padding(padding: const EdgeInsets.only(top: 30), child: lineItem);
+    return Padding(
+        padding: const EdgeInsets.only(top: 30),
+        child: LineItem(
+            title: transactCommand.title,
+            value: transactCommand.amount.toString(),
+            bigger: true));
   }
 
   Widget _actionProgress() => Padding(
@@ -30,10 +30,8 @@ class WhileRunning extends StatelessWidget {
           child: Text(_stageName(),
               key: ValueKey(_stageName()),
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 22,
-                fontStyle: FontStyle.italic,
-              ))));
+              style:
+                  const TextStyle(fontSize: 22, fontStyle: FontStyle.italic))));
 
   String _stageName() {
     switch (executor.state) {

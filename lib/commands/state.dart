@@ -31,4 +31,9 @@ extension abc on MultistageCommandState {
         MultistageCommandState.requesting,
         MultistageCommandState.verifying,
       ].contains(this);
+
+  bool get hasError => [
+        MultistageCommandState.errorDuringRequest,
+        MultistageCommandState.errorDuringVerify,
+      ].contains(this);
 }

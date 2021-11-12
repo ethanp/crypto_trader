@@ -42,8 +42,14 @@ abstract class TransactCommand extends MultistageCommand {
 
 class DepositCommand extends TransactCommand {
   DepositCommand(Dollars amount) : super(amount, Environment.trader.deposit);
+
+  @override
+  String get title => 'Depositing dollars';
 }
 
 class SpendCommand extends TransactCommand {
   SpendCommand(Dollars amount) : super(amount, Environment.trader.spend);
+
+  @override
+  String get title => 'Buying crypto';
 }

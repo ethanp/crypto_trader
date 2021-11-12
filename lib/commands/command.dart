@@ -24,4 +24,6 @@ abstract class MultistageCommand {
 
   @override
   String toString() => '$runtimeType(state: $state)';
+
+  String get title;
 }

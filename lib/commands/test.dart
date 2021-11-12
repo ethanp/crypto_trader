@@ -14,6 +14,9 @@ class FakeCommand extends MultistageCommand {
       print('$runtimeType verify()');
     });
   }
+
+  @override
+  String get title => throw UnimplementedError();
 }
 
 class ErrantRequestCommand extends MultistageCommand {
@@ -30,6 +33,9 @@ class ErrantRequestCommand extends MultistageCommand {
       print('ERROR: Should not have gotten here in $runtimeType');
     });
   }
+
+  @override
+  String get title => throw UnimplementedError();
 }
 
 class ErrantVerifyCommand extends MultistageCommand {
@@ -46,4 +52,7 @@ class ErrantVerifyCommand extends MultistageCommand {
       throw Exception('error from $runtimeType#verify()');
     });
   }
+
+  @override
+  String get title => throw UnimplementedError();
 }

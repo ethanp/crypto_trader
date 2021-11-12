@@ -28,12 +28,6 @@ class MultistageCommandExecutor extends ChangeNotifier {
         _complete();
       });
 
-  // TODO move this into the MultistageCommandState extension class "abcd".
-  bool get hasError => [
-        MultistageCommandState.errorDuringRequest,
-        MultistageCommandState.errorDuringVerify,
-      ].contains(state);
-
   Future<void> _request() async {
     // See https://dart.dev/codelabs/async-await#handling-errors
     try {
