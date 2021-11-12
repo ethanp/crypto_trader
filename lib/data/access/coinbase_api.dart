@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:crypto_trader/import_facade/extensions.dart';
 import 'package:crypto_trader/import_facade/model.dart';
+import 'package:crypto_trader/import_facade/util.dart';
 import 'package:http/http.dart' as http;
 
 import 'coinbase_account.dart';
@@ -143,17 +144,5 @@ class CoinbaseApi {
     final transfers = jsonDecode(transfersResponse) as List<dynamic>;
     return Dollars(
         transfers.map((xfr) => double.parse(xfr['amount'] as String)).sum);
-  }
-}
-
-class InsufficientFundsException implements Exception {
-  const InsufficientFundsException([this.amountAttempted]);
-
-  final Dollars? amountAttempted;
-
-  @override
-  String toString() {
-    final suffix = amountAttempted != null ? ' to spend $amountAttempted' : '';
-    return 'Insufficient cash available$suffix, deposit more dollars';
   }
 }

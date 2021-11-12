@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
+import 'package:crypto_trader/import_facade/util.dart';
 import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
 

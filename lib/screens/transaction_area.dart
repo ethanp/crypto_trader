@@ -19,10 +19,16 @@ class TransactionArea extends StatelessWidget {
                 duration: const Duration(milliseconds: 800),
                 switchInCurve: Curves.easeInToLinear,
                 switchOutCurve: Curves.easeInToLinear,
-                child: executor.isRunning
-                    ? WhileRunning(executor)
-                    : executor.hasError
-                        ? ShowError(executor)
-                        : TransactButtons())));
+                child: _currentUi(executor))));
+  }
+
+  Widget _currentUi(MultistageCommandExecutor executor) {
+    if (executor.isRunning) {
+      return WhileRunning(executor);
+    } else if (executor.hasError) {
+      return ShowError(executor);
+    } else {
+      return TransactButtons();
+    }
   }
 }
