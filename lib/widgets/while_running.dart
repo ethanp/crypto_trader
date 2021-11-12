@@ -12,8 +12,9 @@ class WhileRunning extends StatelessWidget {
       Column(children: [_txnTitle(), _actionProgress()]);
 
   Widget _txnTitle() {
-    final commandType = executor.currCommand?.runtimeType;
-    final text = commandType == DepositCommand ? 'Depositing' : 'Buying crypto';
+    final text = executor.currCommand!.runtimeType == DepositCommand
+        ? 'Depositing'
+        : 'Buying crypto';
     final transactCommand = executor.currCommand! as TransactCommand;
     final transactAmount = transactCommand.amount.toString();
     final lineItem = LineItem(title: text, value: transactAmount, bigger: true);

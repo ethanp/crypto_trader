@@ -154,6 +154,6 @@ class InsufficientFundsException implements Exception {
   @override
   String toString() {
     final suffix = amountAttempted != null ? ' to spend $amountAttempted' : '';
-    return 'Insufficient funds$suffix';
+    return 'Insufficient cash available$suffix, deposit more dollars';
   }
 }

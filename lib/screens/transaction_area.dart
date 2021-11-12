@@ -26,9 +26,29 @@ class TransactionArea extends StatelessWidget {
                         : TransactButtons())));
   }
 
-  Text _showError(MultistageCommandExecutor executor) {
-    Future.delayed(const Duration(seconds: 2), () => executor.resetError());
-    // TODO format this better
-    return Text('Error ${executor.currCommand!.error}');
+  Widget _showError(MultistageCommandExecutor executor) {
+    Future.delayed(const Duration(seconds: 4), () => executor.resetError());
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Spacer(flex: 3),
+        MyText(
+          'Error',
+          fontSize: 35,
+          color: Colors.red[300],
+        ),
+        const Spacer(),
+        MyText(
+          executor.currCommand!.error.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 24,
+            color: Colors.red[100],
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+        const Spacer(flex: 2),
+      ],
+    );
   }
 }

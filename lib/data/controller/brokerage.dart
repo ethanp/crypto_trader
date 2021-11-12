@@ -43,6 +43,8 @@ abstract class Brokerage extends ChangeNotifier {
             dollarValue: dollars,
           ));
         } on InsufficientFundsException {
+          // Sometimes insufficient funds is due to rounding error or something,
+          // so it works if we just try 1 cent less.
           dollars -= Dollars(0.01);
           print('Insufficient funds trying $dollars of $currency');
           return _spendInternal(Holding(
