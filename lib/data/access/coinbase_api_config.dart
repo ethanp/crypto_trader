@@ -21,7 +21,7 @@ class Config {
   /// Can be useful for debugging.
   @override
   String toString() {
-    final fields = <String, String>{
+    final fields = {
       'key': key,
       'secret': secret,
       'passphrase': passphrase,

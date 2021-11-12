@@ -31,12 +31,12 @@ class MultistageCommandExecutor extends ChangeNotifier {
   bool get isRunning => [
         MultistageCommandState.scheduled,
         MultistageCommandState.requesting,
-        MultistageCommandState.verifying
+        MultistageCommandState.verifying,
       ].contains(state);
 
   bool get hasError => [
         MultistageCommandState.errorDuringRequest,
-        MultistageCommandState.errorDuringVerify
+        MultistageCommandState.errorDuringVerify,
       ].contains(state);
 
   Future<void> _request() async {
@@ -76,7 +76,7 @@ class MultistageCommandExecutor extends ChangeNotifier {
 
   void resetError() {
     print('Resetting error');
-    _command.state = MultistageCommandState.nonExistent;
+    _command.state = MultistageCommandState.resetted;
     notifyListeners();
   }
 }

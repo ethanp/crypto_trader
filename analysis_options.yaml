@@ -14,4 +14,5 @@ linter:
     curly_braces_in_flow_control_structures: false
     no_runtimeType_toString: false
     only_throw_errors: true
+    parameter_assignments: false
     require_trailing_commas: false
