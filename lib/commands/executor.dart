@@ -28,12 +28,7 @@ class MultistageCommandExecutor extends ChangeNotifier {
         _complete();
       });
 
-  bool get isRunning => [
-        MultistageCommandState.scheduled,
-        MultistageCommandState.requesting,
-        MultistageCommandState.verifying,
-      ].contains(state);
-
+  // TODO move this into the MultistageCommandState extension class "abcd".
   bool get hasError => [
         MultistageCommandState.errorDuringRequest,
         MultistageCommandState.errorDuringVerify,

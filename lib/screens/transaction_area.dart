@@ -23,7 +23,7 @@ class TransactionArea extends StatelessWidget {
   }
 
   Widget _currentUi(MultistageCommandExecutor executor) {
-    if (executor.isRunning) {
+    if (executor.state.isRunning) {
       return WhileRunning(executor);
     } else if (executor.hasError) {
       return ShowError(executor);

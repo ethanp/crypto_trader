@@ -24,3 +24,11 @@ enum MultistageCommandState {
   /// Look at the error itself to see what happened.
   errorDuringVerify,
 }
+
+extension abc on MultistageCommandState {
+  bool get isRunning => [
+        MultistageCommandState.scheduled,
+        MultistageCommandState.requesting,
+        MultistageCommandState.verifying,
+      ].contains(this);
+}
