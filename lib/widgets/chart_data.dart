@@ -15,7 +15,14 @@ class ChartData extends StatelessWidget {
   final List<Candle> candles;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => Flexible(
+        child: Padding(
+          padding: const EdgeInsets.only(right: 13),
+          child: _lineChart(context),
+        ),
+      );
+
+  Widget _lineChart(BuildContext context) {
     final state = context.read<PortfolioState>();
 
     // Compute bounds //
@@ -29,10 +36,10 @@ class ChartData extends StatelessWidget {
     final maxY = closingPrices.max;
 
     final horizontalInterval = (maxX - minX) /
-        (state.granularity == Granularities.sixHours ? 3.2 : 5.2);
-    final verticalInterval = (maxY - minY) / 3.2;
+        (state.granularity == Granularities.sixHours ? 3.01 : 5.01);
+    final verticalInterval = (maxY - minY) / 4.01;
 
-    final lineChart = LineChart(
+    return LineChart(
       LineChartData(
         minX: minX,
         maxX: maxX,
@@ -45,22 +52,16 @@ class ChartData extends StatelessWidget {
         ),
         lineBarsData: [_priceData()],
         gridData: _grid(verticalInterval, horizontalInterval),
-        borderData: FlBorderData(
-            show: true,
-            border: Border.all(color: Colors.grey[700]!, width: .8)),
+        borderData: _border(),
         lineTouchData: _tooltip(),
       ),
       // Without this, swapping from Bitcoin to Cardano takes ~10sec.
       swapAnimationDuration: Duration.zero,
     );
-
-    return Flexible(
-      child: Padding(
-        padding: const EdgeInsets.only(right: 13),
-        child: lineChart,
-      ),
-    );
   }
+
+  FlBorderData _border() => FlBorderData(
+      show: true, border: Border.all(color: Colors.grey[700]!, width: .8));
 
   FlGridData _grid(double verticalInterval, double horizontalInterval) {
     final gridLine = FlLine(color: Colors.grey[800], strokeWidth: 1);
