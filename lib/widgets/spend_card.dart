@@ -61,7 +61,6 @@ class _SpendCardInnerState extends State<SpendCardInner> {
               AmountField(_fieldController),
               TransactButton(
                 (amount) => SpendCommand(amount),
-                TransactCard.buttonColor,
                 _currentFieldText,
               ),
             ],

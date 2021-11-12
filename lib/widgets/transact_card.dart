@@ -6,8 +6,6 @@ abstract class TransactCard extends StatelessWidget {
 
   Widget body();
 
-  static Color buttonColor = Colors.lightBlueAccent;
-
   @override
   Widget build(BuildContext context) => WithHoldings(
       builder: (holdings) => Card(

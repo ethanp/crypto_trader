@@ -75,25 +75,24 @@ class ChartData extends StatelessWidget {
     );
   }
 
-  LineTouchData _tooltip() {
-    return LineTouchData(
-      touchTooltipData: LineTouchTooltipData(
-        getTooltipItems: (touchedSpots) => touchedSpots.map((touchedSpot) {
-          final millis = touchedSpot.x.toInt();
-          final dateTime = DateTime.fromMillisecondsSinceEpoch(millis);
-          final day = DateFormat.E().format(dateTime);
-          final date = DateFormat.MMMd().format(dateTime);
-          // TODO Get the right timezone here! (Match the other one.)
-          final hourMin = DateFormat.jm().format(dateTime);
-          final time = '$day $date\n$hourMin';
-          final dollars = Dollars(touchedSpot.y);
-          final text = '$dollars\n$time';
-          const style = TextStyle(color: Colors.lightBlueAccent);
-          return LineTooltipItem(text, style);
-        }).toList(),
-      ),
-    );
-  }
+  LineTouchData _tooltip() => LineTouchData(
+        touchTooltipData: LineTouchTooltipData(
+          getTooltipItems: (touchedSpots) => touchedSpots.map((touchedSpot) {
+            final millis = touchedSpot.x.toInt();
+            final dateTime =
+                DateTime.fromMillisecondsSinceEpoch(millis, isUtc: true);
+            final day = DateFormat.E().format(dateTime);
+            final date = DateFormat.MMMd().format(dateTime);
+            // initializeDateFormatting(dateTime.timeZoneName);
+            final hourMin = DateFormat.jm().format(dateTime);
+            final time = '$day $date\n$hourMin';
+            final dollars = Dollars(touchedSpot.y);
+            final text = '$dollars\n$time';
+            const style = TextStyle(color: Colors.lightBlueAccent);
+            return LineTooltipItem(text, style);
+          }).toList(),
+        ),
+      );
 
   LineChartBarData _priceData() {
     const _gradientColors = [Colors.lightBlueAccent, Colors.tealAccent];

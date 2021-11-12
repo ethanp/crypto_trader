@@ -22,7 +22,6 @@ class DepositCard extends TransactCard {
             DepositDropdown(state.value),
             TransactButton(
               (amount) => DepositCommand(amount),
-              TransactCard.buttonColor,
               state,
             ),
           ],

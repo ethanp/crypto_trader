@@ -7,27 +7,26 @@ import 'package:provider/provider.dart';
 
 /// UI [Button] that triggers a financial transaction.
 class TransactButton extends StatelessWidget {
-  /// UI [Button] that triggers a financial transaction.
-  const TransactButton(this.command, this.color, this.amount);
+  /// UI [Button] that -- on press -- triggers a financial transaction.
+  const TransactButton(this.createCommand, this.amountListenable);
 
-  /// What happens when you click the button.
-  final MultistageCommand Function(Dollars) command;
+  /// Build the [MultistageCommand] that executes when you click the button.
+  final MultistageCommand Function(Dollars) createCommand;
 
-  final Color color;
-
-  final ValueNotifier<String> amount;
+  final ValueNotifier<String> amountListenable;
 
   @override
   Widget build(BuildContext context) => SizedBox(
         height: 35,
         child: ValueListenableBuilder<String>(
-          valueListenable: amount,
+          valueListenable: amountListenable,
           builder: (context, value, child) {
-            final valid = AmountField.validateAmount(amount.value) == null;
+            final buttonEnabled = AmountField.validateAmount(value) == null;
             return FloatingActionButton(
               elevation: 7,
-              onPressed: valid ? () => _transact(context) : null,
-              backgroundColor: valid ? color : Colors.grey,
+              onPressed: buttonEnabled ? () => _transact(context) : null,
+              backgroundColor:
+                  buttonEnabled ? Colors.lightBlueAccent : Colors.grey,
               child: const Icon(Icons.attach_money),
             );
           },
@@ -38,7 +37,9 @@ class TransactButton extends StatelessWidget {
     try {
       final executor = context.read<MultistageCommandExecutor>();
       // Get the NEWEST version of the input text.
-      final cmd = command(Dollars(double.parse(amount.value)));
+      final cmd = createCommand(Dollars(double.parse(amountListenable.value)));
+      // By the time the `add` returns the command has queued.
+      // By the time `await` returns the command has executed.
       await executor.add(cmd);
     } catch (err) {
       MySnackbar(context, err.toString(), const Duration(seconds: 20));
