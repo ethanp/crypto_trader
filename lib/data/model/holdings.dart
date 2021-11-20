@@ -16,8 +16,7 @@ class Holdings {
       cryptoHoldings.fold<Dollars>(Dollars(0), (acc, e) => acc + e.dollarValue);
 
   List<Holding> get cryptoHoldings =>
-      holdings.where((h) => h.currency != Currencies.dollars).toList()
-        ..sort((a, b) => Currencies.alphabeticalByName(a.currency, b.currency));
+      holdings.where((h) => h.currency != Currencies.dollars).toList();
 
   /// The [Holding] with the largest shortfall in percentage of portfolio
   /// compared to what was allocated.

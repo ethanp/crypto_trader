@@ -16,11 +16,9 @@ class MyLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Flexible(
-        child: Padding(
+      child: Padding(
           padding: const EdgeInsets.only(right: 13),
-          child: _lineChart(context),
-        ),
-      );
+          child: _lineChart(context)));
 
   Widget _lineChart(BuildContext context) {
     final state = context.read<PortfolioState>();
@@ -99,27 +97,25 @@ class MyLineChart extends StatelessWidget {
   LineChartBarData _priceData() {
     const _gradientColors = [Colors.lightBlueAccent, Colors.tealAccent];
     return LineChartBarData(
-      spots: candles
-          .map((c) => FlSpot(
-                c.timestamp.millisecondsSinceEpoch.toDouble(),
-                c.closingPrice,
-              ))
-          .toList(),
-      isCurved: true,
-      colors: _gradientColors,
-      barWidth: 1,
-      isStrokeCapRound: true,
-      dotData: FlDotData(show: false),
-      belowBarData: BarAreaData(
-        show: true,
-        colors: [
-          _gradientColors[0].withOpacity(0.3),
-          _gradientColors[1].withOpacity(0.6),
-        ],
-        gradientFrom: const Offset(.5, 1),
-        gradientTo: const Offset(.5, 0),
-      ),
-    );
+        spots: candles
+            .map((c) => FlSpot(
+                  c.timestamp.millisecondsSinceEpoch.toDouble(),
+                  c.closingPrice,
+                ))
+            .toList(),
+        isCurved: true,
+        colors: _gradientColors,
+        barWidth: 1,
+        isStrokeCapRound: true,
+        dotData: FlDotData(show: false),
+        belowBarData: BarAreaData(
+            show: true,
+            gradientFrom: const Offset(.5, 1),
+            gradientTo: const Offset(.5, 0),
+            colors: [
+              _gradientColors[0].withOpacity(0.3),
+              _gradientColors[1].withOpacity(0.6),
+            ]));
   }
 
   FlTitlesData _xyAxisLabels(

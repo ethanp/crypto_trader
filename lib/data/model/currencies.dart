@@ -7,10 +7,11 @@ class Currencies {
     callLetters: 'BTC',
     percentAllocation: 40,
   );
-  // TODO sell this one off (probably just use the interface).
   static const bitcoinCash = Currency(
     name: 'Bitcoin Cash',
     callLetters: 'BCH',
+    // TODO(cleanup): Consider selling this off in the interface.
+    // Why would it really go up anymore?
     percentAllocation: 0,
   );
   static const cardano = Currency(
@@ -28,37 +29,36 @@ class Currencies {
     callLetters: 'ETH',
     percentAllocation: 40,
   );
-  // TODO sell this one off (probably just use the interface).
   static const lightcoin = Currency(
     name: 'Lightcoin',
     callLetters: 'LTC',
+    // TODO(cleanup): Consider selling this off in the interface.
+    // Why would it really go up anymore?
     percentAllocation: 0,
   );
 
-  static List<Currency> get allSupported {
-    return _validate([
-      bitcoin,
-      bitcoinCash,
-      cardano,
-      dollars,
-      ethereum,
-      lightcoin,
-    ])
-      ..sort(alphabeticalByName);
-  }
+  static List<Currency> get allSupported => _validated([
+        bitcoin,
+        bitcoinCash,
+        cardano,
+        dollars,
+        ethereum,
+        lightcoin,
+      ])
+        ..sort(byAllocationSize);
 
   static List<Currency> get allCryptoCurrencies =>
       allSupported.where((c) => c != dollars).toList();
 
-  static List<Currency> _validate(List<Currency> list) {
+  static List<Currency> _validated(List<Currency> list) {
     final sum = list.map((e) => e.percentAllocation).sum;
-    if (sum != 100) print('ERROR: PercentAllocation == $sum, not 100');
+    if (sum != 100) throw Exception('Percent allocated == $sum (!= 100)');
     return list;
   }
 
   static Map<String, Currency> get allCurrenciesMap =>
       allSupported.asMap().map((k, v) => MapEntry(v.callLetters, v));
 
-  static int alphabeticalByName(Currency a, Currency b) =>
-      a.name.compareTo(b.name);
+  static int byAllocationSize(Currency a, Currency b) =>
+      -a.percentAllocation.compareTo(b.percentAllocation);
 }
