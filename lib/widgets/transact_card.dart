@@ -10,7 +10,7 @@ abstract class TransactCard extends StatelessWidget {
   Widget build(BuildContext context) => WithHoldings(
       builder: (holdings) => Card(
           shape: _roundedRectOuter(),
-          elevation: 5,
+          elevation: 1,
           child: Container(
               decoration: _roundedRectInner(),
               height: MediaQuery.of(context).size.height / 6,
@@ -22,5 +22,5 @@ abstract class TransactCard extends StatelessWidget {
 
   BoxDecoration _roundedRectInner() => BoxDecoration(
       borderRadius: BorderRadius.circular(20),
-      color: Colors.blue[200]!.withOpacity(.2));
+      color: Colors.grey[700]!.withOpacity(0.6));
 }

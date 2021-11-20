@@ -18,7 +18,7 @@ class PriceChart extends StatelessWidget {
     final state = context.read<PortfolioState>();
     return Column(children: [
       _chartHeader(state),
-      ChartData(candles),
+      MyLineChart(candles),
     ]);
   }
 

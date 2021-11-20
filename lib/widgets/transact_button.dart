@@ -1,4 +1,3 @@
-import 'package:crypto_trader/data/access/coinbase_api.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/util.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
@@ -24,7 +23,7 @@ class TransactButton extends StatelessWidget {
           builder: (context, value, child) {
             final buttonEnabled = AmountField.validateAmount(value) == null;
             return FloatingActionButton(
-              elevation: 7,
+              elevation: buttonEnabled ? 5 : 1,
               onPressed: buttonEnabled ? () => _transact(context) : null,
               backgroundColor:
                   buttonEnabled ? Colors.lightBlueAccent : Colors.grey,

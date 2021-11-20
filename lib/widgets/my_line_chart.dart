@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class ChartData extends StatelessWidget {
-  const ChartData(this.candles);
+class MyLineChart extends StatelessWidget {
+  const MyLineChart(this.candles);
 
   /// Price data for the chart.
   final List<Candle> candles;
@@ -31,8 +31,7 @@ class ChartData extends StatelessWidget {
     final minX = timestamps.min;
     final maxX = timestamps.max;
     final Iterable<double> closingPrices = candles.map((c) => c.closingPrice);
-    final minY =
-        state.granularity == Granularities.oneDay ? .0 : closingPrices.min;
+    final minY = _getMinY(state, closingPrices);
     final maxY = closingPrices.max;
 
     final horizontalInterval = (maxX - minX) /
@@ -60,14 +59,20 @@ class ChartData extends StatelessWidget {
     );
   }
 
+  /// The largest granularity is shown with minY := 0, which allows looking
+  ///  at proportions to see %ge fluctuations.
+  ///
+  /// The other granularities are shown "zoomed in", which makes it easier to
+  ///  look at directionality of recent (relatively insignificant) changes.
+  double _getMinY(PortfolioState state, Iterable<double> closingPrices) =>
+      state.granularity == Granularities.oneDay ? .0 : closingPrices.min;
+
   FlBorderData _border() => FlBorderData(
       show: true, border: Border.all(color: Colors.grey[700]!, width: .8));
 
   FlGridData _grid(double verticalInterval, double horizontalInterval) {
     final gridLine = FlLine(color: Colors.grey[800], strokeWidth: 1);
     return FlGridData(
-      show: true,
-      drawVerticalLine: true,
       horizontalInterval: verticalInterval,
       verticalInterval: horizontalInterval,
       getDrawingHorizontalLine: (value) => gridLine,
@@ -76,22 +81,20 @@ class ChartData extends StatelessWidget {
   }
 
   LineTouchData _tooltip() => LineTouchData(
-        touchTooltipData: LineTouchTooltipData(
+      touchTooltipData: LineTouchTooltipData(
           getTooltipItems: (touchedSpots) => touchedSpots.map((touchedSpot) {
-            final millis = touchedSpot.x.toInt();
-            final dateTime =
-                DateTime.fromMillisecondsSinceEpoch(millis, isUtc: true);
-            final day = DateFormat.E().format(dateTime);
-            final date = DateFormat.MMMd().format(dateTime);
-            final hourMin = DateFormat.jm().format(dateTime);
-            final time = '$day $date\n$hourMin';
-            final dollars = Dollars(touchedSpot.y);
-            final text = '$dollars\n$time';
-            const style = TextStyle(color: Colors.lightBlueAccent);
-            return LineTooltipItem(text, style);
-          }).toList(),
-        ),
-      );
+                final millis = touchedSpot.x.toInt();
+                final dateTime =
+                    DateTime.fromMillisecondsSinceEpoch(millis, isUtc: true);
+                final day = DateFormat.E().format(dateTime);
+                final date = DateFormat.MMMd().format(dateTime);
+                final hourMin = DateFormat.jm().format(dateTime);
+                final time = '$day $date\n$hourMin';
+                final dollars = Dollars(touchedSpot.y);
+                final text = '$dollars\n$time';
+                const style = TextStyle(color: Colors.lightBlueAccent);
+                return LineTooltipItem(text, style);
+              }).toList()));
 
   LineChartBarData _priceData() {
     const _gradientColors = [Colors.lightBlueAccent, Colors.tealAccent];

@@ -18,6 +18,7 @@ class AmountField extends StatelessWidget {
         controller: fieldController,
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
+          errorStyle: TextStyle(color: Colors.red[500]),
           fillColor: Colors.grey[800]!.withOpacity(0.7),
           filled: true,
           labelText: '\$ Amount',

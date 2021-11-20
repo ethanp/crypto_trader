@@ -5,17 +5,18 @@ class Currencies {
   static const bitcoin = Currency(
     name: 'Bitcoin',
     callLetters: 'BTC',
-    percentAllocation: 42,
+    percentAllocation: 40,
   );
+  // TODO sell this one off (probably just use the interface).
   static const bitcoinCash = Currency(
     name: 'Bitcoin Cash',
     callLetters: 'BCH',
-    percentAllocation: 5,
+    percentAllocation: 0,
   );
   static const cardano = Currency(
     name: 'Cardano',
     callLetters: 'ADA',
-    percentAllocation: 18,
+    percentAllocation: 20,
   );
   static const dollars = Currency(
     name: 'US Dollars',
@@ -25,12 +26,13 @@ class Currencies {
   static const ethereum = Currency(
     name: 'Ethereum',
     callLetters: 'ETH',
-    percentAllocation: 30,
+    percentAllocation: 40,
   );
+  // TODO sell this one off (probably just use the interface).
   static const lightcoin = Currency(
     name: 'Lightcoin',
     callLetters: 'LTC',
-    percentAllocation: 5,
+    percentAllocation: 0,
   );
 
   static List<Currency> get allSupported {
