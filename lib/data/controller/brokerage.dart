@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/util.dart';
@@ -27,14 +25,14 @@ abstract class Brokerage extends ChangeNotifier {
       _synchronizer.synchronized(_holdingsCache.get);
 
   @protected
-  Future<String> _spendInternal(Holding holding);
+  Future<void> _spendInternal(Holding holding);
 
   @protected
-  Future<String> _depositInternal(Dollars dollars);
+  Future<void> _depositInternal(Dollars dollars);
 
   /// Trade USD for the "shortest" currency. Ie. the one where we have the
   /// largest deficit compared to its portfolio allocation.
-  Future<String> spend(Dollars dollars) => _synchronizer.synchronized(() async {
+  Future<void> spend(Dollars dollars) => _synchronizer.synchronized(() async {
         final currency = (await getMyHoldings()).shortest.currency;
         print('Buying $dollars of $currency');
         try {
@@ -48,18 +46,19 @@ abstract class Brokerage extends ChangeNotifier {
           // so it works if we just try 1 cent less.
           dollars -= Dollars(0.01);
           print('Insufficient funds trying $dollars of $currency');
-          return _spendInternal(Holding(
+          await _spendInternal(Holding(
             currency: currency,
             dollarValue: dollars,
           ));
+          _invalidateHoldings();
         }
       });
 
   /// Deposit [dollars] into brokerage account from linked checking account.
-  Future<String> deposit(Dollars dollars) =>
-      _synchronizer.synchronized(() async {
+  Future<void> deposit(Dollars dollars) => _synchronizer.synchronized(() async {
         print('Depositing $dollars');
-        return _depositInternal(dollars);
+        await _depositInternal(dollars);
+        _invalidateHoldings();
       });
 
   Future<void> _invalidateHoldings() =>
@@ -106,22 +105,12 @@ class FakeBrokerage extends Brokerage {
 class CoinbaseProBrokerage extends Brokerage {
   /// https://docs.pro.coinbase.com/?ruby#place-a-new-order
   @override
-  Future<String> _spendInternal(Holding order) async {
-    final String orderResponse = await CoinbaseApi().marketOrder(order);
-    print('Order: $orderResponse');
-    final dynamic decoded = jsonDecode(orderResponse);
-    await _invalidateHoldings();
-    return decoded['id'] as String;
-  }
+  Future<void> _spendInternal(Holding order) =>
+      CoinbaseApi().marketOrder(order);
 
   @override
-  Future<String> _depositInternal(Dollars dollars) async {
-    final String depositResponse = await CoinbaseApi().deposit(dollars);
-    print('Deposit: $depositResponse');
-    final dynamic decoded = jsonDecode(depositResponse);
-    await _invalidateHoldings();
-    return decoded['id'] as String;
-  }
+  Future<void> _depositInternal(Dollars dollars) =>
+      CoinbaseApi().deposit(dollars);
 
   @override
   Future<Dollars> _getTotalDeposits() => CoinbaseApi().totalDeposits();

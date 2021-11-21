@@ -19,8 +19,7 @@ class DepositDropdown extends StatelessWidget {
   Widget _dropdown(BuildContext context) => Positioned(
       top: 7,
       child: SizedBox(
-          width: 80,
-          height: 38,
+          width: 75,
           child: DropdownButtonFormField<int>(
               value: int.parse(selectedDropdownValue),
               decoration: InputDecoration(
@@ -30,18 +29,13 @@ class DepositDropdown extends StatelessWidget {
                   fillColor: Colors.grey[800]!.withOpacity(0.7)),
               enableFeedback: true,
               iconSize: 16,
-              itemHeight: 70,
               onChanged: (int? newValue) =>
                   context.read<DepositCardValue>().value = newValue!.toString(),
               items: _dropdownItems())));
 
-  List<DropdownMenuItem<int>> _dropdownItems() => [
-        for (final dropdownValue in [10, 20, 50])
-          DropdownMenuItem(
-            value: dropdownValue,
-            child: Text(dropdownValue.toString()),
-          )
-      ];
+  List<DropdownMenuItem<int>> _dropdownItems() => [10, 20, 50]
+      .map((v) => DropdownMenuItem(value: v, child: Text(v.toString())))
+      .toList();
 
   Widget _label() => Text('\$ Amount',
       style: TextStyle(color: Colors.green[200], fontSize: 12));

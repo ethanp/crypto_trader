@@ -8,7 +8,7 @@ import 'command.dart';
 abstract class TransactCommand extends MultistageCommand {
   TransactCommand(this.amount, this.fun);
 
-  final Future<String> Function(Dollars) fun;
+  final Future<void> Function(Dollars) fun;
   final Dollars amount;
   late final Dollars _originalDollarsHolding;
 
