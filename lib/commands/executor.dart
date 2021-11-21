@@ -37,7 +37,7 @@ class MultistageCommandExecutor extends ChangeNotifier {
     } on Exception catch (e) {
       _command.state = MultistageCommandState.errorDuringRequest;
       _command.error = e;
-      print('Error during request phase of $currCommand');
+      print('Error during request phase of $currCommand: $e');
       notifyListeners();
       rethrow;
     }

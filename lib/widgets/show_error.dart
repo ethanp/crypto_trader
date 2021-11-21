@@ -9,6 +9,7 @@ class ShowError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 4), () => executor.resetError());
+    final error = executor.currCommand!.error;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -20,7 +21,7 @@ class ShowError extends StatelessWidget {
         ),
         const Spacer(),
         MyText(
-          executor.currCommand!.error.toString(),
+          error.toString(),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 24,

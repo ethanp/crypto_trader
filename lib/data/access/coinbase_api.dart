@@ -65,7 +65,8 @@ class CoinbaseApi {
           // Buy `currency` using USD.
           'product_id': '${order.currency.callLetters}-USD',
           // In "quote currency", which is USD in this case, eg. "$0.01".
-          'funds': '${order.dollarValue.amt}',
+          // If we don't truncate to 2-decimals, then Coinbase returns error.
+          'funds': order.dollarValue.amt.toStringAsFixed(2),
         },
       );
 
