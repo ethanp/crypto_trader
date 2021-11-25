@@ -10,7 +10,8 @@ class CoinbaseAccount {
   final dynamic acct;
 
   /// True iff this account holds a currency that is part of our portfolio.
-  bool get isSupported => Currencies.allCurrenciesMap.containsKey(_callLetters);
+  bool get isSupported =>
+      Currencies.asMapByCallLetters.containsKey(_callLetters);
 
   /// Materialize a [Holding] out of this [CoinbaseAccount].
   Future<Holding> get asHolding async {

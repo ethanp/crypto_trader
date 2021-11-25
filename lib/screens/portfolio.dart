@@ -28,8 +28,8 @@ class Portfolio extends StatelessWidget {
 
   // Using ListView instead would allow user scrolling, which would help if
   // there were more portfolio items.
-  Widget _currencyList() => Column(
-      children: Currencies.allCryptoCurrencies.map(_asListItem).toList());
+  Widget _currencyList() =>
+      Column(children: Currencies.crypto.map(_asListItem).toList());
 
   Widget _asListItem(Currency currency) => Padding(
       padding: const EdgeInsets.all(2),

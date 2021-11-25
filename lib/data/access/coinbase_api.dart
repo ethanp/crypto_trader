@@ -70,6 +70,23 @@ class CoinbaseApi {
         },
       );
 
+  /// Calls https://docs.pro.coinbase.com/?ruby#list-accounts
+  Future<Iterable<CoinbaseAccount>> getAccounts() async {
+    final String holdingsResponse = await _get(path: 'accounts', private: true);
+    final accountListRaw = jsonDecode(holdingsResponse) as List<dynamic>;
+    return accountListRaw.map((raw) => CoinbaseAccount(raw));
+  }
+
+  Future<Dollars> totalDeposits() async {
+    // TODO(cleanup): Cache this.
+    print('retrieving deposits');
+    final String transfersResponse =
+        await _get(path: 'transfers', private: true);
+    final transfers = jsonDecode(transfersResponse) as List<dynamic>;
+    return Dollars(
+        transfers.map((xfr) => double.parse(xfr['amount'] as String)).sum);
+  }
+
   /// https://docs.pro.coinbase.com/#payment-methods
   Future<String> _getPaymentMethodId() async {
     final response = await _get(path: 'payment-methods', private: true);
@@ -129,21 +146,5 @@ class CoinbaseApi {
           'sent headers: $headers\n\n');
     }
     return res.body;
-  }
-
-  Future<Iterable<CoinbaseAccount>> getAccounts() async {
-    final String holdingsResponse = await _get(path: 'accounts', private: true);
-    final accountListRaw = jsonDecode(holdingsResponse) as List<dynamic>;
-    return accountListRaw.map((raw) => CoinbaseAccount(raw));
-  }
-
-  Future<Dollars> totalDeposits() async {
-    // TODO(cleanup): Cache this.
-    print('retrieving deposits');
-    final String transfersResponse =
-        await _get(path: 'transfers', private: true);
-    final transfers = jsonDecode(transfersResponse) as List<dynamic>;
-    return Dollars(
-        transfers.map((xfr) => double.parse(xfr['amount'] as String)).sum);
   }
 }

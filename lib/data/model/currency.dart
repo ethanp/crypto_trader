@@ -20,7 +20,7 @@ class Currency {
 
   /// Retrieve a [Currency] using its [callLetters].
   static Currency byCallLetters(String callLetters) =>
-      Currencies.allCurrenciesMap[callLetters]!;
+      Currencies.asMapByCallLetters[callLetters]!;
 
   @override
   bool operator ==(Object other) =>

@@ -9,12 +9,9 @@ class DepositDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-      width: 80,
+      width: 75,
       height: 48,
-      child: Stack(children: [
-        _dropdown(context),
-        _label(),
-      ]));
+      child: Stack(children: [_dropdown(context), _label()]));
 
   Widget _dropdown(BuildContext context) => Positioned(
       top: 7,
@@ -31,9 +28,9 @@ class DepositDropdown extends StatelessWidget {
               iconSize: 16,
               onChanged: (int? newValue) =>
                   context.read<DepositCardValue>().value = newValue!.toString(),
-              items: _dropdownItems())));
+              items: _dropdownItems([10, 20, 50]))));
 
-  List<DropdownMenuItem<int>> _dropdownItems() => [10, 20, 50]
+  List<DropdownMenuItem<int>> _dropdownItems(List<int> values) => values
       .map((v) => DropdownMenuItem(value: v, child: Text(v.toString())))
       .toList();
 

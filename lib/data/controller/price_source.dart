@@ -36,7 +36,7 @@ class CandleCaches {
   const CandleCaches._(this._caches);
 
   factory CandleCaches.build() => CandleCaches._({
-        for (final c in Currencies.allCryptoCurrencies)
+        for (final c in Currencies.crypto)
           c: {for (final g in Granularities.all) g: CandlesCache(c, g)}
       });
 

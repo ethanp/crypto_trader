@@ -5,7 +5,7 @@ class Currencies {
   static const bitcoin = Currency(
     name: 'Bitcoin',
     callLetters: 'BTC',
-    percentAllocation: 40,
+    percentAllocation: 37,
   );
   static const bitcoinCash = Currency(
     name: 'Bitcoin Cash',
@@ -17,7 +17,7 @@ class Currencies {
   static const cardano = Currency(
     name: 'Cardano',
     callLetters: 'ADA',
-    percentAllocation: 20,
+    percentAllocation: 24,
   );
   static const dollars = Currency(
     name: 'US Dollars',
@@ -27,7 +27,7 @@ class Currencies {
   static const ethereum = Currency(
     name: 'Ethereum',
     callLetters: 'ETH',
-    percentAllocation: 40,
+    percentAllocation: 39,
   );
   static const lightcoin = Currency(
     name: 'Lightcoin',
@@ -37,7 +37,7 @@ class Currencies {
     percentAllocation: 0,
   );
 
-  static List<Currency> get allSupported => _validated([
+  static List<Currency> get all => _validated([
         bitcoin,
         bitcoinCash,
         cardano,
@@ -45,10 +45,12 @@ class Currencies {
         ethereum,
         lightcoin,
       ])
-        ..sort(byAllocationSize);
+        ..sort(_byAllocationSize);
 
-  static List<Currency> get allCryptoCurrencies =>
-      allSupported.where((c) => c != dollars).toList();
+  static List<Currency> get crypto => all.where((c) => c != dollars).toList();
+
+  static Map<String, Currency> get asMapByCallLetters =>
+      all.asMap().map((k, v) => MapEntry(v.callLetters, v));
 
   static List<Currency> _validated(List<Currency> list) {
     final sum = list.map((e) => e.percentAllocation).sum;
@@ -56,9 +58,6 @@ class Currencies {
     return list;
   }
 
-  static Map<String, Currency> get allCurrenciesMap =>
-      allSupported.asMap().map((k, v) => MapEntry(v.callLetters, v));
-
-  static int byAllocationSize(Currency a, Currency b) =>
+  static int _byAllocationSize(Currency a, Currency b) =>
       -a.percentAllocation.compareTo(b.percentAllocation);
 }

@@ -16,16 +16,10 @@ class DepositCard extends TransactCard {
       providers: [ChangeNotifierProvider(create: (_) => DepositCardValue())],
       builder: (context, child) {
         final state = context.watch<DepositCardValue>();
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            DepositDropdown(state.value),
-            TransactButton(
-              (amount) => DepositCommand(amount),
-              state,
-            ),
-          ],
-        );
+        return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          DepositDropdown(state.value),
+          TransactButton((amount) => DepositCommand(amount), state),
+        ]);
       },
     );
   }

@@ -3,7 +3,7 @@ import 'package:crypto_trader/import_facade/model.dart';
 class Holdings {
   Holdings(Iterable<Holding> holdings) : holdings = holdings.toList();
 
-  factory Holdings.random() => Holdings(Currencies.allSupported
+  factory Holdings.random() => Holdings(Currencies.all
       .map((c) => Holding(currency: c, dollarValue: Dollars.random(max: 20)))
       .toList());
 

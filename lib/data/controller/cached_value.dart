@@ -40,7 +40,6 @@ class HoldingsCache extends CachedValue<Holdings> {
   Future<Holdings> _fakeInternal() => Future.value(Holdings.random());
 
   Future<Holdings> _coinbaseInternal() async {
-    /// Calls https://docs.pro.coinbase.com/?ruby#list-accounts
     final accounts = await CoinbaseApi().getAccounts();
     return Holdings(await Future.wait(accounts
         .where((acct) => acct.isSupported)
