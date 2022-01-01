@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 class SpendCard extends TransactCard {
   @override
   Widget title() => Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 15),
       child: WithHoldings(
           builder: (holdings) => MyText(
               'Buy ${holdings?.shortest.currency.name ?? '(Loading...)'}',

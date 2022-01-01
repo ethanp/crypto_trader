@@ -9,11 +9,8 @@ class TransactionArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final executor = context.watch<MultistageCommandExecutor>();
-    final screenSize = MediaQuery.of(context).size;
     return Container(
         color: Colors.grey[800],
-        height: screenSize.height / 4.4,
-        width: screenSize.width,
         child: Padding(
             padding: const EdgeInsets.only(top: 2, bottom: 2),
             child: AnimatedSwitcher(
