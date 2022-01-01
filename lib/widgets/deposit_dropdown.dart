@@ -28,7 +28,7 @@ class DepositDropdown extends StatelessWidget {
               iconSize: 16,
               onChanged: (int? newValue) =>
                   context.read<DepositCardValue>().value = newValue!.toString(),
-              items: _dropdownItems([10, 20, 50]))));
+              items: _dropdownItems([10, 20, 30, 50]))));
 
   List<DropdownMenuItem<int>> _dropdownItems(List<int> values) => values
       .map((v) => DropdownMenuItem(value: v, child: Text(v.toString())))

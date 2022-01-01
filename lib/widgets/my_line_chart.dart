@@ -95,27 +95,29 @@ class MyLineChart extends StatelessWidget {
               }).toList()));
 
   LineChartBarData _priceData() {
-    const _gradientColors = [Colors.lightBlueAccent, Colors.tealAccent];
+    const lineColors = [Colors.lightBlueAccent, Colors.tealAccent];
+    final areaColors = [
+      lineColors[0].withOpacity(0.3),
+      lineColors[1].withOpacity(0.6)
+    ];
+    const verticalLine = [Offset(.5, 1), Offset(.5, 0)];
     return LineChartBarData(
+        isCurved: true,
+        colors: lineColors,
+        barWidth: 1,
+        isStrokeCapRound: true,
+        dotData: FlDotData(show: false),
         spots: candles
             .map((c) => FlSpot(
                   c.timestamp.millisecondsSinceEpoch.toDouble(),
                   c.closingPrice,
                 ))
             .toList(),
-        isCurved: true,
-        colors: _gradientColors,
-        barWidth: 1,
-        isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
         belowBarData: BarAreaData(
             show: true,
-            gradientFrom: const Offset(.5, 1),
-            gradientTo: const Offset(.5, 0),
-            colors: [
-              _gradientColors[0].withOpacity(0.3),
-              _gradientColors[1].withOpacity(0.6),
-            ]));
+            gradientFrom: verticalLine.first,
+            gradientTo: verticalLine.last,
+            colors: areaColors));
   }
 
   FlTitlesData _xyAxisLabels(

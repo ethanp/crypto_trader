@@ -5,13 +5,11 @@ class Currencies {
   static const bitcoin = Currency(
     name: 'Bitcoin',
     callLetters: 'BTC',
-    percentAllocation: 37,
+    percentAllocation: 39,
   );
   static const bitcoinCash = Currency(
     name: 'Bitcoin Cash',
     callLetters: 'BCH',
-    // TODO(cleanup): Consider selling this off in the interface.
-    // Why would it really go up anymore?
     percentAllocation: 0,
   );
   static const cardano = Currency(
@@ -27,14 +25,17 @@ class Currencies {
   static const ethereum = Currency(
     name: 'Ethereum',
     callLetters: 'ETH',
-    percentAllocation: 39,
+    percentAllocation: 34,
   );
   static const lightcoin = Currency(
     name: 'Lightcoin',
     callLetters: 'LTC',
-    // TODO(cleanup): Consider selling this off in the interface.
-    // Why would it really go up anymore?
-    percentAllocation: 0,
+    percentAllocation: 1,
+  );
+  static const solana = Currency(
+    name: 'Solana',
+    callLetters: 'SOL',
+    percentAllocation: 2,
   );
 
   static List<Currency> get all => _validated([
@@ -44,6 +45,7 @@ class Currencies {
         dollars,
         ethereum,
         lightcoin,
+        solana,
       ])
         ..sort(_byAllocationSize);
 
