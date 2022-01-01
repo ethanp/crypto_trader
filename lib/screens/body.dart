@@ -8,15 +8,14 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     UiRefresher.register(context);
     return Scaffold(
-      appBar: _appBar(context),
-      body: SafeArea(
-        child: Column(children: [
-          HoldingsFacts(),
-          TransactionArea(),
-          if (!_keyboardIsShowing(context)) Portfolio(),
-        ]),
-      ),
-    );
+        appBar: _appBar(context),
+        body: SafeArea(
+          child: Column(children: [
+            HoldingsFacts(),
+            TransactionArea(),
+            if (!_keyboardIsShowing(context)) Portfolio(),
+          ]),
+        ));
   }
 
   AppBar _appBar(BuildContext context) => AppBar(

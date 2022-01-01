@@ -33,8 +33,7 @@ class OutermostWidget extends StatelessWidget {
 
   /// Hide the keyboard on global tap.
   Widget _enableKeyboardHiding({required Widget child}) => GestureDetector(
-        /// Source: https://stackoverflow.com/a/62327156/1959155
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: child,
-      );
+      // Source: https://stackoverflow.com/a/62327156/1959155
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: child);
 }

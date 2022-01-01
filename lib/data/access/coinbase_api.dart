@@ -78,7 +78,8 @@ class CoinbaseApi {
   }
 
   Future<Dollars> totalDeposits() async {
-    // TODO(cleanup): Cache this.
+    // TODO(cleanup): Cache this. Should be simple to use the
+    //  [CachedValue<Dollars>] class.
     print('retrieving deposits');
     final String transfersResponse =
         await _get(path: 'transfers', private: true);

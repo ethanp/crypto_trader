@@ -50,11 +50,10 @@ class _SpendCardInnerState extends State<SpendCardInner> {
   }
 
   @override
-  Widget build(BuildContext context) => WithHoldings(
-        builder: (holdings) {
-          // Different placement of this may lead to different refresh semantics.
-          _fillFieldWithInitialValue(holdings);
-          return Row(
+  Widget build(BuildContext context) => WithHoldings(builder: (holdings) {
+        // Different placement of this may lead to different refresh semantics.
+        _fillFieldWithInitialValue(holdings);
+        return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -62,11 +61,9 @@ class _SpendCardInnerState extends State<SpendCardInner> {
               TransactButton(
                 (amount) => SpendCommand(amount),
                 _currentFieldText,
-              ),
-            ],
-          );
-        },
-      );
+              )
+            ]);
+      });
 
   void _fillFieldWithInitialValue(Holdings? holdings) {
     if (holdings != null) {
