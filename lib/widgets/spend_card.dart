@@ -12,10 +12,15 @@ class SpendCard extends TransactCard {
   Widget title() => Padding(
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: WithHoldings(
-          builder: (holdings) => MyText(
-              'Buy ${holdings?.shortest.currency.name ?? '(Loading...)'}',
-              fontSize: 18,
-              color: Colors.grey[300])));
+          builder: (holdings) =>
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                MyText('Buy ', fontSize: 16, color: Colors.grey[400]),
+                MyText(holdings?.shortest.currency.name ?? '(Loading...)',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[300]))
+              ])));
 
   @override
   Widget body() => SpendCardInner();

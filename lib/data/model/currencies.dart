@@ -5,7 +5,7 @@ class Currencies {
   static const bitcoin = Currency(
     name: 'Bitcoin',
     callLetters: 'BTC',
-    percentAllocation: 39,
+    percentAllocation: 40,
   );
   static const bitcoinCash = Currency(
     name: 'Bitcoin Cash',
@@ -15,7 +15,7 @@ class Currencies {
   static const cardano = Currency(
     name: 'Cardano',
     callLetters: 'ADA',
-    percentAllocation: 24,
+    percentAllocation: 25,
   );
   static const dollars = Currency(
     name: 'US Dollars',
@@ -25,17 +25,17 @@ class Currencies {
   static const ethereum = Currency(
     name: 'Ethereum',
     callLetters: 'ETH',
-    percentAllocation: 34,
+    percentAllocation: 35,
   );
   static const lightcoin = Currency(
     name: 'Lightcoin',
     callLetters: 'LTC',
-    percentAllocation: 1,
+    percentAllocation: 0,
   );
   static const solana = Currency(
     name: 'Solana',
     callLetters: 'SOL',
-    percentAllocation: 2,
+    percentAllocation: 0,
   );
 
   static List<Currency> get all => _validated([
