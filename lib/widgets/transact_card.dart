@@ -12,6 +12,10 @@ abstract class TransactCard extends StatelessWidget {
           shape: _roundedRectOuter(),
           elevation: 1,
           child: Container(
+              // This is the *max needed height*. It is the size of the
+              // spend_card when there is an amount validation error text
+              // displaying.
+              height: 113,
               padding: const EdgeInsets.only(bottom: 6),
               decoration: _roundedRectInner(),
               width: MediaQuery.of(context).size.width / 2.2,

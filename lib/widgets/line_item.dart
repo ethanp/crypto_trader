@@ -60,7 +60,7 @@ class _Style {
       GoogleFonts.aBeeZee().merge(TextStyle(
           color: Colors.grey[300],
           fontSize: bigger ? 30 : 14,
-          fontWeight: FontWeight.w900));
+          fontWeight: FontWeight.w500));
 
   static TextStyle amountStyle({bool bigger = false}) =>
       TextStyle(color: Colors.green[300], fontSize: bigger ? 35 : 20);

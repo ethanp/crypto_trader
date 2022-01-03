@@ -14,7 +14,7 @@ class SpendCard extends TransactCard {
       child: WithHoldings(
           builder: (holdings) =>
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                MyText('Buy ', fontSize: 16, color: Colors.grey[400]),
+                MyText('Buy ', fontSize: 15, color: Colors.grey[300]),
                 MyText(holdings?.shortest.currency.name ?? '(Loading...)',
                     style: TextStyle(
                         fontSize: 16,

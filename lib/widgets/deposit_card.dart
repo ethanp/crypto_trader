@@ -9,7 +9,7 @@ class DepositCard extends TransactCard {
   Widget title() => Padding(
       padding: const EdgeInsets.only(top: 14, bottom: 7),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        MyText('Deposit ', fontSize: 16, color: Colors.grey[400]),
+        MyText('Deposit ', fontSize: 15, color: Colors.grey[300]),
         MyText('Dollars',
             style: TextStyle(
                 fontSize: 16,
