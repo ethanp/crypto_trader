@@ -7,22 +7,45 @@ class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     UiRefresher.register(context);
-    return Scaffold(
-        appBar: _appBar(context),
-        body: SafeArea(
-          child: Column(children: [
+    final tabs = _tabs(context);
+    return DefaultTabController(
+      length: tabs.length,
+      child: Scaffold(
+          appBar: _appBar(context, tabs),
+          body: TabBarView(children: tabs.map((t) => t.body).toList())),
+    );
+  }
+
+  List<TabGo> _tabs(BuildContext context) => [
+        TabGo(
+          title: 'OG UI',
+          icon: const Icon(Icons.save),
+          body: Column(children: [
             HoldingsFacts(),
             TransactionArea(),
             if (!_keyboardIsShowing(context)) Portfolio(),
           ]),
-        ));
-  }
+        ),
+        TabGo(
+          title: 'NewNew UI',
+          icon: const Icon(Icons.cloud_circle),
+          body: Column(children: [
+            HoldingsFacts(),
+            if (!_keyboardIsShowing(context)) Portfolio(),
+          ]),
+        ),
+      ];
 
-  AppBar _appBar(BuildContext context) => AppBar(
+  AppBar _appBar(BuildContext context, List<TabGo> tabs) => AppBar(
       elevation: 0,
       toolbarHeight: 65,
       backgroundColor: Colors.grey[900]!.withBlue(50),
-      title: const MyText('crypto_trader'),
+      title: TabBar(
+          indicatorSize: TabBarIndicatorSize.label,
+          indicator: const UnderlineTabIndicator(
+            insets: EdgeInsets.only(bottom: 12.0),
+          ),
+          tabs: [...tabs.map((t) => t.tab)]),
       actions: [_refreshButton(context)]);
 
   Widget _refreshButton(BuildContext context) => InkWell(
@@ -40,4 +63,14 @@ class Body extends StatelessWidget {
 
   bool _keyboardIsShowing(BuildContext context) =>
       MediaQuery.of(context).viewInsets.bottom != 0;
+}
+
+class TabGo {
+  const TabGo({required this.title, required this.icon, required this.body});
+
+  final String title;
+  final Icon icon;
+  final Widget body;
+
+  Tab get tab => Tab(text: title, icon: icon);
 }
