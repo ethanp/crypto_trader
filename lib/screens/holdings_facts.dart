@@ -1,9 +1,8 @@
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-/// Display total holdings and earnings.
+/// Displays total holdings and earnings.
 class HoldingsFacts extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Card(
@@ -16,8 +15,8 @@ class HoldingsFacts extends StatelessWidget {
                   gradient: _gradient,
                   boxShadow: const [BoxShadow(blurRadius: 2, spreadRadius: 2)],
                   borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(80),
-                      bottomRight: Radius.circular(80))),
+                      bottomLeft: Radius.circular(100),
+                      bottomRight: Radius.circular(100))),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [_cryptoHoldings(), _cryptoEarnings()]))));

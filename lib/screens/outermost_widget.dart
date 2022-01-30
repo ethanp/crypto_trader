@@ -7,33 +7,37 @@ import 'package:provider/provider.dart';
 
 import 'body.dart';
 
-/// The widget created by [main()].
+/// The [Widget] created by [main()::runApp()].
 class OutermostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    _alwaysRenderInPortraitOrientation();
-    _printWhichEnvironmentIsActive();
-    return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => UiRefresher()),
-          ChangeNotifierProvider(create: (_) => MultistageCommandExecutor()),
-        ],
-        child: _enableKeyboardHiding(
-            child: MaterialApp(
-                theme: ThemeData.dark(),
-                title: 'Crypto Trader',
-                home: Body())));
-  }
+    // Only allow portrait orientation.
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  void _printWhichEnvironmentIsActive() =>
-      print('Using ${Environment.fake ? 'FAKE' : 'REAL'} Coinbase API');
+    // Print which environment is active
+    print('Using ${Environment.fake ? 'FAKE' : 'REAL'} Coinbase API');
 
-  void _alwaysRenderInPortraitOrientation() =>
-      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    // Seems like the top-level widget must create the outer MaterialApp().
+    Widget materialApp = MaterialApp(
+      theme: ThemeData.dark().copyWith(
+        cardColor: Colors.grey[900],
+      ),
+      title: 'Crypto Trader',
+      home: Body(),
+    );
 
-  /// Hide the keyboard on global tap.
-  Widget _enableKeyboardHiding({required Widget child}) => GestureDetector(
+    // Enable keyboard hiding.
+    materialApp = GestureDetector(
       // Source: https://stackoverflow.com/a/62327156/1959155
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: child);
+      child: materialApp,
+    );
+
+    final providers = [
+      ChangeNotifierProvider(create: (_) => UiRefresher()),
+      ChangeNotifierProvider(create: (_) => MultistageCommandExecutor()),
+    ];
+
+    return MultiProvider(providers: providers, child: materialApp);
+  }
 }
