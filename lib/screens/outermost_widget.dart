@@ -17,11 +17,11 @@ class OutermostWidget extends StatelessWidget {
     // Print which environment is active
     print('Using ${Environment.fake ? 'FAKE' : 'REAL'} Coinbase API');
 
-    // Seems like the top-level widget must create the outer MaterialApp().
+    // I think we must create MaterialApp() *as an ancestor* of any widget that
+    // will need to access MediaQuery.of(context).
+    // Ref: https://stackoverflow.com/questions/48498709.
     Widget materialApp = MaterialApp(
-      theme: ThemeData.dark().copyWith(
-        cardColor: Colors.grey[900],
-      ),
+      theme: ThemeData.dark(),
       title: 'Crypto Trader',
       home: Body(),
     );

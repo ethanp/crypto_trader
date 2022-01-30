@@ -5,42 +5,55 @@ import 'package:flutter/material.dart';
 /// Displays total holdings and earnings.
 class HoldingsFacts extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-          padding: const EdgeInsets.only(bottom: 4),
-          child: Container(
-              padding: const EdgeInsets.only(bottom: 14),
-              decoration: BoxDecoration(
-                  gradient: _gradient,
-                  boxShadow: const [BoxShadow(blurRadius: 2, spreadRadius: 2)],
-                  borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(100),
-                      bottomRight: Radius.circular(100))),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [_cryptoHoldings(), _cryptoEarnings()]))));
+  Widget build(BuildContext context) {
+    return styledAsAppBarBottom(holdingsAndEarnings());
+  }
 
-  Gradient get _gradient => LinearGradient(
-      begin: Alignment.topRight,
-      end: Alignment.bottomRight,
-      colors: [Colors.grey[900]!.withBlue(50), Colors.black.withBlue(10)]);
+  Widget styledAsAppBarBottom(Widget child) {
+    const roundedBottomCorners = BorderRadius.only(
+      bottomLeft: Radius.circular(100),
+      bottomRight: Radius.circular(100),
+    );
+    final shadedRoundedAppBarBottom = BoxDecoration(
+      gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomRight,
+          colors: [Colors.grey[900]!.withBlue(50), Colors.black.withBlue(10)]),
+      boxShadow: const [BoxShadow(blurRadius: 2, spreadRadius: 2)],
+      borderRadius: roundedBottomCorners,
+    );
+    return Container(
+      // Spacing between bottom of text and bottom of extended AppBar.
+      padding: const EdgeInsets.only(bottom: 14),
+      decoration: shadedRoundedAppBarBottom,
+      child: child,
+    );
+  }
 
-  Widget _cryptoHoldings() => WithHoldings(
+  Widget holdingsAndEarnings() {
+    final holdings = WithHoldings(
       builder: (holdings) => LineItem(
-          title: 'Holdings', value: holdings?.totalCryptoValue.toString()));
-
-  Widget _cryptoEarnings() => WithHoldings(
+        title: 'Holdings',
+        value: holdings?.totalCryptoValue.toString(),
+      ),
+    );
+    final earnings = WithHoldings(
       builder: (holdings) => WithEarnings(
-          builder: (Dollars? earnings) => LineItem(
-              title: 'Earnings',
-              value: earnings?.toString(),
-              percent: _percent(holdings, earnings))));
-
-  double _percent(Holdings? holdings, Dollars? earnings) {
-    // Default 1 instead of 0 to avoid NaN during division below.
-    final total = holdings?.totalCryptoValue.amt ?? 1.0;
-    final earnedAmt = earnings?.amt ?? 0.0;
-    return earnedAmt / total * 100;
+        builder: (Dollars? earnings) {
+          final total = holdings?.totalCryptoValue.amt ?? 1.0;
+          final earnedAmt = earnings?.amt ?? 0.0;
+          final percent = earnedAmt / total * 100;
+          return LineItem(
+            title: 'Earnings',
+            value: earnings?.toString(),
+            percent: percent,
+          );
+        },
+      ),
+    );
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [holdings, earnings],
+    );
   }
 }
