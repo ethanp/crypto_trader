@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 /// Displays total holdings and earnings.
 class HoldingsFacts extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return styledAsAppBarBottom(holdingsAndEarnings());
-  }
+  Widget build(BuildContext context) =>
+      styledAsAppBarBottom(holdingsAndEarnings());
 
   Widget styledAsAppBarBottom(Widget child) {
     const roundedBottomCorners = BorderRadius.only(

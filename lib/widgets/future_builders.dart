@@ -3,12 +3,18 @@ import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/util.dart';
 import 'package:flutter/material.dart';
 
-/// Simpler API than the built-in `FutureBuilder` for what I'm doing.
+/// Simplified replacement API for the built-in `FutureBuilder`. Shows errors
+/// in console, and on the screen in a Snackbar.
 class EasyFutureBuilder<T> extends StatelessWidget {
   /// A [Widget] that may be different before and after a [future] completes.
-  const EasyFutureBuilder({required this.future, this.builder, this.builderC})
-      : assert((builder == null) != (builderC == null),
-            'Either builder or builderC must be provided, but not both');
+  const EasyFutureBuilder({
+    required this.future,
+    this.builder,
+    this.builderWithContext,
+  }) : assert(
+            (builder == null) != (builderWithContext == null),
+            'Either builder or builderWithContext must be prosvided, '
+            'but not both');
 
   /// Future that will contain data that widgets below depend on.
   final Future<T> future;
@@ -17,7 +23,10 @@ class EasyFutureBuilder<T> extends StatelessWidget {
   /// [future] completes (and may return data).
   final Widget Function(T?)? builder;
 
-  final Widget Function(BuildContext, T?)? builderC;
+  /// A [Function] that *has access to the [BuildContext], and* can return
+  /// different [Widget]s before and after the [future] completes (and may
+  /// return data).
+  final Widget Function(BuildContext, T?)? builderWithContext;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +39,7 @@ class EasyFutureBuilder<T> extends StatelessWidget {
       }),
       builder: (_ctx, holdings) => builder != null
           ? builder!(holdings.data)
-          : builderC!(_ctx, holdings.data),
+          : builderWithContext!(_ctx, holdings.data),
     );
   }
 }
@@ -40,11 +49,11 @@ class WithHoldings extends EasyFutureBuilder<Holdings> {
   /// A [Widget] that can look different before and after [Holdings] were retrieved.
   WithHoldings(
       {Widget Function(Holdings?)? builder,
-      Widget Function(BuildContext, Holdings?)? builderC})
+      Widget Function(BuildContext, Holdings?)? builderWithContext})
       : super(
             future: Environment.trader.getMyHoldings(),
             builder: builder,
-            builderC: builderC);
+            builderWithContext: builderWithContext);
 }
 
 /// Specify [Widget]s to be built before and after [Earnings] were retrieved.

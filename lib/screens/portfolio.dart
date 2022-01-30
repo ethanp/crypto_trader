@@ -14,7 +14,7 @@ class Portfolio extends StatelessWidget {
       builder: (context, _) => Flexible(
             child: Column(children: [
               _priceChart(context.watch<PortfolioState>()),
-              const SizedBox(height: 12),
+              const SizedBox(height: 12), // Separator.
               _currencyList(),
             ]),
           ));
@@ -33,7 +33,7 @@ class Portfolio extends StatelessWidget {
 
   Widget _asListItem(Currency currency) => Padding(
       padding: const EdgeInsets.all(2),
-      child: WithHoldings(builderC: (context, holdings) {
+      child: WithHoldings(builderWithContext: (context, holdings) {
         final state = context.read<PortfolioState>();
         return GestureDetector(
             onTap: () => state.setCurrency(currency),
