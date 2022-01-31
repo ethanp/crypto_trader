@@ -17,7 +17,7 @@ class WhileRunning extends StatelessWidget {
         padding: const EdgeInsets.only(top: 30),
         child: LineItem(
             title: transactCommand.title,
-            value: transactCommand.amount.toString(),
+            value: transactCommand.subtitle,
             bigger: true));
   }
 

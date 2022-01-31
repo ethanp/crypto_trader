@@ -26,4 +26,5 @@ abstract class MultistageCommand {
   String toString() => '$runtimeType(state: $state)';
 
   String get title;
+  String get subtitle;
 }

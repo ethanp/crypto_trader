@@ -17,6 +17,9 @@ class FakeCommand extends MultistageCommand {
 
   @override
   String get title => throw UnimplementedError();
+
+  @override
+  String get subtitle => throw UnimplementedError();
 }
 
 class ErrantRequestCommand extends MultistageCommand {
@@ -36,6 +39,9 @@ class ErrantRequestCommand extends MultistageCommand {
 
   @override
   String get title => throw UnimplementedError();
+
+  @override
+  String get subtitle => throw UnimplementedError();
 }
 
 class ErrantVerifyCommand extends MultistageCommand {
@@ -55,4 +61,7 @@ class ErrantVerifyCommand extends MultistageCommand {
 
   @override
   String get title => throw UnimplementedError();
+
+  @override
+  String get subtitle => throw UnimplementedError();
 }

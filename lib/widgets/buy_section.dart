@@ -11,7 +11,7 @@ class BuySection extends StatelessWidget {
   Widget build(BuildContext context) {
     final executor = context.read<MultistageCommandExecutor>();
     final textEditingController = TextEditingController();
-    final selectedCurrency = Currencies.dollars; // TODO read from context.
+    final selectedCurrency = Currencies.bitcoin; // TODO read from context.
 
     final userInputAmountField = SizedBox(
       width: 50,
@@ -49,6 +49,7 @@ class BuySection extends StatelessWidget {
     TextEditingController textEditingController,
     Currency selectedCurrency,
   ) async {
+    // TODO check that it's a valid number > 10.
     final userInput = double.tryParse(textEditingController.text);
     if (userInput == null) {
       print('Invalid userInput ${textEditingController.text}');
@@ -57,9 +58,12 @@ class BuySection extends StatelessWidget {
     final dollarsToSpend = Dollars(userInput);
     final holdings = await Environment.trader.getMyHoldings();
     final dollarsToDeposit = dollarsToSpend - holdings.of(Currencies.dollars);
-    // IIUC, awaiting this will cause us to wait till the deposit
-    // completes.
-    await executor.enqueue(DepositCommand(dollarsToDeposit));
+    if (dollarsToDeposit.amt > 1) {
+      if (dollarsToDeposit.amt < 10) dollarsToDeposit.amt = 10;
+      // IIUC, awaiting this will cause us to wait till the deposit
+      // completes.
+      await executor.enqueue(DepositCommand(dollarsToDeposit));
+    }
     await executor.enqueue(PurchaseCommand(Holding(
       currency: selectedCurrency,
       dollarValue: dollarsToSpend,

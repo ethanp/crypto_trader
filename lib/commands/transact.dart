@@ -6,17 +6,16 @@ import 'package:crypto_trader/import_facade/model.dart';
 import 'command.dart';
 
 abstract class TransactCommand extends MultistageCommand {
-  TransactCommand(this.amount, this.fun);
+  TransactCommand(this.fun);
 
-  final Future<void> Function(Dollars) fun;
-  final Dollars amount;
+  final Future<void> Function() fun;
   late final Dollars _originalDollarsHolding;
 
   @override
   Future<void> request() async {
     _originalDollarsHolding = await _dollarsNow();
     print('Original dollars: $_originalDollarsHolding');
-    await fun(amount);
+    await fun();
   }
 
   @override
@@ -41,28 +40,39 @@ abstract class TransactCommand extends MultistageCommand {
 }
 
 class DepositCommand extends TransactCommand {
-  DepositCommand(Dollars amount) : super(amount, Environment.trader.deposit);
+  DepositCommand(this.amount)
+      : super(() async => Environment.trader.deposit(amount));
+
+  final Dollars amount;
 
   @override
   String get title => 'Depositing dollars';
+
+  @override
+  String get subtitle => amount.toString();
 }
 
 class SpendCommand extends TransactCommand {
-  SpendCommand(Dollars amount) : super(amount, Environment.trader.spend);
+  SpendCommand(this.amount)
+      : super(() async => Environment.trader.spend(amount));
+  final Dollars amount;
 
   @override
   String get title => 'Buying crypto';
+
+  @override
+  String get subtitle => amount.toString();
 }
 
 class PurchaseCommand extends TransactCommand {
-  // TODO(feature): This is currently a fake implementation that devolves to the
-  //  older version. It should be calling the Environment.trader.purchase API
-  //  (yet-to-be-built).
   PurchaseCommand(this.purchaseOrder)
-      : super(purchaseOrder.dollarValue, Environment.trader.spend);
+      : super(() async => Environment.trader.purchaseOrder(purchaseOrder));
 
   final Holding purchaseOrder;
 
   @override
-  String get title => 'Buying ${purchaseOrder.debugString()}';
+  String get title => 'Buying ${purchaseOrder.currency}';
+
+  @override
+  String get subtitle => purchaseOrder.dollarValue.toString();
 }

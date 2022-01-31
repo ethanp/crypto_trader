@@ -12,6 +12,4 @@ class Holding {
   @override
   String toString() =>
       'Holding{currency: $currency, dollarValue: $dollarValue}';
-
-  String debugString() => '$dollarValue of $currency';
 }
