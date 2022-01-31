@@ -9,27 +9,60 @@ import 'package:provider/provider.dart';
 class BuySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Lint said not to read context within async callback so moved this here.
     final executor = context.read<MultistageCommandExecutor>();
+    final textEditingController = TextEditingController();
+    final selectedCurrency = Currencies.dollars; // TODO read from context.
+
+    final userInputAmountField = SizedBox(
+      width: 50,
+      child: TextFormField(
+        controller: textEditingController,
+      ),
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
       child: Row(children: [
-        SizedBox(width: 50, child: TextFormField()),
+        userInputAmountField,
         const SizedBox(width: 20),
-        ElevatedButton(
-          onPressed: () async {
-            final userInput = Dollars(5);
-            final holdings = await Environment.trader.getMyHoldings();
-            final dollars = holdings.dollarsOf(Currencies.dollars);
-            final remaining = userInput - dollars;
-            // IIUC, awaiting this will cause us to wait till the deposit
-            // completes.
-            await executor.add(DepositCommand(remaining));
-            await executor.add(SpendCommand(userInput));
-          },
-          child: const Text('Buy'),
-        ),
+        _buyButton(executor, textEditingController, selectedCurrency),
       ]),
     );
+  }
+
+  ElevatedButton _buyButton(
+    MultistageCommandExecutor executor,
+    TextEditingController textEditingController,
+    Currency selectedCurrency,
+  ) {
+    return ElevatedButton(
+      onPressed: () => _buyButtonHandler(
+        executor,
+        textEditingController,
+        selectedCurrency,
+      ),
+      child: const Text('Buy'),
+    );
+  }
+
+  Future<void> _buyButtonHandler(
+    MultistageCommandExecutor executor,
+    TextEditingController textEditingController,
+    Currency selectedCurrency,
+  ) async {
+    final userInput = double.tryParse(textEditingController.text);
+    if (userInput == null) {
+      print('Invalid userInput ${textEditingController.text}');
+      return;
+    }
+    final dollarsToSpend = Dollars(userInput);
+    final holdings = await Environment.trader.getMyHoldings();
+    final dollarsToDeposit = dollarsToSpend - holdings.of(Currencies.dollars);
+    // IIUC, awaiting this will cause us to wait till the deposit
+    // completes.
+    await executor.enqueue(DepositCommand(dollarsToDeposit));
+    await executor.enqueue(PurchaseCommand(Holding(
+      currency: selectedCurrency,
+      dollarValue: dollarsToSpend,
+    )));
   }
 }

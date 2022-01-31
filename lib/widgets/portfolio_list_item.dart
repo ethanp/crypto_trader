@@ -37,7 +37,7 @@ class PortfolioListItem extends StatelessWidget {
 
   Widget _header() =>
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        MyText(holdings?.dollarsOf(currency).toString() ?? 'Loading',
+        MyText(holdings?.of(currency).toString() ?? 'Loading',
             style: _Style.holdingValueTextStyle, textAlign: TextAlign.right),
         MyText(' of ', style: _Style.ofStyle),
         MyText(currency.name, style: _Style.currencyNameTextStyle),

@@ -30,10 +30,10 @@ abstract class Brokerage extends ChangeNotifier {
   @protected
   Future<void> _depositInternal(Dollars dollars);
 
-  /// Trade USD for the "shortest" currency. Ie. the one where we have the
-  /// largest deficit compared to its portfolio allocation.
-  Future<void> spend(Dollars dollars) => _synchronizer.synchronized(() async {
-        final currency = (await getMyHoldings()).shortest.currency;
+  Future<void> purchaseOrder(Holding purchaseOrder) =>
+      _synchronizer.synchronized(() async {
+        var dollars = purchaseOrder.dollarValue;
+        final currency = purchaseOrder.currency;
         print('Buying $dollars of $currency');
         try {
           // `await` makes the exception "catchable".
@@ -53,6 +53,13 @@ abstract class Brokerage extends ChangeNotifier {
           _invalidateHoldings();
         }
       });
+
+  /// Trade USD for the "shortest" currency. Ie. the one where we have the
+  /// largest deficit compared to its portfolio allocation.
+  Future<void> spend(Dollars dollars) =>
+      _synchronizer.synchronized(() async => purchaseOrder(Holding(
+          currency: (await getMyHoldings()).shortest.currency,
+          dollarValue: dollars)));
 
   /// Deposit [dollars] into brokerage account from linked checking account.
   Future<void> deposit(Dollars dollars) => _synchronizer.synchronized(() async {
@@ -79,8 +86,8 @@ class FakeBrokerage extends Brokerage {
     print('Fake-buying ${holding.dollarValue} of ${holding.currency.name}');
     final holdings = await getMyHoldings();
     // Seems ok to violate the "dot-dot principle" here since it's a fake :)
-    final Dollars to = holdings.dollarsOf(holding.currency);
-    final Dollars from = holdings.dollarsOf(Currencies.dollars);
+    final Dollars to = holdings.of(holding.currency);
+    final Dollars from = holdings.of(Currencies.dollars);
     // Use .amt because we're actually mutating the `holdings` map here.
     to.amt += holding.dollarValue.amt;
     from.amt -= holding.dollarValue.amt;
@@ -93,7 +100,7 @@ class FakeBrokerage extends Brokerage {
   Future<String> _depositInternal(Dollars deposit) async {
     print('Fake-transferring $deposit from Schwab');
     final holdings = await getMyHoldings();
-    holdings.dollarsOf(Currencies.dollars).amt += deposit.amt;
+    holdings.of(Currencies.dollars).amt += deposit.amt;
     return 'Succeeded';
   }
 

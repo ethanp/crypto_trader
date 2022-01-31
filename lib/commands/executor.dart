@@ -17,7 +17,7 @@ class MultistageCommandExecutor extends ChangeNotifier {
       currCommand?.state ?? MultistageCommandState.nonExistent;
 
   // This synchronization turns this Executor into an implicit Queue ADT.
-  Future<void> add(MultistageCommand command) =>
+  Future<void> enqueue(MultistageCommand command) =>
       _synchronizer.synchronized(() async {
         print('starting $command');
         currCommand = command;

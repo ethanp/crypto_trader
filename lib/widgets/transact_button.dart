@@ -40,7 +40,7 @@ class TransactButton extends StatelessWidget {
       final cmd = createCommand(Dollars(double.parse(amountListenable.value)));
       // By the time the `add` returns the command has queued.
       // By the time `await` returns the command has executed.
-      await executor.add(cmd);
+      await executor.enqueue(cmd);
     } on InsufficientFundsException {
       // Not sure why we need a separate catch for this exception but we do.
       print('Insufficient funds (user was already notified)');

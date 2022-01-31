@@ -35,7 +35,7 @@ abstract class TransactCommand extends MultistageCommand {
 
   Future<Dollars> _dollarsNow() async {
     final holdings = await Environment.trader.forceRefreshHoldings();
-    final dollarsNow = holdings.dollarsOf(Currencies.dollars);
+    final dollarsNow = holdings.of(Currencies.dollars);
     return dollarsNow;
   }
 }
@@ -52,4 +52,17 @@ class SpendCommand extends TransactCommand {
 
   @override
   String get title => 'Buying crypto';
+}
+
+class PurchaseCommand extends TransactCommand {
+  // TODO(feature): This is currently a fake implementation that devolves to the
+  //  older version. It should be calling the Environment.trader.purchase API
+  //  (yet-to-be-built).
+  PurchaseCommand(this.purchaseOrder)
+      : super(purchaseOrder.dollarValue, Environment.trader.spend);
+
+  final Holding purchaseOrder;
+
+  @override
+  String get title => 'Buying ${purchaseOrder.debugString()}';
 }

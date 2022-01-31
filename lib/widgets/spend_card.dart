@@ -73,7 +73,7 @@ class _SpendCardInnerState extends State<SpendCardInner> {
   void _fillFieldWithInitialValue(Holdings? holdings) {
     if (holdings != null) {
       _fieldController.text = NumberFormat('##0.##')
-          .format(holdings.dollarsOf(Currencies.dollars).rounded);
+          .format(holdings.of(Currencies.dollars).rounded);
     }
   }
 }

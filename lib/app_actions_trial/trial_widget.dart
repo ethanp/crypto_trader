@@ -92,7 +92,7 @@ class ActionButton extends StatelessWidget {
     print('Button pressed');
     // Docs for this: https://dart.dev/codelabs/async-await#handling-errors
     try {
-      await executor.add(action);
+      await executor.enqueue(action);
     } on Exception catch (e) {
       print('Caught exception $e');
     }

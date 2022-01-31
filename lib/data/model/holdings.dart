@@ -23,14 +23,14 @@ class Holdings {
   Holding get shortest => cryptoHoldings.reduce((Holding a, Holding b) =>
       difference(a.currency) < difference(b.currency) ? a : b);
 
-  Dollars dollarsOf(Currency currency) =>
+  Dollars of(Currency currency) =>
       holdings.firstWhere((e) => e.currency == currency).dollarValue;
 
   @override
   String toString() => 'Holdings{\n${holdings.join('\n')}\n';
 
   double percentageContaining(Currency currency) =>
-      (dollarsOf(currency) / totalCryptoValue * 100).amt;
+      (of(currency) / totalCryptoValue * 100).amt;
 
   double difference(Currency currency) =>
       percentageContaining(currency) - currency.percentAllocation;
