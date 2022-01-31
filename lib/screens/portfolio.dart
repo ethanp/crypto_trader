@@ -2,22 +2,18 @@ import 'package:crypto_trader/data/access/granularity.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
-import 'package:crypto_trader/widgets/portfolio_list_item.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Portfolio extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => PortfolioState())],
-      builder: (context, _) => Flexible(
-            child: Column(children: [
-              _priceChart(context.watch<PortfolioState>()),
-              const SizedBox(height: 12), // Separator.
-              _currencyList(),
-            ]),
-          ));
+  Widget build(BuildContext context) => Flexible(
+        child: Column(children: [
+          _priceChart(context.watch<PortfolioState>()),
+          const SizedBox(height: 12), // Separator.
+          _currencyList(),
+        ]),
+      );
 
   Widget _priceChart(PortfolioState state) => Expanded(
       child: EasyFutureBuilder<List<Candle>>(

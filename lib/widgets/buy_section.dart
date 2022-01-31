@@ -1,6 +1,7 @@
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/util.dart';
+import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,43 +10,34 @@ import 'package:provider/provider.dart';
 class BuySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final executor = context.read<MultistageCommandExecutor>();
+    final commandExecutor = context.read<MultistageCommandExecutor>();
     final textEditingController = TextEditingController();
-    final selectedCurrency = Currencies.bitcoin; // TODO read from context.
+    final selectedCurrency = context.watch<PortfolioState>().currency;
 
-    final userInputAmountField = SizedBox(
-      width: 50,
-      child: TextFormField(
-        controller: textEditingController,
-      ),
-    );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
       child: Row(children: [
-        userInputAmountField,
+        SizedBox(
+          width: 50,
+          child: TextFormField(
+            controller: textEditingController,
+          ),
+        ),
         const SizedBox(width: 20),
-        _buyButton(executor, textEditingController, selectedCurrency),
+        ElevatedButton(
+          onPressed: () => _buyButtonHandler(
+            commandExecutor,
+            textEditingController,
+            selectedCurrency,
+          ),
+          child: const Text('Buy'),
+        ),
       ]),
     );
   }
 
-  ElevatedButton _buyButton(
-    MultistageCommandExecutor executor,
-    TextEditingController textEditingController,
-    Currency selectedCurrency,
-  ) {
-    return ElevatedButton(
-      onPressed: () => _buyButtonHandler(
-        executor,
-        textEditingController,
-        selectedCurrency,
-      ),
-      child: const Text('Buy'),
-    );
-  }
-
   Future<void> _buyButtonHandler(
-    MultistageCommandExecutor executor,
+    MultistageCommandExecutor commandExecutor,
     TextEditingController textEditingController,
     Currency selectedCurrency,
   ) async {
@@ -62,9 +54,9 @@ class BuySection extends StatelessWidget {
       if (dollarsToDeposit.amt < 10) dollarsToDeposit.amt = 10;
       // IIUC, awaiting this will cause us to wait till the deposit
       // completes.
-      await executor.enqueue(DepositCommand(dollarsToDeposit));
+      await commandExecutor.enqueue(DepositCommand(dollarsToDeposit));
     }
-    await executor.enqueue(PurchaseCommand(Holding(
+    await commandExecutor.enqueue(PurchaseCommand(Holding(
       currency: selectedCurrency,
       dollarValue: dollarsToSpend,
     )));
