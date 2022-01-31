@@ -18,32 +18,7 @@ class BuySection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
       child: Row(children: [
-        SizedBox(
-          width: 100,
-          child: TextFormField(
-            controller: textEditingController,
-            decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              errorStyle: TextStyle(color: Colors.red[500]),
-              fillColor: Colors.grey[800]!.withOpacity(0.7),
-              filled: true,
-              labelText: '\$ $selectedCurrency',
-              labelStyle: TextStyle(color: Colors.green[200]),
-              isDense: true,
-              contentPadding:
-                  const EdgeInsets.only(top: 10, bottom: 10, right: 10),
-            ),
-            textAlign: TextAlign.right,
-            validator: _userInputValidator,
-            autovalidateMode: AutovalidateMode.always,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            // These are called before `onChanged:`
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[\.0-9]')),
-              LengthLimitingTextInputFormatter(5),
-            ],
-          ),
-        ),
+        _textFormField(textEditingController, selectedCurrency),
         const SizedBox(width: 20),
         ElevatedButton(
           onPressed: () => _buyButtonHandler(
@@ -54,6 +29,37 @@ class BuySection extends StatelessWidget {
           child: const Text('Buy'),
         ),
       ]),
+    );
+  }
+
+  Widget _textFormField(
+    TextEditingController textEditingController,
+    Currency selectedCurrency,
+  ) {
+    return SizedBox(
+      width: 100,
+      child: TextFormField(
+        controller: textEditingController,
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          errorStyle: TextStyle(color: Colors.red[500]),
+          fillColor: Colors.grey[800]!.withOpacity(0.7),
+          filled: true,
+          labelText: '\$ $selectedCurrency',
+          labelStyle: TextStyle(color: Colors.green[200]),
+          isDense: true,
+          contentPadding: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
+        ),
+        textAlign: TextAlign.right,
+        validator: _userInputValidator,
+        autovalidateMode: AutovalidateMode.always,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        // These are called before `onChanged:`
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'[\.0-9]')),
+          LengthLimitingTextInputFormatter(5),
+        ],
+      ),
     );
   }
 
