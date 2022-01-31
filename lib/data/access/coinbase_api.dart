@@ -47,14 +47,18 @@ class CoinbaseApi {
   }
 
   /// https://docs.pro.coinbase.com/#payment-method
-  Future<String> deposit(Dollars dollars) async => _post(
-        path: '/deposits/payment-method',
-        body: {
-          'amount': '${dollars.amt}',
-          'currency': 'USD',
-          'payment_method_id': await _getPaymentMethodId(),
-        },
-      );
+  Future<String> deposit(Dollars dollars) async {
+    // Coinbase API complains if amount is "too precise".
+    final double amtRounded = (dollars.amt * 100).toInt() / 100.0;
+    return _post(
+      path: '/deposits/payment-method',
+      body: {
+        'amount': '$amtRounded',
+        'currency': 'USD',
+        'payment_method_id': await _getPaymentMethodId(),
+      },
+    );
+  }
 
   /// https://docs.pro.coinbase.com/?php#place-a-new-order
   Future<String> marketOrder(Holding order) => _post(
