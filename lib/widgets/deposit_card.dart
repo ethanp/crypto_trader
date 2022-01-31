@@ -1,6 +1,5 @@
 import 'package:crypto_trader/import_facade/util.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
-import 'package:crypto_trader/widgets/transact_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
