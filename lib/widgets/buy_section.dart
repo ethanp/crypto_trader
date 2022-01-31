@@ -40,6 +40,14 @@ class BuySection extends StatelessWidget {
       width: 100,
       child: TextFormField(
         controller: textEditingController,
+        textAlign: TextAlign.right,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        autovalidateMode: AutovalidateMode.always,
+        validator: _userInputValidator,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'[\.0-9]')),
+          LengthLimitingTextInputFormatter(5),
+        ],
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
           errorStyle: TextStyle(color: Colors.red[500]),
@@ -50,15 +58,6 @@ class BuySection extends StatelessWidget {
           isDense: true,
           contentPadding: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
         ),
-        textAlign: TextAlign.right,
-        validator: _userInputValidator,
-        autovalidateMode: AutovalidateMode.always,
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        // These are called before `onChanged:`
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'[\.0-9]')),
-          LengthLimitingTextInputFormatter(5),
-        ],
       ),
     );
   }
@@ -75,7 +74,8 @@ class BuySection extends StatelessWidget {
     }
     final userInput = double.tryParse(textEditingController.text);
     if (userInput == null || userInput < 10 || userInput > 100) {
-      print('Weird, we should not get here: ${textEditingController.text}');
+      // The validation above should have checked for all these possibilities.
+      print('ERROR, we should not get here: ${textEditingController.text}');
       return;
     }
     final dollarsToSpend = Dollars(userInput);

@@ -20,7 +20,6 @@ class Body extends StatelessWidget {
   List<_TabGo> _uiTabs(BuildContext context) {
     final keyboardIsHidden = MediaQuery.of(context).viewInsets.bottom == 0;
     final uiV1 = _TabGo(
-      title: 'OG UI',
       icon: const Icon(Icons.save),
       body: Column(children: [
         HoldingsFacts(),
@@ -29,7 +28,6 @@ class Body extends StatelessWidget {
       ]),
     );
     final uiV2 = _TabGo(
-      title: 'NewNew UI',
       icon: const Icon(Icons.cloud_circle),
       body: Column(children: [
         HoldingsFacts(),
@@ -85,11 +83,10 @@ class Body extends StatelessWidget {
 }
 
 class _TabGo {
-  const _TabGo({required this.title, required this.icon, required this.body});
+  const _TabGo({required this.icon, required this.body});
 
-  final String title;
   final Icon icon;
   final Widget body;
 
-  Tab get asTab => Tab(text: title, icon: icon);
+  Tab get asTab => Tab(icon: icon);
 }
