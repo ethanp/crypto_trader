@@ -1,13 +1,10 @@
-import 'package:crypto_trader/commands/command.dart';
-import 'package:crypto_trader/commands/executor.dart';
-import 'package:crypto_trader/commands/test.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/util.dart';
 import 'package:crypto_trader/import_facade/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AppActionsTrialTopLevel extends StatelessWidget {
+class TrialWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -33,14 +30,31 @@ class AppActionsTrialTopLevel extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('State: $text', style: font),
-                      ActionButton(executor, 'No error', FakeCommand()),
                       ActionButton(
-                          executor, 'Error on request', ErrantRequestCommand()),
+                        executor,
+                        'No error',
+                        FakeCommand(),
+                      ),
                       ActionButton(
-                          executor, 'Error on verify', ErrantVerifyCommand()),
+                        executor,
+                        'Error on request',
+                        ErrantRequestCommand(),
+                      ),
                       ActionButton(
-                          executor, 'Deposit $amount', DepositCommand(amount)),
-                      ActionButton(executor, buyText, SpendCommand(amount)),
+                        executor,
+                        'Error on verify',
+                        ErrantVerifyCommand(),
+                      ),
+                      ActionButton(
+                        executor,
+                        'Deposit $amount',
+                        DepositCommand(amount),
+                      ),
+                      ActionButton(
+                        executor,
+                        buyText,
+                        SpendCommand(amount),
+                      ),
                     ]
                         .expand(
                             (element) => [const SizedBox(height: 10), element])

@@ -2,8 +2,6 @@ import 'package:crypto_trader/import_facade/util.dart';
 import 'package:flutter/material.dart';
 import 'package:synchronized/synchronized.dart';
 
-import 'command.dart';
-
 /// Runs one [MultistageCommand] at a time, and will [notifyListeners()] when
 /// the [MultistageCommandState] changes.
 ///

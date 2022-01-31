@@ -2,6 +2,7 @@ export 'package:crypto_trader/screens/holdings_facts.dart';
 export 'package:crypto_trader/screens/portfolio.dart';
 export 'package:crypto_trader/screens/transaction_area.dart';
 export 'package:crypto_trader/widgets/amount_field.dart';
+export 'package:crypto_trader/widgets/buy_section.dart';
 export 'package:crypto_trader/widgets/deposit_card.dart';
 export 'package:crypto_trader/widgets/deposit_dropdown.dart';
 export 'package:crypto_trader/widgets/future_builders.dart';
