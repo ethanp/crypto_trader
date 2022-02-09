@@ -6,19 +6,18 @@ import 'package:provider/provider.dart';
 /// Area of the screen with the cash available, deposit, and spend Widgets;
 /// and while a transaction is taking place, display its progress.
 class TransactionArea extends StatelessWidget {
+  const TransactionArea(this.defaultChild);
+
+  final Widget defaultChild;
+
   @override
-  Widget build(BuildContext context) {
-    final executor = context.watch<MultistageCommandExecutor>();
-    return Container(
-        color: Colors.grey[800],
-        child: Padding(
-            padding: const EdgeInsets.only(top: 2, bottom: 2),
-            child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 800),
-                switchInCurve: Curves.easeInToLinear,
-                switchOutCurve: Curves.easeInToLinear,
-                child: _currentUi(executor))));
-  }
+  Widget build(BuildContext context) => Padding(
+      padding: const EdgeInsets.only(top: 2, bottom: 2),
+      child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 800),
+          switchInCurve: Curves.easeInToLinear,
+          switchOutCurve: Curves.easeInToLinear,
+          child: _currentUi(context.watch<MultistageCommandExecutor>())));
 
   Widget _currentUi(MultistageCommandExecutor executor) {
     if (executor.state.isRunning)
@@ -26,6 +25,6 @@ class TransactionArea extends StatelessWidget {
     else if (executor.state.hasError)
       return ShowError(executor);
     else
-      return TransactButtons();
+      return defaultChild;
   }
 }

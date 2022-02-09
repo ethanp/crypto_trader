@@ -59,7 +59,7 @@ class _Style {
   static TextStyle labelStyle({bool bigger = false}) =>
       GoogleFonts.aBeeZee().merge(TextStyle(
           color: Colors.grey[300],
-          fontSize: bigger ? 30 : 14,
+          fontSize: bigger ? 28 : 14,
           fontWeight: FontWeight.w500));
 
   static TextStyle amountStyle({bool bigger = false}) =>

@@ -24,7 +24,7 @@ class Body extends StatelessWidget {
       icon: const Icon(Icons.save),
       body: Column(children: [
         HoldingsFacts(),
-        TransactionArea(),
+        TransactionArea(TransactButtons()),
         if (keyboardIsHidden) Portfolio(),
       ]),
     );
@@ -33,7 +33,7 @@ class Body extends StatelessWidget {
       icon: const Icon(Icons.cloud_circle),
       body: Column(children: [
         HoldingsFacts(),
-        BuySection(),
+        TransactionArea(BuySection()),
         if (keyboardIsHidden) Portfolio(),
       ]),
     );
