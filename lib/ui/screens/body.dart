@@ -17,27 +17,19 @@ class Body extends StatelessWidget {
     );
   }
 
+  // There's currently just one tab, but in the future, when we need a new tab,
+  // leaving the infra there will make it trivial (rather than pretty annoying).
   List<_TabGo> _uiTabs(BuildContext context) {
     final keyboardIsHidden = MediaQuery.of(context).viewInsets.bottom == 0;
-    final uiV1 = _TabGo(
-      title: 'OG UI',
-      icon: const Icon(Icons.save),
-      body: Column(children: [
-        HoldingsFacts(),
-        TransactionArea(TransactButtons()),
-        if (keyboardIsHidden) Portfolio(),
-      ]),
-    );
     final uiV2 = _TabGo(
-      title: 'NewNew UI',
-      icon: const Icon(Icons.cloud_circle),
+      title: 'Make money, get money',
       body: Column(children: [
         HoldingsFacts(),
         TransactionArea(BuySection()),
         if (keyboardIsHidden) Portfolio(),
       ]),
     );
-    return [uiV1, uiV2];
+    return [uiV2];
   }
 
   AppBar _appBar(List<_TabGo> uiTabs, BuildContext context) {
@@ -85,16 +77,14 @@ class Body extends StatelessWidget {
 }
 
 class _TabGo {
-  const _TabGo({required this.title, required this.icon, required this.body});
+  const _TabGo({required this.title, required this.body});
 
   final String title;
-  final Icon icon;
   final Widget body;
 
   Tab get asTab => Tab(
-      icon: icon,
-      child: Padding(
+          child: Padding(
         padding: const EdgeInsets.only(bottom: 8),
-        child: Text(title, style: const TextStyle(fontSize: 8)),
+        child: MyText(title, style: const TextStyle(fontSize: 15)),
       ));
 }
