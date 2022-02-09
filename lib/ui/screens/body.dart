@@ -12,7 +12,7 @@ class Body extends StatelessWidget {
       length: uiTabs.length,
       child: Scaffold(
         appBar: _appBar(uiTabs, context),
-        body: TabBarView(children: [...uiTabs.map((t) => t.body)]),
+        body: TabBarView(children: uiTabs.map((t) => t.body).toList()),
       ),
     );
   }
@@ -42,7 +42,7 @@ class Body extends StatelessWidget {
         indicator: const UnderlineTabIndicator(
           insets: EdgeInsets.only(bottom: 12.0),
         ),
-        tabs: [...uiTabs.map((t) => t.asTab)],
+        tabs: uiTabs.map((t) => t.asTab).toList(),
       ),
       actions: [_refreshButton(context)],
     );
