@@ -11,24 +11,42 @@ import 'package:provider/provider.dart';
 class BuySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final commandExecutor = context.read<MultistageCommandExecutor>();
-    final textEditingController = TextEditingController();
     final selectedCurrency = context.watch<PortfolioState>().currency;
+    final commandExecutor = context.read<MultistageCommandExecutor>();
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-      child: Row(children: [
-        _textFormField(textEditingController, selectedCurrency),
-        const SizedBox(width: 20),
-        ElevatedButton(
-          onPressed: () => _buyButtonHandler(
-            commandExecutor,
-            textEditingController,
-            selectedCurrency,
-          ),
-          child: const Text('Buy'),
-        ),
-      ]),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buyForm(selectedCurrency, commandExecutor),
+          _recommendation(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buyForm(
+    Currency selectedCurrency,
+    MultistageCommandExecutor commandExecutor,
+  ) {
+    final textEditingController = TextEditingController();
+    return Row(children: [
+      _textFormField(textEditingController, selectedCurrency),
+      const SizedBox(width: 20),
+      _buyButton(commandExecutor, textEditingController, selectedCurrency),
+    ]);
+  }
+
+  Widget _buyButton(MultistageCommandExecutor commandExecutor,
+      TextEditingController textEditingController, Currency selectedCurrency) {
+    return ElevatedButton(
+      onPressed: () => _buyButtonHandler(
+        commandExecutor,
+        textEditingController,
+        selectedCurrency,
+      ),
+      child: const Text('Buy'),
     );
   }
 
@@ -102,5 +120,25 @@ class BuySection extends StatelessWidget {
     if (parsedDouble < 10) return '>10';
     if (parsedDouble > 100) return '≤\$100';
     return null;
+  }
+
+  Widget _recommendation() {
+    return Column(
+      children: [
+        const MyText('Recommendation:'),
+        WithHoldings(
+          builder: (holdings) => MyText(
+            '${holdings?.shortest.currency ?? 'Loading'}',
+            style: const TextStyle(
+              fontSize: 15,
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.w700,
+              color: Colors.yellowAccent,
+              letterSpacing: 1.5,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
