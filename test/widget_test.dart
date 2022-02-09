@@ -1,4 +1,4 @@
-import 'package:crypto_trader/import_facade/widgets.dart';
+import 'package:crypto_trader/import_facade/ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // TODO(bug): The test is not passing.

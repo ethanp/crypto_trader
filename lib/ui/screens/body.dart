@@ -1,5 +1,5 @@
-import 'package:crypto_trader/import_facade/ui_refresher.dart';
-import 'package:crypto_trader/import_facade/widgets.dart';
+import 'package:crypto_trader/import_facade/ui.dart';
+import 'package:crypto_trader/ui/util/ui_refresher.dart';
 import 'package:flutter/material.dart';
 
 /// Outermost [Scaffold] for the app.

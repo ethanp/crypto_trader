@@ -2,7 +2,7 @@ import 'package:crypto_trader/data/access/granularity.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/extensions.dart';
 import 'package:crypto_trader/import_facade/model.dart';
-import 'package:crypto_trader/import_facade/widgets.dart';
+import 'package:crypto_trader/import_facade/ui.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
