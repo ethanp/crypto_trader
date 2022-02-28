@@ -59,11 +59,11 @@ class _Style {
   static TextStyle labelStyle({bool bigger = false}) =>
       GoogleFonts.aBeeZee().merge(TextStyle(
           color: Colors.grey[300],
-          fontSize: bigger ? 28 : 14,
+          fontSize: bigger ? 24 : 14,
           fontWeight: FontWeight.w500));
 
   static TextStyle amountStyle({bool bigger = false}) =>
-      TextStyle(color: Colors.green[300], fontSize: bigger ? 35 : 20);
+      TextStyle(color: Colors.green[300], fontSize: bigger ? 26 : 20);
 
   static final percentStyle =
       amountStyle().copyWith(fontSize: 16, color: Colors.lightBlueAccent);

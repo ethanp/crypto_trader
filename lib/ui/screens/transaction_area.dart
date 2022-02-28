@@ -6,10 +6,6 @@ import 'package:provider/provider.dart';
 /// Area of the screen with the cash available, deposit, and spend Widgets;
 /// and while a transaction is taking place, display its progress.
 class TransactionArea extends StatelessWidget {
-  const TransactionArea(this.defaultChild);
-
-  final Widget defaultChild;
-
   @override
   Widget build(BuildContext context) => Padding(
       padding: const EdgeInsets.only(top: 2, bottom: 2),
@@ -25,6 +21,6 @@ class TransactionArea extends StatelessWidget {
     else if (executor.state.hasError)
       return ShowError(executor);
     else
-      return defaultChild;
+      return BuySection();
   }
 }

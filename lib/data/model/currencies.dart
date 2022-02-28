@@ -15,7 +15,7 @@ class Currencies {
   static const cardano = Currency(
     name: 'Cardano',
     callLetters: 'ADA',
-    percentAllocation: 25,
+    percentAllocation: 24,
   );
   static const dollars = Currency(
     name: 'US Dollars',
@@ -25,7 +25,7 @@ class Currencies {
   static const ethereum = Currency(
     name: 'Ethereum',
     callLetters: 'ETH',
-    percentAllocation: 35,
+    percentAllocation: 36,
   );
   static const lightcoin = Currency(
     name: 'Lightcoin',
@@ -47,7 +47,7 @@ class Currencies {
         lightcoin,
         solana,
       ])
-        ..sort(_byAllocationSize);
+        ..sort((a, b) => b.percentAllocation - a.percentAllocation);
 
   static List<Currency> get crypto => all.where((c) => c != dollars).toList();
 
@@ -59,7 +59,4 @@ class Currencies {
     if (sum != 100) throw Exception('Percent allocated == $sum (!= 100)');
     return list;
   }
-
-  static int _byAllocationSize(Currency a, Currency b) =>
-      -a.percentAllocation.compareTo(b.percentAllocation);
 }

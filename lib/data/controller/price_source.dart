@@ -1,6 +1,4 @@
-import 'package:crypto_trader/data/access/coinbase_api.dart';
 import 'package:crypto_trader/data/access/granularity.dart';
-import 'package:crypto_trader/data/model/currencies.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 

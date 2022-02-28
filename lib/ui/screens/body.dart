@@ -25,8 +25,15 @@ class Body extends StatelessWidget {
       title: 'Make money, get money',
       body: Column(children: [
         HoldingsFacts(),
-        TransactionArea(BuySection()),
-        if (keyboardIsHidden) Portfolio(),
+        TransactionArea(),
+        if (keyboardIsHidden)
+          Flexible(
+            child: Column(children: [
+              Expanded(child: PriceChart()),
+              const SizedBox(height: 12), // Separator.
+              Portfolio(),
+            ]),
+          ),
       ]),
     );
     return [uiV2];
@@ -65,14 +72,10 @@ class Body extends StatelessWidget {
       ),
     );
     return InkWell(
-      onTap: () => UiRefresher.refresh(context),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Stack(
-          children: [icon, label],
-        ),
-      ),
-    );
+        onTap: () => UiRefresher.refresh(context),
+        child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Stack(children: [icon, label])));
   }
 }
 

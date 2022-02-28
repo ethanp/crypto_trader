@@ -2,24 +2,20 @@ import 'package:crypto_trader/data/access/granularity.dart';
 import 'package:crypto_trader/import_facade/controller.dart';
 import 'package:crypto_trader/import_facade/model.dart';
 import 'package:crypto_trader/import_facade/ui.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// Line chart of price history of a [Currency].
 class PriceChart extends StatelessWidget {
-  /// Line chart of price history of a [Currency].
-  const PriceChart({required this.candles});
-
-  /// Price data for the chart.
-  final List<Candle> candles;
-
   @override
   Widget build(BuildContext context) {
-    final state = context.read<PortfolioState>();
-    return Column(children: [
-      _chartHeader(state),
-      MyLineChart(candles),
-    ]);
+    final state = context.watch<PortfolioState>();
+    return EasyFutureBuilder<List<Candle>>(
+        future: Environment.prices.candles(state.currency, state.granularity),
+        builder: (List<Candle>? candles) => candles == null
+            ? const CupertinoActivityIndicator()
+            : Column(children: [_chartHeader(state), MyLineChart(candles)]));
   }
 
   Widget _chartHeader(PortfolioState state) => Padding(
