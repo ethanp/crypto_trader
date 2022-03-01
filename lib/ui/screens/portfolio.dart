@@ -15,7 +15,7 @@ class Portfolio extends StatelessWidget {
   Widget _asListItem(Currency currency) => Padding(
       padding: const EdgeInsets.all(2),
       child: WithHoldings(builderWithContext: (context, holdings) {
-        final state = context.read<PortfolioState>();
+        final state = context.watch<PortfolioState>();
         return GestureDetector(
             onTap: () => state.setCurrency(currency),
             child: PortfolioListItem(

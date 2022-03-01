@@ -21,20 +21,19 @@ class MyLineChart extends StatelessWidget {
           child: _lineChart(context)));
 
   Widget _lineChart(BuildContext context) {
-    final state = context.read<PortfolioState>();
+    final PortfolioState state = context.read<PortfolioState>();
 
     // Compute bounds //
     final Iterable<double> timestamps =
         candles.map((c) => c.timestamp.millisecondsSinceEpoch.toDouble());
-    final minX = timestamps.min;
-    final maxX = timestamps.max;
+    final double minX = timestamps.min;
+    final double maxX = timestamps.max;
     final Iterable<double> closingPrices = candles.map((c) => c.closingPrice);
-    final minY = _getMinY(state, closingPrices);
-    final maxY = closingPrices.max;
+    final double minY = _getMinY(state, closingPrices);
+    final double maxY = closingPrices.max;
 
-    final horizontalInterval = (maxX - minX) /
-        (state.granularity == Granularities.sixHours ? 3.01 : 5.01);
-    final verticalInterval = (maxY - minY) / 4.01;
+    final double horizontalInterval = (maxX - minX) / 5.01;
+    final double verticalInterval = (maxY - minY) / 4.01;
 
     return LineChart(
       LineChartData(
@@ -81,17 +80,17 @@ class MyLineChart extends StatelessWidget {
   LineTouchData _tooltip() => LineTouchData(
       touchTooltipData: LineTouchTooltipData(
           getTooltipItems: (touchedSpots) => touchedSpots.map((touchedSpot) {
-                final millis = touchedSpot.x.toInt();
-                final dateTime =
-                    DateTime.fromMillisecondsSinceEpoch(millis, isUtc: true);
+                final dateTime = DateTime.fromMillisecondsSinceEpoch(
+                  touchedSpot.x.toInt(),
+                  isUtc: true,
+                );
                 final day = DateFormat.E().format(dateTime);
                 final date = DateFormat.MMMd().format(dateTime);
                 final hourMin = DateFormat.jm().format(dateTime);
-                final time = '$day $date\n$hourMin';
-                final dollars = Dollars(touchedSpot.y);
-                final text = '$dollars\n$time';
-                const style = TextStyle(color: Colors.lightBlueAccent);
-                return LineTooltipItem(text, style);
+                return LineTooltipItem(
+                  '${Dollars(touchedSpot.y)}\n$day $date\n$hourMin',
+                  const TextStyle(color: Colors.yellowAccent),
+                );
               }).toList()));
 
   LineChartBarData _priceData() {
@@ -107,12 +106,13 @@ class MyLineChart extends StatelessWidget {
         barWidth: 1,
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
-        spots: candles
-            .map((c) => FlSpot(
-                  c.timestamp.millisecondsSinceEpoch.toDouble(),
-                  c.closingPrice,
-                ))
-            .toList(),
+        spots: [
+          for (final candle in candles)
+            FlSpot(
+              candle.timestamp.millisecondsSinceEpoch.toDouble(),
+              candle.closingPrice,
+            )
+        ],
         belowBarData: BarAreaData(
             show: true,
             gradientFrom: verticalLine.first,
